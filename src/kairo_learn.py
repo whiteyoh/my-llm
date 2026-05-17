@@ -5,8 +5,8 @@ from pathlib import Path
 import streamlit as st
 
 from tiny_llm.data import ByteTokenizer
-from tiny_llm.experiments import load_experiment_metadata, make_experiment_metadata, save_experiment
-from tiny_llm.learn import build_attention_preview, build_probability_preview, build_token_preview, build_training_config, create_model_status, generate_learning_output, prepare_retrain_comparison, train_tiny_model, validate_learn_training_text
+from tiny_llm.experiments import load_experiment_metadata, make_experiment_metadata, restore_experiment_model, save_experiment
+from tiny_llm.learn import TEACHER_LIMITS, build_attention_preview, build_probability_preview, build_token_preview, build_training_config, create_model_status, enforce_teacher_limits, generate_learning_output, prepare_retrain_comparison, train_tiny_model, validate_learn_training_text
 from tiny_llm.safety import SafetyConfig, safety_notice
 
 DEFAULTS = {"seq_len": 32, "d_model": 64, "n_heads": 4, "n_layers": 2, "epochs": 1, "batch_size": 4}
@@ -41,11 +41,11 @@ for title, action, reflection in lesson_steps:
 st.sidebar.header("Teacher controls")
 show_advanced = st.sidebar.toggle("Show advanced hyperparameters", value=False)
 safe_mode = st.sidebar.toggle("Classroom Safe Mode", value=True)
-max_new_tokens_cap = int(st.sidebar.number_input("Allowed max_new_tokens", min_value=5, max_value=80, value=20))
+max_new_tokens_cap = int(st.sidebar.number_input("Allowed max_new_tokens", min_value=5, max_value=80, value=40))
 model_size_preset = st.sidebar.selectbox("Max model size preset", ["Classroom demo", "Moderate"], index=0)
 custom_banned = st.sidebar.text_area("Custom banned terms (comma-separated)", value="")
 if st.sidebar.button("Reset session"):
-    for key in ["kairo_state", "before_output", "last_prompt", "last_output"]:
+    for key in ["kairo_state", "before_output", "last_prompt", "last_output", "restored_meta", "restored_model"]:
         st.session_state.pop(key, None)
     st.sidebar.success("Session reset.")
 
@@ -86,6 +86,10 @@ if preview:
     st.code(f"Original snippet: {snippet}\nEncoded bytes: {ids}\nDecoded round trip: {tok.decode(ids)}")
 
 cfg, cfg_warnings = build_training_config({"seq_len": int(seq_len), "d_model": int(d_model), "n_heads": int(n_heads), "n_layers": int(n_layers), "epochs": int(epochs), "batch_size": int(batch_size)}, preset=model_size_preset)
+limits = TEACHER_LIMITS.get(model_size_preset, TEACHER_LIMITS["Classroom demo"])
+max_new_tokens_cap, cap_warn = enforce_teacher_limits({"max_new_tokens": max_new_tokens_cap}, model_size_preset)
+max_new_tokens_cap = max_new_tokens_cap["max_new_tokens"]
+cfg_warnings.extend(cap_warn)
 for warning in cfg_warnings:
     st.warning(warning)
 
@@ -130,7 +134,7 @@ if "kairo_state" in st.session_state:
 st.subheader("3) Talk to it")
 prompt = st.text_input("Prompt", value=st.session_state.get("last_prompt", "The robot opened the door"))
 colt1, colt2, colt3 = st.columns(3)
-max_new_tokens = int(colt1.number_input("max_new_tokens", min_value=1, max_value=min(MAX_CLASSROOM_NEW_TOKENS, max_new_tokens_cap), value=min(20, max_new_tokens_cap)))
+max_new_tokens = int(colt1.number_input("max_new_tokens", min_value=1, max_value=max_new_tokens_cap, value=min(20, max_new_tokens_cap)))
 temperature = float(colt2.number_input("temperature", min_value=0.1, max_value=2.0, value=0.9, step=0.1))
 top_k = int(colt3.number_input("top_k", min_value=0, max_value=100, value=40))
 
@@ -196,3 +200,16 @@ if st.button("Load experiment metadata"):
         st.json(loaded)
     except FileNotFoundError as exc:
         st.error(str(exc))
+
+
+if st.button("Restore experiment model"):
+    try:
+        model, metadata = restore_experiment_model(exp_path)
+        st.session_state["restored_model"] = str(model.__class__.__name__)
+        st.session_state["restored_meta"] = metadata
+        st.success("Model restored from experiment checkpoint.")
+    except (FileNotFoundError, ValueError, KeyError, RuntimeError) as exc:
+        st.error(str(exc))
+if "restored_meta" in st.session_state:
+    st.write("Restored model status:")
+    st.json(st.session_state["restored_meta"])

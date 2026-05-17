@@ -13,22 +13,27 @@ from tiny_llm.generation import generate_tokens, resolve_device, validate_sampli
 from tiny_llm.model import TinyGPT
 from tiny_llm.safety import SafetyConfig, filter_output, is_prompt_allowed, validate_training_text
 
-DEFAULTS = {"seq_len": 32, "d_model": 64, "n_heads": 4, "n_layers": 2, "epochs": 1, "batch_size": 4}
-MODEL_LIMITS = {
-    "Classroom demo": {"d_model": 64, "n_layers": 2, "seq_len": 32, "epochs": 1},
-    "Moderate": {"d_model": 128, "n_layers": 4, "seq_len": 64, "epochs": 3},
+DEFAULTS = {"seq_len": 32, "d_model": 64, "n_heads": 4, "n_layers": 2, "epochs": 1, "batch_size": 4, "max_new_tokens": 40}
+TEACHER_LIMITS = {
+    "Classroom demo": {"seq_len": 32, "d_model": 64, "n_layers": 2, "epochs": 1, "max_new_tokens": 40},
+    "Moderate": {"seq_len": 64, "d_model": 128, "n_layers": 4, "epochs": 3, "max_new_tokens": 80},
 }
+
+
+def enforce_teacher_limits(cfg: dict[str, int], preset: str = "Classroom demo") -> tuple[dict[str, int], list[str]]:
+    limits = TEACHER_LIMITS.get(preset, TEACHER_LIMITS["Classroom demo"])
+    out = dict(cfg)
+    warnings: list[str] = []
+    for key, max_value in limits.items():
+        if key in out and int(out[key]) > max_value:
+            out[key] = max_value
+            warnings.append("Teacher controls are keeping this demo CPU-friendly.")
+    return out, sorted(set(warnings))
 
 
 def build_training_config(raw: dict[str, int], preset: str = "Classroom demo") -> tuple[dict[str, int], list[str]]:
     cfg = {k: int(v) for k, v in raw.items()}
-    warnings: list[str] = []
-    limits = MODEL_LIMITS.get(preset, MODEL_LIMITS["Classroom demo"])
-    for key, max_value in limits.items():
-        if cfg[key] > max_value:
-            cfg[key] = max_value
-            warnings.append("Teacher controls are keeping this demo CPU-friendly.")
-    return cfg, warnings
+    return enforce_teacher_limits(cfg, preset=preset)
 
 
 def validate_learn_training_text(text: str, banned_terms: tuple[str, ...] | None = None) -> list[str]:
@@ -80,30 +85,13 @@ def train_tiny_model(training_text: str, cfg: dict[str, int], progress_callback:
 
     if progress_callback:
         progress_callback(1.0)
-    return {
-        "model": model,
-        "tokenizer": tok,
-        "token_count": len(token_ids),
-        "sequence_count": len(ds),
-        "param_count": sum(p.numel() for p in model.parameters()),
-        "train_losses": train_losses,
-        "val_losses": val_losses,
-        "cfg": cfg,
-    }
+    return {"model": model, "tokenizer": tok, "token_count": len(token_ids), "sequence_count": len(ds), "param_count": sum(p.numel() for p in model.parameters()), "train_losses": train_losses, "val_losses": val_losses, "cfg": cfg}
 
 
 def create_model_status(state: dict[str, Any] | None) -> dict[str, Any]:
     if not state:
-        return {"trained": False, "label": "Status: Not trained"}
-    return {
-        "trained": True,
-        "label": "Status: Trained",
-        "token_count": state["token_count"],
-        "sequence_count": state["sequence_count"],
-        "param_count": state["param_count"],
-        "train_loss": state["train_losses"][-1],
-        "val_loss": state["val_losses"][-1],
-    }
+        return {"trained": False, "label": "🔴 Not trained yet"}
+    return {"trained": True, "label": "🟢 Trained", "token_count": state["token_count"], "sequence_count": state["sequence_count"], "param_count": state["param_count"], "train_loss": state["train_losses"][-1], "val_loss": state["val_losses"][-1]}
 
 
 def generate_learning_output(state: dict[str, Any], prompt: str, *, max_new_tokens: int, temperature: float, top_k: int, safe_cfg: SafetyConfig) -> dict[str, str]:

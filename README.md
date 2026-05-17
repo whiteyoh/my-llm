@@ -2,63 +2,68 @@
 
 **Build it. Train it. Talk to it. Retrain it. Understand it.**
 
-Kairo is a hands-on educational GPT lab for demystifying how language models learn.
-
 ## The idea
-Kairo helps learners build and train a tiny model on CPU.
-It makes tokens, probabilities, loss, and attention visible.
-It supports a guided classroom learning loop.
-It is intentionally small and transparent.
-It is designed for curiosity, not production deployment.
+Kairo is a tiny language-model lab for classrooms.
+You pick text and turn it into tokens.
+You train a small CPU-friendly model and watch loss change.
+You prompt it, inspect probabilities, and compare retrains.
+You inspect attention to see pattern use, not human-like understanding.
 
 ## Why it exists
-Most people use AI without understanding it. Kairo makes the invisible parts visible.
+Most people use AI systems without seeing what is happening inside them. Kairo makes hidden mechanics visible so learners can experiment, ask better questions, and build intuition.
 
 ## The learning loop
+
 | Step | Learner does | Kairo shows | Concept learned |
 |---|---|---|---|
 | Build it | choose text | byte tokens | tokenisation |
-| Train it | run training | loss chart | prediction error |
-| Talk to it | prompt model | generated output | sampling |
+| Train it | train tiny model | loss chart | prediction error |
+| Talk to it | prompt model | output + probabilities | sampling |
 | Retrain it | change data | before/after output | data changes behaviour |
-| Understand it | inspect probabilities/attention | tables/charts | models predict patterns |
+| Understand it | inspect attention | attention table/heatmap | pattern use, not human understanding |
 
 ## Try it in 3 minutes
 ```bash
-python -m venv .venv
-source .venv/bin/activate
-pip install -e .
 python src/train.py --input_file data/samples/space_adventure.txt --out_dir runs/demo --epochs 1 --batch_size 4 --seq_len 32 --d_model 64 --n_heads 4 --n_layers 2 --device cpu
 python src/generate.py --checkpoint runs/demo/best.pt --prompt "The robot opened the door" --max_new_tokens 20 --device cpu
+python src/evaluate.py --checkpoint runs/demo/best.pt --input_file data/samples/space_adventure.txt --device cpu
 ```
 
 ## Learn Mode
-Run `pip install -e ".[learn]"` and `streamlit run src/kairo_learn.py`.
-
-Screenshot idea placeholders:
-- guided workflow
-- token viewer
-- probability table
-- attention view
-- retrain comparison
+```bash
+pip install -e ".[learn]"
+streamlit run src/kairo_learn.py
+```
+Includes token viewer, loss chart, probability table, attention view, retrain comparison, and experiment save/restore.
 
 ## Classroom use
-Teacher-led demos, secondary school lessons, STEM clubs, and workshops.
+Designed for teacher-led demos, secondary school lessons, STEM clubs, and workshops.
 
 ## Safety and supervision
-Kairo includes lightweight classroom guardrails and teacher controls, but it is not full moderation.
+Kairo includes lightweight guardrails, not full moderation. Teacher supervision is required.
 
 ## What Kairo is not
-Not a production LLM. Not instruction-tuned. Not fully moderated. Not a chatbot replacement.
+- not a production LLM
+- not instruction-tuned
+- not fully moderated
+- not a chatbot replacement
 
 ## Developer quickstart
-Install, train, generate, evaluate, chat, test.
+Install deps, run train/generate/evaluate/chat scripts, then run tests:
+```bash
+pip install -e .
+pytest -q
+```
 
 ## Documentation map
-- [Teacher guide](docs/teacher_guide.md)
-- [Student worksheet](docs/student_worksheet.md)
-- [Architecture](docs/architecture.md)
-- [How LLMs work](docs/how_llms_work.md)
+- `docs/teacher_guide.md`
+- `docs/student_worksheet.md`
+- `docs/architecture.md`
+- `docs/how_llms_work.md`
 
 ## Roadmap
-Prioritise learning UX, attention visuals, experiment comparison, and lesson packs.
+- better attention visuals
+- save/load Learn Mode sessions
+- lesson packs
+- printable worksheets
+- richer experiment comparison
