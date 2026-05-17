@@ -1,39 +1,56 @@
 # Kairo Teacher Guide
 
-## Lesson overview
-Kairo is a tiny educational language-model lab for demonstrating next-token prediction.
+## Before class checklist
+- Install: `pip install -e .` (and optionally `pip install -e ".[learn]"`).
+- Verify smoke commands run once on your machine.
+- Open safe sample data from `data/samples/`.
+- Confirm classroom safe mode is ON in Learn Mode.
 
-## Safeguarding (lightweight, teacher-led)
-Kairo includes lightweight guardrails only. It is not full moderation. Teachers should supervise prompts, datasets, and outputs at all times.
+## Safe dataset checklist
+- No personal data (emails, phone numbers, addresses).
+- No violent/self-harm/weapon instructions.
+- No copyrighted text you cannot use.
+- Age-appropriate language for your pupils.
+- Short, focused themes (space, nature, robots) work best.
 
-## Dataset checklist
-- Use school-appropriate text only.
-- Do not include personal data (emails, phone numbers, addresses).
-- Avoid harmful or distressing themes.
-- Avoid content you do not have permission to reuse.
-- Start with `data/samples/` when possible.
+## Prompt rules for pupils
+- Keep prompts classroom-safe and respectful.
+- No requests for harm, weapons, or illegal advice.
+- Use short prompts first, then iterate.
+- Report unsuitable output to teacher immediately.
 
-## Prompting rules for pupils
-- Use kind, respectful prompts.
-- Avoid requests about harm, weapons, or illegal activity.
-- Do not paste personal information.
-- Ask a teacher before trying unusual prompts.
+## 45-minute lesson script
+1. **0-5 min**: Intro to next-token prediction and lesson goals.
+2. **5-12 min**: Build it (paste dataset, inspect byte tokens).
+3. **12-20 min**: Train it (run tiny CPU training, watch loss chart).
+4. **20-30 min**: Talk to it (prompt and generation settings).
+5. **30-38 min**: Retrain it (change dataset and compare outputs).
+6. **38-45 min**: Understand it discussion and reflection.
 
-## Teacher review workflow
-1. Teacher selects or approves dataset text.
-2. Teacher runs training and checks warnings.
-3. Pupils submit prompts; teacher monitors output.
-4. If output is unsuitable, stop and discuss why.
-5. Adjust dataset/prompting rules and retry.
+## 90-minute workshop script
+1. **0-15 min**: Concepts + safety framing.
+2. **15-30 min**: Build it activity with token-table worksheet.
+3. **30-45 min**: Train and read train/validation loss.
+4. **45-60 min**: Prompt design and next-token probability view.
+5. **60-75 min**: Retrain comparison groups (different datasets).
+6. **75-90 min**: Debrief: pattern learning vs understanding.
 
-## How to respond to unsuitable outputs
-- Pause the activity.
-- Remind students that Kairo predicts tokens and can be wrong/unsafe.
-- Remove unsafe dataset text and retry with safer samples.
-- Re-enable safe filtering if it was disabled.
+## Learn Mode workflow (teacher explanation)
+- **Build it**: show that text becomes byte tokens.
+- **Train it**: explain loss as "how wrong next-token guesses are".
+- **Talk to it**: show sampling controls and output variability.
+- **Retrain it**: prove behavior changes when training text changes.
+- **Understand it**: reinforce limits (pattern matching, no human understanding).
 
-## Suggested classroom rules
-- "No personal data in prompts or datasets."
-- "Use only teacher-approved text."
-- "Tell a teacher immediately if output seems unsafe."
-- "Kairo is a learning tool, not a trusted authority."
+## Discussion prompts after retraining
+- What changed in tone/words/style?
+- Which dataset phrases appeared in outputs?
+- Did the model reason, or mirror patterns?
+- Why did odd repetitions happen?
+
+## If output is unsuitable
+1. Pause pupil interaction and do not continue generating.
+2. Remind class that guardrails are lightweight, not perfect.
+3. Switch to reviewed safe sample text and safer prompt.
+4. Keep safe mode ON and re-run with teacher supervision.
+5. Use the incident as a discussion on AI limitations and safety.

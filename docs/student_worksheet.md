@@ -1,24 +1,47 @@
 # Kairo Student Worksheet
 
-## What are tokens?
-A token is a small piece of text. In Kairo, each UTF-8 byte is a token.
+## Build it
+- What training text did you choose?
+- How many tokens did it have?
+- Copy 10 tokens from the token viewer into this table:
 
-## Safety first
-- Use kind, safe prompts.
-- Do not enter personal information.
-- Tell a teacher if an output seems unsuitable.
-- Kairo is a learning tool, not a real person.
+| Index | Token ID | Display |
+|---|---:|---|
+| 0 |  |  |
+| 1 |  |  |
+| 2 |  |  |
 
-## Prediction exercise
-Given: "The robot opened the".
-What word do you predict next? Why?
+## Train it
+- What were your settings (seq_len, layers, epochs)?
+- What was the latest training loss?
+- What was the latest validation loss?
 
-## Train Kairo
-1. Pick a safe sample text.
-2. Train for 1 epoch with small settings.
-3. Note the train and validation loss.
+### Loss observation box
+- Is loss getting lower?
+- Is validation loss higher than training loss?
+- What might that mean?
 
-## Reflection questions
-- What patterns did the model copy?
-- What mistakes did it make?
-- Why is this not a "magic" system?
+## Talk to it
+- Prompt used:
+- Output generated:
+- What were top 3 next-token predictions?
+
+## Predict-the-next-token exercise
+Before clicking generate, guess the next token after your prompt.
+- My guess:
+- Model top token:
+- Was I close?
+
+## Retrain it
+Change your training text, retrain, then compare.
+
+| Same prompt | Before retrain | After retrain |
+|---|---|---|
+|  |  |  |
+
+## Understand it
+Answer these reflection questions:
+1. What changed after retraining?
+2. Did the model understand ideas, or copy patterns?
+3. Why can outputs be strange or repetitive?
+4. Why should a teacher supervise classroom AI use?

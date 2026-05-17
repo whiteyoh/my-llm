@@ -1,4 +1,5 @@
 from tiny_llm.safety import (
+    SafetyConfig,
     contains_blocked_term,
     filter_output,
     is_prompt_allowed,
@@ -62,3 +63,13 @@ def test_validate_training_text_empty() -> None:
 
 def test_safety_notice_nonempty() -> None:
     assert safety_notice().strip()
+
+
+def test_safety_config_custom_terms() -> None:
+    cfg = SafetyConfig(banned_terms=("volcano",))
+    assert not is_prompt_allowed("volcano facts", banned_terms=cfg.banned_terms)
+
+
+def test_validate_training_text_custom_min_len() -> None:
+    warnings = validate_training_text("hello world", min_chars=5)
+    assert not any("very short" in w.lower() for w in warnings)
