@@ -16,7 +16,7 @@ class CausalSelfAttention(nn.Module):
         self.proj = nn.Linear(d_model, d_model)
         self.dropout = dropout
 
-    def forward(self, x: torch.Tensor) -> torch.Tensor:
+    def forward(self, x: torch.Tensor, return_attn: bool = False) -> torch.Tensor | tuple[torch.Tensor, torch.Tensor]:
         b, t, c = x.size()
         qkv = self.qkv(x)
         q, k, v = qkv.chunk(3, dim=-1)
@@ -25,17 +25,29 @@ class CausalSelfAttention(nn.Module):
         k = k.view(b, t, self.n_heads, self.head_dim).transpose(1, 2)
         v = v.view(b, t, self.n_heads, self.head_dim).transpose(1, 2)
 
-        y = F.scaled_dot_product_attention(
-            q,
-            k,
-            v,
-            attn_mask=None,
-            dropout_p=self.dropout if self.training else 0.0,
-            is_causal=True,
-        )
+        if return_attn:
+            scale = self.head_dim ** -0.5
+            scores = (q @ k.transpose(-2, -1)) * scale
+            mask = torch.tril(torch.ones(t, t, device=x.device, dtype=torch.bool))
+            scores = scores.masked_fill(~mask.view(1, 1, t, t), float("-inf"))
+            attn = torch.softmax(scores, dim=-1)
+            y = attn @ v
+        else:
+            attn = None
+            y = F.scaled_dot_product_attention(
+                q,
+                k,
+                v,
+                attn_mask=None,
+                dropout_p=self.dropout if self.training else 0.0,
+                is_causal=True,
+            )
 
         y = y.transpose(1, 2).contiguous().view(b, t, c)
-        return self.proj(y)
+        out = self.proj(y)
+        if return_attn:
+            return out, attn
+        return out
 
 
 class TransformerBlock(nn.Module):
@@ -51,7 +63,12 @@ class TransformerBlock(nn.Module):
             nn.Dropout(dropout),
         )
 
-    def forward(self, x: torch.Tensor) -> torch.Tensor:
+    def forward(self, x: torch.Tensor, return_attn: bool = False) -> torch.Tensor | tuple[torch.Tensor, torch.Tensor]:
+        if return_attn:
+            attn_out, attn = self.attn(self.ln1(x), return_attn=True)
+            x = x + attn_out
+            x = x + self.ff(self.ln2(x))
+            return x, attn
         x = x + self.attn(self.ln1(x))
         x = x + self.ff(self.ln2(x))
         return x
@@ -92,14 +109,22 @@ class TinyGPT(nn.Module):
         self.ln_f = nn.LayerNorm(d_model)
         self.head = nn.Linear(d_model, vocab_size)
 
-    def forward(self, idx: torch.Tensor) -> torch.Tensor:
+    def forward(self, idx: torch.Tensor, return_attn: bool = False) -> torch.Tensor | tuple[torch.Tensor, list[torch.Tensor]]:
         b, t = idx.size()
         if t > self.seq_len:
             raise ValueError(f"Sequence length {t} exceeds configured seq_len={self.seq_len}")
 
         pos = torch.arange(0, t, device=idx.device).unsqueeze(0)
         x = self.token_emb(idx) + self.pos_emb(pos)
+        attn_maps: list[torch.Tensor] = []
         for block in self.blocks:
-            x = block(x)
+            if return_attn:
+                x, attn = block(x, return_attn=True)
+                attn_maps.append(attn)
+            else:
+                x = block(x)
         x = self.ln_f(x)
-        return self.head(x)
+        logits = self.head(x)
+        if return_attn:
+            return logits, attn_maps
+        return logits

@@ -117,3 +117,9 @@ Why do you think token #1 was most likely?
 - **Probability**: How likely the model thinks each next token is.
 - **Retraining**: Training again on new text to change model behavior.
 - **Dataset**: The text collection used for training.
+
+
+## New activities
+- Attention activity: Which earlier token do you think matters most?
+- Experiment log: dataset used, prompt used, output before retrain, output after retrain, what changed?
+- Reflection: Does attention mean understanding? Why or why not?

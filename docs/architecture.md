@@ -147,3 +147,9 @@ Kairo’s explainability tools emphasize:
 - retraining comparisons.
 
 These are the “windows” learners use to understand model behavior.
+
+
+## Learn Mode flow updates
+- Added attention visualisation path (`tiny_llm.attention.get_attention_map`).
+- Added local experiment persistence module (`tiny_llm.experiments`).
+- Updated flow: Build -> Train -> Talk -> Attention -> Save/Load -> Retrain -> Compare.
