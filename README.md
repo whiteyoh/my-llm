@@ -46,6 +46,36 @@ python src/generate.py --checkpoint runs/demo/best.pt --prompt "The robot opened
 python src/evaluate.py --checkpoint runs/demo/best.pt --input_file data/samples/space_adventure.txt --device cpu
 ```
 
+
+## What you should see
+
+Your exact numbers and generated text will vary run-to-run, but successful commands should look roughly like this:
+
+**Training (`src/train.py`)**
+```text
+Kairo training
+Device: cpu
+Parameter count: 123,456
+Epoch 1: train_loss=3.21 val_loss=3.05
+Saved best checkpoint: runs/demo/best.pt
+```
+
+**Generation (`src/generate.py`)**
+```text
+Kairo Generation
+Prompt: The robot opened the door
+Sampling: max_new_tokens=20 temperature=1.0 top_k=40 top_p=1.0
+Output: The robot opened the door ...
+```
+
+**Evaluation (`src/evaluate.py`)**
+```text
+loss: 3.02
+perplexity: 20.49
+token_count: 987
+sequence_count: 955
+```
+
 ## Learn Mode
 ```bash
 streamlit run src/kairo_learn.py

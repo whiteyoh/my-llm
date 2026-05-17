@@ -1,6 +1,6 @@
 import pytest
 
-from tiny_llm.learn import build_training_config, enforce_teacher_limits, generate_learning_output, prepare_retrain_comparison
+from tiny_llm.learn import build_attention_labels, build_attention_matrix_rows, build_training_config, enforce_teacher_limits, generate_learning_output, prepare_retrain_comparison
 from tiny_llm.model import TinyGPT
 from tiny_llm.safety import SafetyConfig
 
@@ -36,3 +36,14 @@ def test_custom_banned_terms_enforced() -> None:
     state = _state()
     with pytest.raises(ValueError):
         generate_learning_output(state, "forbidden", max_new_tokens=2, temperature=1.0, top_k=5, safe_cfg=SafetyConfig(enabled=True, banned_terms=("forbidden",)))
+
+
+def test_attention_labels_use_display_when_present() -> None:
+    labels = build_attention_labels([{"display": "h"}, {"display": "<space>"}, {}])
+    assert labels == ["0: h", "1: <space>", "2"]
+
+
+def test_attention_matrix_rows_add_named_columns() -> None:
+    rows = build_attention_matrix_rows([[1.0, 0.0], [0.2, 0.8]], ["0: h", "1: i"])
+    assert rows[0]["token"] == "0: h"
+    assert rows[1]["1: i"] == pytest.approx(0.8)

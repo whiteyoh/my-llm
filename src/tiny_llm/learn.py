@@ -120,3 +120,42 @@ def build_probability_preview(state: dict[str, Any], prompt: str, top_n: int = 5
 
 def build_attention_preview(state: dict[str, Any], prompt: str, *, layer: int = -1, head: int = 0, limit: int = 24, top_k: int = 3) -> dict[str, Any]:
     return get_attention_map(state["model"], state["tokenizer"], prompt, seq_len=state["cfg"]["seq_len"], device=torch.device("cpu"), layer=layer, head=head, limit=limit, top_k=top_k)
+
+
+def build_attention_labels(tokens: list[dict[str, Any]]) -> list[str]:
+    labels: list[str] = []
+    for i, token in enumerate(tokens):
+        display = token.get("display")
+        if display:
+            labels.append(f"{i}: {display}")
+        else:
+            labels.append(str(i))
+    return labels
+
+
+def build_attention_matrix_rows(attention_matrix: list[list[float]], labels: list[str]) -> list[dict[str, float | str]]:
+    rows: list[dict[str, float | str]] = []
+    for i, row in enumerate(attention_matrix):
+        named_row: dict[str, float | str] = {"token": labels[i] if i < len(labels) else str(i)}
+        for j, value in enumerate(row):
+            col = labels[j] if j < len(labels) else str(j)
+            named_row[col] = float(value)
+        rows.append(named_row)
+    return rows
+
+
+def build_restored_learning_state(model: TinyGPT, metadata: dict[str, Any], defaults: dict[str, int]) -> tuple[dict[str, Any], list[str]]:
+    restored_cfg = metadata.get("config") if isinstance(metadata.get("config"), dict) else {}
+    cfg_missing = [k for k in defaults if k not in restored_cfg]
+    cfg = {k: int(restored_cfg.get(k, v)) for k, v in defaults.items()}
+    restored_state = {
+        "model": model,
+        "tokenizer": ByteTokenizer(),
+        "cfg": cfg,
+        "token_count": int(metadata.get("token_count", 0) or 0),
+        "sequence_count": int(metadata.get("sequence_count", 0) or 0),
+        "train_losses": metadata.get("train_losses") or [float(metadata.get("train_loss", 0.0) or 0.0)],
+        "val_losses": metadata.get("val_losses") or [float(metadata.get("validation_loss", 0.0) or 0.0)],
+        "param_count": int(metadata.get("param_count") or sum(p.numel() for p in model.parameters())),
+    }
+    return restored_state, cfg_missing

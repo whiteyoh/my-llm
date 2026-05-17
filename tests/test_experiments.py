@@ -10,6 +10,7 @@ from tiny_llm.experiments import (
     restore_experiment_model,
     save_experiment,
 )
+from tiny_llm.learn import build_restored_learning_state
 from tiny_llm.model import TinyGPT
 
 
@@ -70,3 +71,11 @@ def test_corrupted_metadata_json_raises_friendly_value_error(tmp_path: Path) -> 
 def test_missing_metadata_raises_file_not_found(tmp_path: Path) -> None:
     with pytest.raises(FileNotFoundError):
         load_experiment_metadata(tmp_path / "missing")
+
+
+def test_build_restored_learning_state_uses_safe_defaults() -> None:
+    model = _model()
+    state, missing = build_restored_learning_state(model, {"prompt": "hi"}, defaults={"seq_len": 16, "d_model": 32, "n_heads": 4, "n_layers": 1})
+    assert set(missing) == {"seq_len", "d_model", "n_heads", "n_layers"}
+    assert state["cfg"]["seq_len"] == 16
+    assert state["train_losses"] == [0.0]
