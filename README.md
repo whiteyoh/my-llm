@@ -7,47 +7,30 @@ Build it. Train it. Talk to it. Understand it.
 ## What Kairo is
 Kairo is a small, readable, beginner-friendly project for learning how language models work.
 
-## What Kairo is not
-- Kairo is **not** a production LLM.
-- Kairo is **not** instruction-tuned.
-- Kairo is **not** a full moderation, alignment, or safeguarding platform.
-- Kairo outputs may be poor, strange, biased, or unsuitable depending on training data.
-
-## Safety in Kairo (lightweight classroom guardrails)
-### What safety does
-- Screens prompts for a small set of clearly unsafe classroom terms.
-- Filters generated output for the same blocked terms by default.
-- Shows clear safety notices in CLI and Learn Mode.
-- Provides dataset safety warnings (short text, blocked terms, and possible personal data markers).
-
-### What safety does not do
-- It does not provide full moderation.
-- It does not guarantee child-safety compliance.
-- It does not replace teacher supervision.
-- It can miss context, coded language, spelling changes, and implied meaning.
-
-### Teacher guidance
-- Prefer safe sample files in `data/samples/`.
-- Review any custom dataset before pupils use it.
-- Keep use supervised and discuss limitations openly.
-
-### Disabling filtering for trusted local experiments
-You can disable filtering in CLI tools with:
-- `python src/generate.py ... --unsafe-disable-filter`
-- `python src/chat.py ... --unsafe-disable-filter`
-
-When disabled, Kairo prints a warning. This setting is not suitable for unsupervised learners.
-
-## Quick start
-```bash
-pip install -e .
-python src/train.py --input_file data/samples/space_adventure.txt --out_dir runs/demo --epochs 1 --batch_size 4 --seq_len 32 --d_model 64 --n_heads 4 --n_layers 2
-python src/generate.py --checkpoint runs/demo/best.pt --prompt "The robot opened the door" --max_new_tokens 20
-```
-
-## Learn Mode
-Optional Streamlit UI:
+## Learn Mode walkthrough
+Run Learn Mode:
 ```bash
 pip install -e ".[learn]"
 streamlit run src/kairo_learn.py
 ```
+
+Learners follow a guided workflow:
+1. **Build it**: paste/select training text, inspect token count, and preview first 20 byte tokens.
+2. **Train it**: train a tiny GPT on CPU, watch train/validation loss, and learn that loss = prediction error.
+3. **Talk to it**: enter a prompt, tune sampling, generate output, and inspect top next-token probabilities.
+4. **Retrain it**: change text, retrain, and compare before/after outputs for the same prompt.
+5. **Understand it**: discuss why low loss is not human understanding and why tiny models can be strange.
+
+Screenshot idea: token viewer
+Screenshot idea: loss chart
+Screenshot idea: before/after retrain comparison
+
+## Why this demystifies LLMs
+- You can see raw byte tokens, not hidden magic.
+- You can watch the model improve during training.
+- You can inspect next-token probabilities directly.
+- You can retrain and immediately observe behavior changes.
+- You can discuss limitations with classroom-safe guardrails and teacher supervision.
+
+## Safety in Kairo (lightweight classroom guardrails)
+Kairo uses lightweight classroom guardrails. A teacher should supervise use. It is not full moderation or safeguarding.
