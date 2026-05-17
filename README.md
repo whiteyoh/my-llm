@@ -10,7 +10,7 @@ Kairo is a small, readable, beginner-friendly project for learning how language 
 ## What Kairo is not
 - Kairo is **not** a production LLM.
 - Kairo is **not** instruction-tuned.
-- Kairo has **no** safety/alignment layer.
+- Kairo includes a minimal classroom safety filter, but no full moderation/alignment system.
 - Kairo outputs may be poor, strange, biased, or unsuitable depending on training data.
 
 ## Who it is for
@@ -44,6 +44,9 @@ streamlit run src/kairo_learn.py
 ## CLI usage
 ### CLI training
 `python src/train.py --help`
+
+### Resume training
+`python src/train.py --resume runs/demo/last.pt --input_file data/samples/space_adventure.txt --out_dir runs/demo --epochs 2`
 
 ### CLI generation
 `python src/generate.py --help`
