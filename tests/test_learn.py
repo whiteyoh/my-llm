@@ -2,6 +2,8 @@ import pytest
 
 from tiny_llm.data import ByteTokenizer
 from tiny_llm.learn import (
+    build_attention_labels,
+    build_attention_matrix_rows,
     build_attention_preview,
     build_probability_preview,
     build_token_preview,
@@ -9,6 +11,7 @@ from tiny_llm.learn import (
     create_model_status,
     enforce_teacher_limits,
     generate_learning_output,
+    build_restored_learning_state,
     prepare_retrain_comparison,
 )
 from tiny_llm.model import TinyGPT
@@ -95,3 +98,40 @@ def test_probability_and_attention_preview_work() -> None:
     attn = build_attention_preview(state, "hello", limit=8, top_k=2)
     assert "attention_matrix" in attn
     assert "table" in attn
+
+
+def test_build_attention_labels_prefers_display_and_falls_back_index() -> None:
+    tokens = [{"display": "A"}, {}, {"display": "C"}]
+    labels = build_attention_labels(tokens)
+    assert labels == ["0: A", "1", "2: C"]
+
+
+def test_build_attention_matrix_rows_include_labels_and_numeric_values() -> None:
+    rows = build_attention_matrix_rows([[0.1, 0.9], [0.25, 0.75]], ["0: hi", "1: there"])
+    assert rows[0]["token"] == "0: hi"
+    assert rows[0]["0: hi"] == pytest.approx(0.1)
+    assert isinstance(rows[0]["1: there"], float)
+    assert rows[1]["token"] == "1: there"
+
+
+def test_build_restored_learning_state_contains_expected_fields() -> None:
+    model = TinyGPT(256, 16, 32, 4, 1, 0.0)
+    metadata = {
+        "config": {"seq_len": 32},
+        "token_count": 100,
+        "sequence_count": 10,
+        "train_loss": 1.23,
+        "validation_loss": 1.45,
+        "param_count": 999,
+    }
+    defaults = {"seq_len": 16, "d_model": 64, "n_heads": 4, "n_layers": 2, "epochs": 1, "batch_size": 4, "max_new_tokens": 40}
+    restored, missing = build_restored_learning_state(model, metadata, defaults)
+    assert restored["model"] is model
+    assert "tokenizer" in restored
+    assert restored["cfg"]["seq_len"] == 32
+    assert restored["train_losses"] == [pytest.approx(1.23)]
+    assert restored["val_losses"] == [pytest.approx(1.45)]
+    assert restored["token_count"] == 100
+    assert restored["sequence_count"] == 10
+    assert restored["param_count"] == 999
+    assert set(missing) == {"d_model", "n_heads", "n_layers", "epochs", "batch_size", "max_new_tokens"}
