@@ -13,29 +13,60 @@ from tiny_llm.experiments import (
 from tiny_llm.model import TinyGPT
 
 
-def test_metadata_creation() -> None:
-    meta = make_experiment_metadata(token_count=42)
-    assert "timestamp" in meta
+def _model() -> TinyGPT:
+    return TinyGPT(256, 16, 32, 4, 1, 0.0)
 
 
-def test_save_load_roundtrip_and_restore(tmp_path: Path) -> None:
-    model = TinyGPT(256, 16, 32, 4, 1, 0.0)
-    meta = make_experiment_metadata(config={"seq_len": 16, "d_model": 32, "n_heads": 4, "n_layers": 1}, prompt="hi")
-    save_experiment(tmp_path / "exp1", model, meta)
-    loaded = load_experiment_metadata(tmp_path / "exp1")
+def test_save_experiment_writes_metadata_and_model(tmp_path: Path) -> None:
+    exp = tmp_path / "exp"
+    save_experiment(exp, _model(), make_experiment_metadata(config={"seq_len": 16, "d_model": 32, "n_heads": 4, "n_layers": 1}))
+    assert (exp / "metadata.json").exists()
+    assert (exp / "model.pt").exists()
+
+
+def test_load_experiment_metadata_returns_metadata(tmp_path: Path) -> None:
+    exp = tmp_path / "exp"
+    save_experiment(exp, _model(), make_experiment_metadata(prompt="hi", config={"seq_len": 16, "d_model": 32, "n_heads": 4, "n_layers": 1}))
+    loaded = load_experiment_metadata(exp)
     assert loaded["prompt"] == "hi"
-    assert experiment_exists(tmp_path / "exp1")
-    assert load_experiment_checkpoint(tmp_path / "exp1").exists()
-    restored_model, restored_meta = restore_experiment_model(tmp_path / "exp1")
+
+
+def test_load_experiment_checkpoint_returns_path(tmp_path: Path) -> None:
+    exp = tmp_path / "exp"
+    save_experiment(exp, _model(), make_experiment_metadata(config={"seq_len": 16, "d_model": 32, "n_heads": 4, "n_layers": 1}))
+    assert load_experiment_checkpoint(exp) == exp / "model.pt"
+
+
+def test_experiment_exists_true_false(tmp_path: Path) -> None:
+    exp = tmp_path / "exp"
+    assert not experiment_exists(exp)
+    save_experiment(exp, _model(), make_experiment_metadata(config={"seq_len": 16, "d_model": 32, "n_heads": 4, "n_layers": 1}))
+    assert experiment_exists(exp)
+
+
+def test_restore_experiment_model_success(tmp_path: Path) -> None:
+    exp = tmp_path / "exp"
+    save_experiment(exp, _model(), make_experiment_metadata(config={"seq_len": 16, "d_model": 32, "n_heads": 4, "n_layers": 1}, prompt="hi"))
+    restored_model, metadata = restore_experiment_model(exp)
     assert isinstance(restored_model, TinyGPT)
-    assert restored_meta["prompt"] == "hi"
+    assert metadata["prompt"] == "hi"
 
 
-def test_missing_and_corrupt_metadata(tmp_path: Path) -> None:
+def test_restore_experiment_model_missing_config_raises(tmp_path: Path) -> None:
+    exp = tmp_path / "exp"
+    save_experiment(exp, _model(), make_experiment_metadata(prompt="hi"))
+    with pytest.raises(ValueError, match="missing model config"):
+        restore_experiment_model(exp)
+
+
+def test_corrupted_metadata_json_raises_friendly_value_error(tmp_path: Path) -> None:
+    exp = tmp_path / "exp"
+    exp.mkdir()
+    (exp / "metadata.json").write_text("{not json", encoding="utf-8")
+    with pytest.raises(ValueError, match="corrupted JSON"):
+        load_experiment_metadata(exp)
+
+
+def test_missing_metadata_raises_file_not_found(tmp_path: Path) -> None:
     with pytest.raises(FileNotFoundError):
         load_experiment_metadata(tmp_path / "missing")
-    exp = tmp_path / "exp2"
-    exp.mkdir()
-    (exp / "metadata.json").write_text("{bad", encoding="utf-8")
-    with pytest.raises(ValueError):
-        load_experiment_metadata(exp)

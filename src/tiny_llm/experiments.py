@@ -9,9 +9,18 @@ import torch
 
 from tiny_llm.model import TinyGPT
 
+REQUIRED_CONFIG_KEYS = ("seq_len", "d_model", "n_heads", "n_layers")
+
 
 def make_experiment_metadata(**kwargs: Any) -> dict[str, Any]:
     return {"timestamp": datetime.now(timezone.utc).isoformat(), **kwargs}
+
+
+def validate_experiment_config(metadata: dict[str, Any]) -> dict[str, int]:
+    cfg = metadata.get("config")
+    if not isinstance(cfg, dict) or any(key not in cfg for key in REQUIRED_CONFIG_KEYS):
+        raise ValueError("Experiment metadata is missing model config needed for restore.")
+    return {key: int(cfg[key]) for key in REQUIRED_CONFIG_KEYS}
 
 
 def save_experiment(path: str | Path, model: torch.nn.Module, metadata: dict[str, Any]) -> Path:
@@ -47,9 +56,13 @@ def experiment_exists(path: str | Path) -> bool:
 
 def restore_experiment_model(path: str | Path) -> tuple[TinyGPT, dict[str, Any]]:
     metadata = load_experiment_metadata(path)
-    cfg = metadata.get("config") or {}
+    cfg = validate_experiment_config(metadata)
+    checkpoint_path = load_experiment_checkpoint(path)
     model = TinyGPT(256, cfg["seq_len"], cfg["d_model"], cfg["n_heads"], cfg["n_layers"], 0.1)
-    state = torch.load(load_experiment_checkpoint(path), map_location="cpu")
+    try:
+        state = torch.load(checkpoint_path, map_location="cpu", weights_only=True)
+    except TypeError:
+        state = torch.load(checkpoint_path, map_location="cpu")
     model.load_state_dict(state)
     model.eval()
     return model, metadata
