@@ -1,51 +1,51 @@
 # Teacher Guide
 
-## Curiosity opener
-**Can we make a tiny AI learn from one page of text?**
+## Before-lesson checklist
+- Python installed
+- Repo cloned
+- `pip install -e .` done
+- Sample data available in `data/samples/`
 
-## Before the lesson checklist
-- Python environment ready
-- Sample dataset selected
-- Safe mode enabled
-- Learning goals posted
-
-## Required hardware
-- Teacher laptop (CPU is enough)
-- Projector
-- Optional student laptops
+## Hardware expectations
+- CPU-only works
+- 8GB RAM recommended
+- No GPU required
 
 ## Setup options
-- Teacher demo only
-- Pair activity
-- Individual coding activity
+- CLI-only lesson
+- Learn Mode with Streamlit (`pip install -e ".[learn]"`)
 
 ## 45-minute lesson script
-1. Build it (10m)
-2. Train it (10m)
-3. Talk to it (10m)
-4. Retrain + compare (10m)
-5. Reflection (5m)
+1. Build it (token viewer)
+2. Train it (1 epoch)
+3. Talk to it
+4. Inspect probabilities
+5. Reflection
 
 ## 90-minute workshop script
-Includes the 45-minute flow plus deeper attention/probability analysis, extensions, and mini-presentations.
+Add retraining, attention inspection, and experiment save/restore.
 
-## Safeguarding and moderation guidance
-Use classroom-safe text only. Supervise prompts and outputs. Do not use personal data.
+## Teacher controls
+Use presets to clamp model/training/generation sizes. If exceeded, Kairo warns: “Teacher controls are keeping this demo CPU-friendly.”
 
-## Suggested classroom rules
-Be respectful, use safe prompts, avoid personal/sensitive text, discuss surprising outputs constructively.
+## Attention visualisation teaching notes
+Attention shows which prior tokens influenced a prediction. It does **not** mean human-like understanding.
+
+## Experiment save/restore workflow
+1. Train model
+2. Save experiment
+3. Load metadata
+4. Restore model checkpoint
+
+## Safeguarding notes
+Safe mode is on by default. Custom banned terms apply to prompt checks and output filtering. Supervision is still required.
 
 ## Troubleshooting
-- Training fails: reduce seq_len / model size
-- Repetitive output: add more text or retrain
-- Slow runs: use classroom preset
+- Short text errors: reduce `seq_len` or add more text.
+- Slow run: pick Classroom demo preset.
+- Load error: verify `metadata.json` and `model.pt` exist.
 
-## Assessment/reflection questions
+## Reflection questions
 - What changed after retraining?
-- Why can loss go down while text still looks odd?
-- Why is attention not the same as understanding?
-
-## Extension tasks
-- Compare two domains
-- Change prompt style
-- Analyze top next-token probabilities
+- Which token had strongest attention?
+- Why can attention be useful but limited?

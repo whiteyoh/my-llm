@@ -1,6 +1,6 @@
 import pytest
 
-from tiny_llm.learn import build_training_config, generate_learning_output, prepare_retrain_comparison
+from tiny_llm.learn import build_training_config, enforce_teacher_limits, generate_learning_output, prepare_retrain_comparison
 from tiny_llm.model import TinyGPT
 from tiny_llm.safety import SafetyConfig
 
@@ -19,6 +19,12 @@ def test_teacher_limits_enforced() -> None:
     assert cfg["d_model"] == 64
     assert cfg["n_layers"] == 2
     assert cfg["epochs"] == 1
+    assert warnings == ["Teacher controls are keeping this demo CPU-friendly."]
+
+
+def test_max_new_tokens_clamped() -> None:
+    cfg, warnings = enforce_teacher_limits({"max_new_tokens": 500}, preset="Moderate")
+    assert cfg["max_new_tokens"] == 80
     assert warnings
 
 

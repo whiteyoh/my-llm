@@ -18,10 +18,11 @@ def test_attention_valid_output_contains_matrix_list() -> None:
     tok = ByteTokenizer()
     out = get_attention_map(model, tok, "hello", seq_len=16, device=torch.device("cpu"))
     assert isinstance(out["attention_matrix"], list)
-    assert out["note"]
+    assert out["note"] == "Attention is a model mechanism, not human understanding."
+    assert out["token_count"] == len(out["token_ids"])
 
 
-def test_attention_invalid_layer_head_topk() -> None:
+def test_attention_invalid_layer_head_topk_limit_prompt() -> None:
     model = TinyGPT(256, 16, 32, 4, 1, 0.0)
     tok = ByteTokenizer()
     with pytest.raises(ValueError):
@@ -30,3 +31,7 @@ def test_attention_invalid_layer_head_topk() -> None:
         get_attention_map(model, tok, "hello", seq_len=16, device=torch.device("cpu"), head=99)
     with pytest.raises(ValueError):
         get_attention_map(model, tok, "hello", seq_len=16, device=torch.device("cpu"), top_k=0)
+    with pytest.raises(ValueError):
+        get_attention_map(model, tok, "hello", seq_len=16, device=torch.device("cpu"), limit=0)
+    with pytest.raises(ValueError):
+        get_attention_map(model, tok, "  ", seq_len=16, device=torch.device("cpu"))

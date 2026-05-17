@@ -1,27 +1,24 @@
 # Student Worksheet
 
-## Big question
-**Can you train a tiny AI?**
-
 ## Build it
-My dataset:
+**My dataset:** _______________________________
 
 ## Train it
-What happened to the loss?
+What happened to loss? ________________________
 
 ## Talk to it
-My prompt:
+**My prompt:** ________________________________
+Top predicted next token: ______________________
 
 ## Retrain it
-Output before retrain:
-
-Output after retrain:
+Output before retrain: _________________________
+Output after retrain: __________________________
 
 ## Inspect attention
-Which token got most attention?
+Token with strongest attention: ________________
+
+## Save experiment
+Experiment folder: _____________________________
 
 ## Understand it
-Top predicted next token:
-
-## Reflection
-What surprised me?
+What changed? Why? _____________________________

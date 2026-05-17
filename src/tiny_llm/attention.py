@@ -30,9 +30,9 @@ def get_attention_map(model: TinyGPT, tokenizer: ByteTokenizer, prompt: str, seq
     if not prompt.strip():
         raise ValueError("Prompt is empty. Add a few words to inspect attention.")
     if limit <= 0:
-        raise ValueError("limit must be greater than 0.")
+        raise ValueError("limit must be greater than 0 so attention rows can be shown.")
     if top_k <= 0:
-        raise ValueError("top_k must be greater than 0.")
+        raise ValueError("top_k must be greater than 0 so learners can inspect attended tokens.")
     token_ids = tokenizer.encode(prompt)
     token_ids = token_ids[-min(seq_len, limit) :]
     x = torch.tensor(token_ids, dtype=torch.long, device=device).unsqueeze(0)
@@ -46,10 +46,15 @@ def get_attention_map(model: TinyGPT, tokenizer: ByteTokenizer, prompt: str, seq
     chosen = attn_maps[layer_idx][0, head].detach().cpu()
     return {
         "token_ids": token_ids,
+        "token_labels": format_attention_tokens(token_ids, limit=limit),
         "tokens": format_attention_tokens(token_ids, limit=limit),
         "attention": chosen,
+        "attention_tensor": chosen,
         "attention_matrix": chosen.tolist(),
         "table": attention_to_table(chosen, token_ids, top_k=top_k),
+        "selected_layer": layer_idx,
+        "selected_head": head,
+        "token_count": len(token_ids),
         "layer": layer_idx,
         "head": head,
         "num_tokens": len(token_ids),
