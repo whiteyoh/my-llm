@@ -34,7 +34,7 @@ Kairo makes model behavior visible:
 Many learners meet AI through polished products that hide the mechanics.
 Kairo exists to make those mechanics concrete, testable, and discussable in class.
 
-## Learning loop
+## The learning loop
 
 | Step | Learner action | Concept |
 |---|---|---|
