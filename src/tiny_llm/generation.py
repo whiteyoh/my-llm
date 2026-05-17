@@ -11,8 +11,12 @@ from tiny_llm.model import TinyGPT
 
 
 def resolve_device(device: str) -> torch.device:
+    if device not in {"auto", "cpu", "cuda"}:
+        raise ValueError("device must be one of: auto, cpu, cuda")
     if device == "auto":
         return torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    if device == "cuda" and not torch.cuda.is_available():
+        raise ValueError("cuda requested but not available")
     return torch.device(device)
 
 

@@ -22,3 +22,9 @@ pythonpath = ["src"]
 [tool.ruff]
 line-length = 100
 target-version = "py311"
+
+
+[project.optional-dependencies]
+learn = [
+  "streamlit>=1.35.0",
+]

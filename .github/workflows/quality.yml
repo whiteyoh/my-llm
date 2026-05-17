@@ -22,23 +22,6 @@ jobs:
       - run: ruff check .
       - run: python -m compileall src tests
       - run: pytest -q
-      - run: |
-          python src/train.py \
-            --input_file data/sample.txt \
-            --out_dir runs/ci \
-            --epochs 1 \
-            --batch_size 4 \
-            --seq_len 32 \
-            --d_model 64 \
-            --n_heads 4 \
-            --n_layers 2
-      - run: |
-          python src/generate.py \
-            --checkpoint runs/ci/best.pt \
-            --prompt "Once upon a time" \
-            --max_new_tokens 10
-      - run: |
-          python src/evaluate.py \
-            --checkpoint runs/ci/best.pt \
-            --input_file data/sample.txt \
-            --batch_size 4
+      - run: python src/train.py --input_file data/samples/space_adventure.txt --out_dir runs/ci --epochs 1 --batch_size 4 --seq_len 32 --d_model 64 --n_heads 4 --n_layers 2
+      - run: python src/generate.py --checkpoint runs/ci/best.pt --prompt "The robot opened the door" --max_new_tokens 20
+      - run: python src/evaluate.py --checkpoint runs/ci/best.pt --input_file data/samples/space_adventure.txt --batch_size 4

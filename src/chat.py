@@ -7,6 +7,7 @@ import torch
 from tiny_llm.data import ByteTokenizer
 from tiny_llm.generation import generate_tokens, resolve_device, set_seed, validate_sampling_args
 from tiny_llm.model import TinyGPT
+from tiny_llm.safety import filter_output, is_prompt_allowed
 from tiny_llm.utils import load_checkpoint
 
 
@@ -43,11 +44,15 @@ def main() -> None:
     model.eval()
 
     print("Kairo chat ready. Type /exit or /quit to stop.")
+    print("Safety note: prompts/outputs are lightly filtered, not fully moderated.")
     with torch.no_grad():
         while True:
             prompt = input("you> ").strip()
             if prompt in {"/exit", "/quit"}:
                 break
+            if not is_prompt_allowed(prompt):
+                print("bot> Prompt blocked by school safety filter.")
+                continue
             out_ids = generate_tokens(
                 model,
                 prompt,
@@ -59,7 +64,7 @@ def main() -> None:
                 top_p=args.top_p,
                 device=device,
             )
-            print("bot>", tokenizer.decode(out_ids))
+            print("bot>", filter_output(tokenizer.decode(out_ids)))
 
 
 if __name__ == "__main__":

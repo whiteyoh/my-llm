@@ -1,0 +1,4 @@
+Robo-Bean is a classroom helper with wheels, lights, and polite manners.
+Each morning, it greets students and reminds them of the reading schedule.
+It can carry books, sort pencils, and play calm music during quiet work time.
+When someone asks for help, Robo-Bean says, "Let's solve it step by step."

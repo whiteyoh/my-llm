@@ -58,10 +58,12 @@ def main() -> None:
 
     avg_loss = total_loss / max(1, batches)
     perplexity = math.exp(avg_loss)
+    print("=== Kairo Evaluation ===")
     print(f"loss: {avg_loss:.6f}")
     print(f"perplexity: {perplexity:.6f}")
     print(f"token count: {len(token_ids)}")
     print(f"sequence count: {len(dataset)}")
+    print("Perplexity is the model's uncertainty: lower is generally better for this dataset.")
 
 
 if __name__ == "__main__":

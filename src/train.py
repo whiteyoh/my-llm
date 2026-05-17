@@ -1,16 +1,14 @@
 from __future__ import annotations
 
 import argparse
-import random
 from pathlib import Path
 
-import numpy as np
 import torch
 import torch.nn.functional as F
 from torch.utils.data import DataLoader, random_split
 
 from tiny_llm.data import ByteTokenizer, SequenceDataset
-from tiny_llm.generation import resolve_device
+from tiny_llm.generation import resolve_device, set_seed
 from tiny_llm.model import TinyGPT
 from tiny_llm.utils import load_checkpoint, save_json
 
@@ -25,15 +23,6 @@ def evaluate(model: TinyGPT, loader: DataLoader, device: torch.device) -> float:
             loss = F.cross_entropy(logits.view(-1, logits.size(-1)), y.view(-1))
             losses.append(loss.item())
     return float(sum(losses) / max(1, len(losses)))
-
-
-def set_seed(seed: int) -> None:
-    random.seed(seed)
-    np.random.seed(seed)
-    torch.manual_seed(seed)
-    if torch.cuda.is_available():
-        torch.cuda.manual_seed(seed)
-        torch.cuda.manual_seed_all(seed)
 
 
 def main() -> None:
@@ -61,10 +50,10 @@ def main() -> None:
         raise ValueError("seq_len must be > 0")
     if args.epochs <= 0:
         raise ValueError("epochs must be > 0")
-    if not (0.0 < args.val_ratio < 1.0):
-        raise ValueError("val_ratio must be in (0, 1)")
     if args.lr <= 0:
         raise ValueError("lr must be > 0")
+    if not (0.0 < args.val_ratio < 1.0):
+        raise ValueError("val_ratio must be in (0, 1)")
 
     set_seed(args.seed)
     out_dir = Path(args.out_dir)
@@ -109,6 +98,10 @@ def main() -> None:
         config = ckpt.get("config", config)
 
     save_json(out_dir / "config.json", config)
+    total_params = sum(p.numel() for p in model.parameters())
+    print("=== Kairo Training ===")
+    print(f"Device: {device}")
+    print(f"Parameters: {total_params:,}")
 
     for epoch in range(start_epoch, args.epochs + 1):
         model.train()
@@ -128,7 +121,7 @@ def main() -> None:
         val_loss = evaluate(model, val_loader, device)
         history["train_loss"].append(train_loss)
         history["val_loss"].append(val_loss)
-        print(f"Epoch {epoch}/{args.epochs} - train_loss={train_loss:.4f} val_loss={val_loss:.4f}")
+        print(f"Epoch {epoch}/{args.epochs} | train_loss={train_loss:.4f} | val_loss={val_loss:.4f}")
 
         ckpt = {
             "model_state": model.state_dict(),
@@ -143,8 +136,10 @@ def main() -> None:
             best_val = val_loss
             ckpt["best_val"] = best_val
             torch.save(ckpt, out_dir / "best.pt")
+            print(f"Saved new best checkpoint: {out_dir / 'best.pt'}")
 
     save_json(out_dir / "metrics.json", history)
+    print(f"Training complete. Last checkpoint: {out_dir / 'last.pt'}")
 
 
 if __name__ == "__main__":
