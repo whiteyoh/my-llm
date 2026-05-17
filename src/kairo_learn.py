@@ -186,6 +186,13 @@ if "kairo_state" in st.session_state:
         st.write("Attention shows which earlier tokens the model looked at most when making a prediction.")
         st.table(amap["tokens"])
         st.table([{"query": r["query_token"], "top_attended": ", ".join(f"{x['token']} ({x['weight']:.2f})" for x in r["top_attended"])} for r in amap["table"]])
+        matrix = amap.get("attention_matrix")
+        if matrix:
+            token_labels = [row.get("token_display", str(i)) for i, row in enumerate(amap.get("tokens", []))]
+            st.caption("Rows are query tokens. Columns are previous tokens the model can attend to. Larger values mean more attention weight.")
+            st.dataframe(matrix, use_container_width=True)
+            if token_labels:
+                st.caption("Token order: " + " | ".join(f"{i}:{tok}" for i, tok in enumerate(token_labels)))
 
 st.subheader("7) Save / load experiment")
 exp_path = st.text_input("Experiment folder", value="runs/experiments/latest")
@@ -205,8 +212,29 @@ if st.button("Load experiment metadata"):
 if st.button("Restore experiment model"):
     try:
         model, metadata = restore_experiment_model(exp_path)
+        restored_cfg = metadata.get("config") if isinstance(metadata.get("config"), dict) else {}
+        fallback_cfg = {"seq_len": DEFAULTS["seq_len"], "d_model": DEFAULTS["d_model"], "n_heads": DEFAULTS["n_heads"], "n_layers": DEFAULTS["n_layers"]}
+        cfg_missing = [k for k in fallback_cfg if k not in restored_cfg]
+        cfg = {k: int(restored_cfg.get(k, v)) for k, v in fallback_cfg.items()}
+        restored_state = {
+            "model": model,
+            "tokenizer": ByteTokenizer(),
+            "cfg": cfg,
+            "token_count": int(metadata.get("token_count", 0) or 0),
+            "sequence_count": int(metadata.get("sequence_count", 0) or 0),
+            "train_losses": metadata.get("train_losses") or [float(metadata.get("train_loss", 0.0) or 0.0)],
+            "val_losses": metadata.get("val_losses") or [float(metadata.get("validation_loss", 0.0) or 0.0)],
+            "param_count": int(metadata.get("param_count") or sum(p.numel() for p in model.parameters())),
+        }
+        st.session_state["kairo_state"] = restored_state
         st.session_state["restored_model"] = str(model.__class__.__name__)
         st.session_state["restored_meta"] = metadata
+        if metadata.get("prompt"):
+            st.session_state["last_prompt"] = metadata.get("prompt")
+        if metadata.get("generated_output"):
+            st.session_state["last_output"] = metadata.get("generated_output")
+        if cfg_missing:
+            st.warning("Some saved metadata was missing, so Kairo used safe defaults for parts of the restore.")
         st.success("Model restored from experiment checkpoint.")
     except (FileNotFoundError, ValueError, KeyError, RuntimeError) as exc:
         st.error(str(exc))

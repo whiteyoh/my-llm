@@ -22,6 +22,23 @@ Most people use AI systems without seeing what is happening inside them. Kairo m
 | Retrain it | change data | before/after output | data changes behaviour |
 | Understand it | inspect attention | attention table/heatmap | pattern use, not human understanding |
 
+## Installation
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install -e .
+```
+
+### Optional Learn Mode extras
+```bash
+pip install -e ".[learn]"
+```
+
+### Quality checks
+```bash
+pytest -q
+```
+
 ## Try it in 3 minutes
 ```bash
 python src/train.py --input_file data/samples/space_adventure.txt --out_dir runs/demo --epochs 1 --batch_size 4 --seq_len 32 --d_model 64 --n_heads 4 --n_layers 2 --device cpu
@@ -31,7 +48,6 @@ python src/evaluate.py --checkpoint runs/demo/best.pt --input_file data/samples/
 
 ## Learn Mode
 ```bash
-pip install -e ".[learn]"
 streamlit run src/kairo_learn.py
 ```
 Includes token viewer, loss chart, probability table, attention view, retrain comparison, and experiment save/restore.
