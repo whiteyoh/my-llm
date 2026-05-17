@@ -3,17 +3,11 @@ from __future__ import annotations
 from pathlib import Path
 
 import streamlit as st
-import torch
-import torch.nn.functional as F
-from torch.utils.data import DataLoader, random_split
 
-from tiny_llm.attention import get_attention_map
-from tiny_llm.data import ByteTokenizer, SequenceDataset
-from tiny_llm.experiments import load_experiment, make_experiment_metadata, save_experiment
-from tiny_llm.explain import tokens_preview, top_next_token_predictions
-from tiny_llm.generation import generate_tokens, resolve_device, validate_sampling_args
-from tiny_llm.model import TinyGPT
-from tiny_llm.safety import SafetyConfig, filter_output, is_prompt_allowed, safety_notice, validate_training_text
+from tiny_llm.data import ByteTokenizer
+from tiny_llm.experiments import load_experiment_metadata, make_experiment_metadata, save_experiment
+from tiny_llm.learn import build_attention_preview, build_probability_preview, build_token_preview, build_training_config, create_model_status, generate_learning_output, prepare_retrain_comparison, train_tiny_model, validate_learn_training_text
+from tiny_llm.safety import SafetyConfig, safety_notice
 
 DEFAULTS = {"seq_len": 32, "d_model": 64, "n_heads": 4, "n_layers": 2, "epochs": 1, "batch_size": 4}
 MAX_CLASSROOM_NEW_TOKENS = 40
@@ -22,63 +16,6 @@ PRESETS = {
     "Small / better output": {"seq_len": 48, "d_model": 96, "n_heads": 4, "n_layers": 3, "epochs": 2, "batch_size": 4},
     "Custom": DEFAULTS,
 }
-
-
-def _train_model(training_text: str, cfg: dict[str, int], progress: st.delta_generator.DeltaGenerator) -> dict:
-    tok = ByteTokenizer()
-    token_ids = tok.encode(training_text)
-    ds = SequenceDataset(token_ids, seq_len=cfg["seq_len"])
-    val_size = max(1, int(len(ds) * 0.1))
-    train_size = len(ds) - val_size
-    train_ds, val_ds = random_split(ds, [train_size, val_size])
-
-    train_loader = DataLoader(train_ds, batch_size=cfg["batch_size"], shuffle=True)
-    val_loader = DataLoader(val_ds, batch_size=cfg["batch_size"])
-    device = resolve_device("cpu")
-    model = TinyGPT(tok.vocab_size, cfg["seq_len"], cfg["d_model"], cfg["n_heads"], cfg["n_layers"], 0.1).to(device)
-    opt = torch.optim.AdamW(model.parameters(), lr=3e-4)
-
-    train_losses, val_losses = [], []
-    total_steps = max(1, cfg["epochs"] * len(train_loader))
-    step_count = 0
-
-    for epoch in range(cfg["epochs"]):
-        model.train()
-        running = 0.0
-        for x, y in train_loader:
-            x, y = x.to(device), y.to(device)
-            opt.zero_grad(set_to_none=True)
-            logits = model(x)
-            loss = F.cross_entropy(logits.view(-1, logits.size(-1)), y.view(-1))
-            loss.backward()
-            opt.step()
-            running += loss.item()
-
-            step_count += 1
-            progress.progress(min(step_count / total_steps, 1.0), text=f"Training... epoch {epoch + 1}/{cfg['epochs']}")
-
-        train_losses.append(running / max(1, len(train_loader)))
-
-        model.eval()
-        v_running = 0.0
-        with torch.no_grad():
-            for x, y in val_loader:
-                x, y = x.to(device), y.to(device)
-                logits = model(x)
-                v_running += F.cross_entropy(logits.view(-1, logits.size(-1)), y.view(-1)).item()
-        val_losses.append(v_running / max(1, len(val_loader)))
-
-    progress.progress(1.0, text="Training complete")
-    return {
-        "model": model,
-        "tokenizer": tok,
-        "token_count": len(token_ids),
-        "sequence_count": len(ds),
-        "param_count": sum(p.numel() for p in model.parameters()),
-        "train_losses": train_losses,
-        "val_losses": val_losses,
-        "cfg": cfg,
-    }
 
 
 st.set_page_config(page_title="Kairo Learn Mode", layout="centered")
@@ -133,10 +70,10 @@ if show_advanced:
 else:
     n_layers, epochs, batch_size = base["n_layers"], base["epochs"], base["batch_size"]
 
-for warning in validate_training_text(training_text):
+for warning in validate_learn_training_text(training_text, banned_terms=safety_cfg.banned_terms):
     st.warning(warning)
 
-preview = tokens_preview(training_text, limit=20)
+preview = build_token_preview(training_text, limit=20)
 st.subheader("1) Build it: token viewer")
 st.write(f"Token count: **{len(ByteTokenizer().encode(training_text))}**")
 st.write("First 20 byte tokens:")
@@ -148,7 +85,9 @@ if preview:
     ids = [int(row["token_id"]) for row in preview]
     st.code(f"Original snippet: {snippet}\nEncoded bytes: {ids}\nDecoded round trip: {tok.decode(ids)}")
 
-cfg = {"seq_len": int(seq_len), "d_model": int(d_model), "n_heads": int(n_heads), "n_layers": int(n_layers), "epochs": int(epochs), "batch_size": int(batch_size)}
+cfg, cfg_warnings = build_training_config({"seq_len": int(seq_len), "d_model": int(d_model), "n_heads": int(n_heads), "n_layers": int(n_layers), "epochs": int(epochs), "batch_size": int(batch_size)}, preset=model_size_preset)
+for warning in cfg_warnings:
+    st.warning(warning)
 
 train_col, retrain_col, reset_col = st.columns(3)
 train_clicked = train_col.button("Train")
@@ -165,20 +104,20 @@ if train_clicked or retrain_clicked:
         if retrain_clicked and "last_output" in st.session_state:
             st.session_state["before_output"] = st.session_state.get("last_output")
         progress = st.progress(0.0, text="Starting training...")
-        st.session_state["kairo_state"] = _train_model(training_text, cfg, progress)
-        st.success("Model trained.")
+        st.session_state["kairo_state"] = train_tiny_model(training_text, cfg, progress_callback=lambda p: progress.progress(p))
+        st.success("You have trained your own tiny language model.")
 
 st.subheader("Model status")
-if "kairo_state" in st.session_state:
-    state = st.session_state["kairo_state"]
-    st.success("Status: Trained")
-    st.write(f"Token count: {state['token_count']}")
-    st.write(f"Sequence count: {state['sequence_count']}")
-    st.write(f"Parameter count: {state['param_count']}")
-    st.write(f"Latest train loss: {state['train_losses'][-1]:.4f}")
-    st.write(f"Latest validation loss: {state['val_losses'][-1]:.4f}")
+status = create_model_status(st.session_state.get("kairo_state"))
+if status["trained"]:
+    st.success(status["label"])
+    st.write(f"Token count: {status['token_count']}")
+    st.write(f"Sequence count: {status['sequence_count']}")
+    st.write(f"Parameter count: {status['param_count']}")
+    st.write(f"Latest train loss: {status['train_loss']:.4f}")
+    st.write(f"Latest validation loss: {status['val_loss']:.4f}")
 else:
-    st.warning("Status: Not trained")
+    st.warning(status["label"])
 
 st.subheader("2) Train it: loss chart")
 if "kairo_state" in st.session_state:
@@ -196,16 +135,13 @@ temperature = float(colt2.number_input("temperature", min_value=0.1, max_value=2
 top_k = int(colt3.number_input("top_k", min_value=0, max_value=100, value=40))
 
 if st.button("Generate output"):
-    validate_sampling_args(max_new_tokens, temperature, top_k, 1.0)
-    if safety_cfg.enabled and not is_prompt_allowed(prompt, banned_terms=safety_cfg.banned_terms):
-        st.warning("Prompt blocked by Classroom Safe Mode. Try a safer prompt.")
-    elif "kairo_state" not in st.session_state:
+    if "kairo_state" not in st.session_state:
         st.warning("Train a model first.")
     else:
         state = st.session_state["kairo_state"]
-        ids = generate_tokens(state["model"], prompt, state["tokenizer"], seq_len=state["cfg"]["seq_len"], max_new_tokens=max_new_tokens, temperature=temperature, top_k=top_k, top_p=1.0, device=torch.device("cpu"))
-        raw_out = state["tokenizer"].decode(ids)
-        out = filter_output(raw_out, banned_terms=safety_cfg.banned_terms, mask=safety_cfg.mask) if safety_cfg.enabled else raw_out
+        generated = generate_learning_output(state, prompt, max_new_tokens=max_new_tokens, temperature=temperature, top_k=top_k, safe_cfg=safety_cfg)
+        raw_out = generated["raw_output"]
+        out = generated["output"]
         st.session_state["last_output"] = out
         st.session_state["last_prompt"] = prompt
         if out != raw_out and safety_cfg.enabled:
@@ -213,16 +149,17 @@ if st.button("Generate output"):
         st.code(out)
 
         st.write("Top next-token predictions (demystification view):")
-        probs = top_next_token_predictions(state["model"], state["tokenizer"], prompt, seq_len=state["cfg"]["seq_len"], device=torch.device("cpu"), top_n=5)
+        probs = build_probability_preview(state, prompt, top_n=5)
         st.table(probs)
 
 st.subheader("4) Retrain it: compare before/after")
-if st.session_state.get("before_output") and st.session_state.get("last_output"):
+comparison = prepare_retrain_comparison(st.session_state.get("before_output"), st.session_state.get("last_output"))
+if comparison:
     c1, c2 = st.columns(2)
     c1.write("Before retrain")
-    c1.code(st.session_state["before_output"])
+    c1.code(comparison["before"])
     c2.write("After retrain")
-    c2.code(st.session_state["last_output"])
+    c2.code(comparison["after"])
     st.caption("Changing the training text changes the patterns the model learns.")
 
 st.subheader("5) Understand it")
@@ -241,7 +178,7 @@ if "kairo_state" in st.session_state:
     state = st.session_state["kairo_state"]
     attn_prompt = st.text_input("Attention prompt", value=prompt, key="attn_prompt")
     if st.button("Show attention map"):
-        amap = get_attention_map(state["model"], state["tokenizer"], attn_prompt, seq_len=state["cfg"]["seq_len"], device=torch.device("cpu"))
+        amap = build_attention_preview(state, attn_prompt)
         st.write("Attention shows which earlier tokens the model looked at most when making a prediction.")
         st.table(amap["tokens"])
         st.table([{"query": r["query_token"], "top_attended": ", ".join(f"{x['token']} ({x['weight']:.2f})" for x in r["top_attended"])} for r in amap["table"]])
@@ -255,7 +192,7 @@ if st.button("Save experiment") and "kairo_state" in st.session_state:
     st.success("Experiment saved locally.")
 if st.button("Load experiment metadata"):
     try:
-        loaded = load_experiment(exp_path)
+        loaded = load_experiment_metadata(exp_path)
         st.json(loaded)
     except FileNotFoundError as exc:
         st.error(str(exc))
