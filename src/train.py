@@ -99,9 +99,12 @@ def main() -> None:
 
     save_json(out_dir / "config.json", config)
     total_params = sum(p.numel() for p in model.parameters())
-    print("=== Kairo Training ===")
+    print("=== Kairo training ===")
     print(f"Device: {device}")
     print(f"Parameters: {total_params:,}")
+    print(f"Dataset token count: {len(dataset):,} sequences from {len(text):,} bytes of text")
+    print(f"Train/validation split: {train_size:,} / {val_size:,} sequences")
+    print(f"Checkpoint output paths: best={out_dir / 'best.pt'} last={out_dir / 'last.pt'}")
 
     for epoch in range(start_epoch, args.epochs + 1):
         model.train()

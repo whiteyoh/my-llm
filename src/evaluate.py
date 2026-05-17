@@ -63,6 +63,7 @@ def main() -> None:
     print(f"perplexity: {perplexity:.6f}")
     print(f"token count: {len(token_ids)}")
     print(f"sequence count: {len(dataset)}")
+    print("Loss is the average prediction error for the next token: lower is better.")
     print("Perplexity is the model's uncertainty: lower is generally better for this dataset.")
 
 
