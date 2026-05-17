@@ -1,8 +1,10 @@
 from __future__ import annotations
 
 import argparse
+import random
 from pathlib import Path
 
+import numpy as np
 import torch
 import torch.nn.functional as F
 from torch.utils.data import DataLoader, random_split
@@ -24,6 +26,19 @@ def evaluate(model: TinyGPT, loader: DataLoader, device: torch.device) -> float:
     return float(sum(losses) / max(1, len(losses)))
 
 
+def set_seed(seed: int) -> None:
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed(seed)
+        torch.cuda.manual_seed_all(seed)
+
+
+def load_checkpoint(path: Path, device: torch.device) -> dict:
+    return torch.load(path, map_location=device)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Train a tiny GPT-style language model.")
     parser.add_argument("--input_file", type=str, required=True)
@@ -36,7 +51,12 @@ def main() -> None:
     parser.add_argument("--n_heads", type=int, default=8)
     parser.add_argument("--n_layers", type=int, default=6)
     parser.add_argument("--dropout", type=float, default=0.1)
+    parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument("--grad_clip", type=float, default=1.0)
+    parser.add_argument("--resume", type=str, default="")
     args = parser.parse_args()
+
+    set_seed(args.seed)
 
     out_dir = Path(args.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -48,7 +68,8 @@ def main() -> None:
 
     val_size = max(1, int(len(dataset) * 0.1))
     train_size = len(dataset) - val_size
-    train_ds, val_ds = random_split(dataset, [train_size, val_size])
+    split_generator = torch.Generator().manual_seed(args.seed)
+    train_ds, val_ds = random_split(dataset, [train_size, val_size], generator=split_generator)
 
     train_loader = DataLoader(train_ds, batch_size=args.batch_size, shuffle=True)
     val_loader = DataLoader(val_ds, batch_size=args.batch_size)
@@ -65,13 +86,26 @@ def main() -> None:
 
     optimizer = torch.optim.AdamW(model.parameters(), lr=args.lr)
 
-    history = {"train_loss": [], "val_loss": []}
+    history: dict[str, list[float]] = {"train_loss": [], "val_loss": []}
     best_val = float("inf")
+    start_epoch = 1
 
     config = vars(args) | {"vocab_size": tokenizer.vocab_size, "device": str(device)}
+
+    if args.resume:
+        resume_path = Path(args.resume)
+        ckpt = load_checkpoint(resume_path, device)
+        model.load_state_dict(ckpt["model_state"])
+        if "optimizer_state" in ckpt:
+            optimizer.load_state_dict(ckpt["optimizer_state"])
+        start_epoch = int(ckpt.get("epoch", 0)) + 1
+        best_val = float(ckpt.get("best_val", best_val))
+        history = ckpt.get("history", history)
+        config = ckpt.get("config", config)
+
     save_json(out_dir / "config.json", config)
 
-    for epoch in range(1, args.epochs + 1):
+    for epoch in range(start_epoch, args.epochs + 1):
         model.train()
         running = 0.0
         for x, y in train_loader:
@@ -80,6 +114,7 @@ def main() -> None:
             logits = model(x)
             loss = F.cross_entropy(logits.view(-1, logits.size(-1)), y.view(-1))
             loss.backward()
+            torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=args.grad_clip)
             optimizer.step()
             running += loss.item()
 
@@ -92,11 +127,16 @@ def main() -> None:
 
         ckpt = {
             "model_state": model.state_dict(),
+            "optimizer_state": optimizer.state_dict(),
             "config": config,
+            "epoch": epoch,
+            "best_val": best_val,
+            "history": history,
         }
         torch.save(ckpt, out_dir / "last.pt")
         if val_loss < best_val:
             best_val = val_loss
+            ckpt["best_val"] = best_val
             torch.save(ckpt, out_dir / "best.pt")
 
     save_json(out_dir / "metrics.json", history)

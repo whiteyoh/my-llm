@@ -1,0 +1,56 @@
+name: quality
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.12"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Install quality tools
+        run: pip install pytest ruff
+
+      - name: Install package
+        run: pip install -e .
+
+      - name: Ruff
+        run: ruff check .
+
+      - name: Compile
+        run: python -m compileall src tests
+
+      - name: Pytest
+        run: pytest -q
+
+      - name: Smoke train
+        run: |
+          python src/train.py \
+            --input_file data/sample.txt \
+            --out_dir runs/ci \
+            --epochs 1 \
+            --batch_size 4 \
+            --seq_len 32 \
+            --d_model 64 \
+            --n_heads 4 \
+            --n_layers 2
+
+      - name: Smoke generate
+        run: |
+          python src/generate.py \
+            --checkpoint runs/ci/best.pt \
+            --prompt "Once upon a time" \
+            --max_new_tokens 10
