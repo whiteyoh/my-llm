@@ -1,6 +1,8 @@
 # Kairo
 
-**Kairo is an educational byte-level GPT lab that helps learners build, train, and understand a tiny language model from first principles.**
+Build it. Train it. Talk to it. Understand it.
+
+**An educational byte-level GPT lab that helps learners build, train, talk to, and understand a tiny language model.**
 
 ## What Kairo is
 Kairo is a small, readable, beginner-friendly project for learning how language models work.
@@ -40,10 +42,27 @@ streamlit run src/kairo_learn.py
 ```
 
 ## CLI usage
-- Train: `python src/train.py --help`
-- Generate: `python src/generate.py --help`
-- Evaluate: `python src/evaluate.py --help`
-- Chat: `python src/chat.py --help`
+### CLI training
+`python src/train.py --help`
+
+### CLI generation
+`python src/generate.py --help`
+
+### Evaluation
+`python src/evaluate.py --help`
+
+### Chat
+`python src/chat.py --help`
+
+## School safety notes
+- Educational use only in supervised environments.
+- Kairo includes only lightweight placeholder filtering.
+- It is not a full safety or moderation system.
+
+## Byte-level tokenizer limitations
+- It predicts byte-level tokens, not words or ideas.
+- It can mimic patterns without true understanding.
+- Outputs depend heavily on the training data quality and scope.
 
 ## Roadmap
 - Keep educational defaults tiny and fast.
