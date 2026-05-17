@@ -1,0 +1,70 @@
+from __future__ import annotations
+
+import argparse
+import random
+
+import numpy as np
+import torch
+
+from generate import generate_tokens, resolve_device
+from tiny_llm.data import ByteTokenizer
+from tiny_llm.model import TinyGPT
+from tiny_llm.utils import load_checkpoint
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description="Simple terminal chat demo for tiny-llm checkpoints.")
+    parser.add_argument("--checkpoint", type=str, required=True)
+    parser.add_argument("--max_new_tokens", type=int, default=120)
+    parser.add_argument("--temperature", type=float, default=0.9)
+    parser.add_argument("--top_k", type=int, default=40)
+    parser.add_argument("--top_p", type=float, default=1.0)
+    parser.add_argument("--device", type=str, default="auto", choices=["auto", "cpu", "cuda"])
+    parser.add_argument("--seed", type=int, default=None)
+    args = parser.parse_args()
+
+    if args.seed is not None:
+        random.seed(args.seed)
+        np.random.seed(args.seed)
+        torch.manual_seed(args.seed)
+        if torch.cuda.is_available():
+            torch.cuda.manual_seed_all(args.seed)
+
+    device = resolve_device(args.device)
+    ckpt = load_checkpoint(args.checkpoint, map_location=device)
+    config = ckpt["config"]
+    tokenizer = ByteTokenizer()
+
+    model = TinyGPT(
+        vocab_size=config["vocab_size"],
+        seq_len=config["seq_len"],
+        d_model=config["d_model"],
+        n_heads=config["n_heads"],
+        n_layers=config["n_layers"],
+        dropout=config["dropout"],
+    ).to(device)
+    model.load_state_dict(ckpt["model_state"])
+    model.eval()
+
+    print("Tiny Chat ready. Type /exit or /quit to stop.")
+    with torch.no_grad():
+        while True:
+            prompt = input("you> ").strip()
+            if prompt in {"/exit", "/quit"}:
+                break
+            out_ids = generate_tokens(
+                model,
+                prompt,
+                tokenizer,
+                seq_len=config["seq_len"],
+                max_new_tokens=args.max_new_tokens,
+                temperature=args.temperature,
+                top_k=args.top_k,
+                top_p=args.top_p,
+                device=device,
+            )
+            print("bot>", tokenizer.decode(out_ids))
+
+
+if __name__ == "__main__":
+    main()

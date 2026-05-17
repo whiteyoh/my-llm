@@ -1,3 +1,4 @@
+import pytest
 import torch
 
 from tiny_llm.model import TinyGPT
@@ -8,3 +9,8 @@ def test_model_forward_shape() -> None:
     x = torch.randint(0, 256, (2, 16))
     logits = model(x)
     assert logits.shape == (2, 16, 256)
+
+
+def test_invalid_model_config() -> None:
+    with pytest.raises(ValueError):
+        TinyGPT(vocab_size=256, seq_len=16, d_model=30, n_heads=8, n_layers=2, dropout=0.1)
