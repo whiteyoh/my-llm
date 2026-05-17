@@ -7,7 +7,7 @@ import torch
 from tiny_llm.data import ByteTokenizer
 from tiny_llm.generation import generate_tokens, resolve_device, set_seed, validate_sampling_args
 from tiny_llm.model import TinyGPT
-from tiny_llm.safety import filter_output, is_prompt_allowed
+from tiny_llm.safety import SafetyConfig, filter_output, is_prompt_allowed, safety_notice
 from tiny_llm.utils import load_checkpoint
 
 
@@ -21,11 +21,18 @@ def main() -> None:
     parser.add_argument("--top_p", type=float, default=1.0)
     parser.add_argument("--seed", type=int, default=None)
     parser.add_argument("--device", type=str, default="auto", choices=["auto", "cpu", "cuda"])
+    parser.add_argument("--unsafe-disable-filter", action="store_true")
     args = parser.parse_args()
 
     validate_sampling_args(args.max_new_tokens, args.temperature, args.top_k, args.top_p)
-    if not is_prompt_allowed(args.prompt):
-        raise ValueError("Prompt blocked by school safety filter. Please try a safer prompt.")
+    cfg = SafetyConfig(enabled=not args.unsafe_disable_filter)
+
+    print(safety_notice())
+    if not cfg.enabled:
+        print("Safety filtering disabled. Use only with trusted local datasets and supervised contexts.")
+
+    if cfg.enabled and not is_prompt_allowed(args.prompt, banned_terms=cfg.banned_terms):
+        parser.exit(2, "Prompt blocked by classroom safety mode. Please try a safer prompt.\n")
 
     if args.seed is not None:
         set_seed(args.seed)
@@ -59,7 +66,8 @@ def main() -> None:
             device=device,
         )
 
-    output_text = filter_output(tokenizer.decode(out_ids))
+    decoded = tokenizer.decode(out_ids)
+    output_text = filter_output(decoded, banned_terms=cfg.banned_terms, mask=cfg.mask) if cfg.enabled else decoded
     print("=== Kairo Generation ===")
     print(f"Device: {device}")
     print(f"Prompt: {args.prompt}")
@@ -69,7 +77,6 @@ def main() -> None:
     )
     print("Generated output:")
     print(output_text)
-    print("Note: Kairo is educational and not a full safety-moderated system.")
 
 
 if __name__ == "__main__":

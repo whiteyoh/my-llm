@@ -10,6 +10,7 @@ from torch.utils.data import DataLoader, random_split
 from tiny_llm.data import ByteTokenizer, SequenceDataset
 from tiny_llm.generation import resolve_device, set_seed
 from tiny_llm.model import TinyGPT
+from tiny_llm.safety import validate_training_text
 from tiny_llm.utils import load_checkpoint, save_json
 
 
@@ -61,6 +62,8 @@ def main() -> None:
     out_dir.mkdir(parents=True, exist_ok=True)
 
     text = Path(args.input_file).read_text(encoding="utf-8")
+    for warning in validate_training_text(text):
+        print(f"[safety warning] {warning}")
     tokenizer = ByteTokenizer()
     dataset = SequenceDataset(tokenizer.encode(text), seq_len=args.seq_len)
 
