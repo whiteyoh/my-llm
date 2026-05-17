@@ -10,6 +10,7 @@ import torch.nn.functional as F
 from torch.utils.data import DataLoader, random_split
 
 from tiny_llm.data import ByteTokenizer, SequenceDataset
+from tiny_llm.generation import resolve_device
 from tiny_llm.model import TinyGPT
 from tiny_llm.utils import load_checkpoint, save_json
 
@@ -51,6 +52,7 @@ def main() -> None:
     parser.add_argument("--val_ratio", type=float, default=0.1)
     parser.add_argument("--grad_clip", type=float, default=1.0)
     parser.add_argument("--resume", type=str, default="")
+    parser.add_argument("--device", type=str, default="auto", choices=["auto", "cpu", "cuda"])
     args = parser.parse_args()
 
     if args.batch_size <= 0:
@@ -80,7 +82,7 @@ def main() -> None:
     train_loader = DataLoader(train_ds, batch_size=args.batch_size, shuffle=True)
     val_loader = DataLoader(val_ds, batch_size=args.batch_size)
 
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    device = resolve_device(args.device)
     model = TinyGPT(
         vocab_size=tokenizer.vocab_size,
         seq_len=args.seq_len,

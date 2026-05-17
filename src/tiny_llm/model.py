@@ -25,7 +25,6 @@ class CausalSelfAttention(nn.Module):
         k = k.view(b, t, self.n_heads, self.head_dim).transpose(1, 2)
         v = v.view(b, t, self.n_heads, self.head_dim).transpose(1, 2)
 
-        # Uses PyTorch's fused scaled dot product attention when available.
         y = F.scaled_dot_product_attention(
             q,
             k,
@@ -69,6 +68,21 @@ class TinyGPT(nn.Module):
         dropout: float,
     ) -> None:
         super().__init__()
+        if vocab_size <= 0:
+            raise ValueError("vocab_size must be > 0")
+        if seq_len <= 0:
+            raise ValueError("seq_len must be > 0")
+        if d_model <= 0:
+            raise ValueError("d_model must be > 0")
+        if n_heads <= 0:
+            raise ValueError("n_heads must be > 0")
+        if n_layers <= 0:
+            raise ValueError("n_layers must be > 0")
+        if d_model % n_heads != 0:
+            raise ValueError("d_model must be divisible by n_heads")
+        if not (0.0 <= dropout < 1.0):
+            raise ValueError("dropout must be in [0, 1)")
+
         self.seq_len = seq_len
         self.token_emb = nn.Embedding(vocab_size, d_model)
         self.pos_emb = nn.Embedding(seq_len, d_model)

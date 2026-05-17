@@ -1,19 +1,17 @@
 from __future__ import annotations
 
 import argparse
-import random
 
-import numpy as np
 import torch
 
-from generate import generate_tokens, resolve_device
 from tiny_llm.data import ByteTokenizer
+from tiny_llm.generation import generate_tokens, resolve_device, set_seed, validate_sampling_args
 from tiny_llm.model import TinyGPT
 from tiny_llm.utils import load_checkpoint
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Simple terminal chat demo for tiny-llm checkpoints.")
+    parser = argparse.ArgumentParser(description="Simple terminal chat demo for Kairo checkpoints.")
     parser.add_argument("--checkpoint", type=str, required=True)
     parser.add_argument("--max_new_tokens", type=int, default=120)
     parser.add_argument("--temperature", type=float, default=0.9)
@@ -23,12 +21,10 @@ def main() -> None:
     parser.add_argument("--seed", type=int, default=None)
     args = parser.parse_args()
 
+    validate_sampling_args(args.max_new_tokens, args.temperature, args.top_k, args.top_p)
+
     if args.seed is not None:
-        random.seed(args.seed)
-        np.random.seed(args.seed)
-        torch.manual_seed(args.seed)
-        if torch.cuda.is_available():
-            torch.cuda.manual_seed_all(args.seed)
+        set_seed(args.seed)
 
     device = resolve_device(args.device)
     ckpt = load_checkpoint(args.checkpoint, map_location=device)
@@ -46,7 +42,7 @@ def main() -> None:
     model.load_state_dict(ckpt["model_state"])
     model.eval()
 
-    print("Tiny Chat ready. Type /exit or /quit to stop.")
+    print("Kairo chat ready. Type /exit or /quit to stop.")
     with torch.no_grad():
         while True:
             prompt = input("you> ").strip()

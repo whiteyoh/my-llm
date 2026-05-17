@@ -9,14 +9,9 @@ import torch.nn.functional as F
 from torch.utils.data import DataLoader
 
 from tiny_llm.data import ByteTokenizer, SequenceDataset
+from tiny_llm.generation import resolve_device
 from tiny_llm.model import TinyGPT
 from tiny_llm.utils import load_checkpoint
-
-
-def resolve_device(device: str) -> torch.device:
-    if device == "auto":
-        return torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    return torch.device(device)
 
 
 def main() -> None:
@@ -26,6 +21,9 @@ def main() -> None:
     parser.add_argument("--batch_size", type=int, default=32)
     parser.add_argument("--device", type=str, default="auto", choices=["auto", "cpu", "cuda"])
     args = parser.parse_args()
+
+    if args.batch_size <= 0:
+        raise ValueError("batch_size must be > 0")
 
     device = resolve_device(args.device)
     ckpt = load_checkpoint(args.checkpoint, map_location=device)
