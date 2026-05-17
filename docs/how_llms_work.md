@@ -90,3 +90,7 @@ Use the same prompt before and after retraining on a new dataset.
 If outputs shift in style or topic, you are seeing data influence in action.
 
 That is the key lesson: model behavior is learned pattern behavior.
+
+
+## Attention in plain English
+Attention is a weighting mechanism over earlier tokens for next-token prediction. It is useful evidence about pattern use, not proof of human-like understanding.

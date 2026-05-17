@@ -7,13 +7,16 @@ import torch
 import torch.nn.functional as F
 from torch.utils.data import DataLoader, random_split
 
+from tiny_llm.attention import get_attention_map
 from tiny_llm.data import ByteTokenizer, SequenceDataset
+from tiny_llm.experiments import load_experiment, make_experiment_metadata, save_experiment
 from tiny_llm.explain import tokens_preview, top_next_token_predictions
 from tiny_llm.generation import generate_tokens, resolve_device, validate_sampling_args
 from tiny_llm.model import TinyGPT
 from tiny_llm.safety import SafetyConfig, filter_output, is_prompt_allowed, safety_notice, validate_training_text
 
 DEFAULTS = {"seq_len": 32, "d_model": 64, "n_heads": 4, "n_layers": 2, "epochs": 1, "batch_size": 4}
+MAX_CLASSROOM_NEW_TOKENS = 40
 PRESETS = {
     "Very small / classroom demo": DEFAULTS,
     "Small / better output": {"seq_len": 48, "d_model": 96, "n_heads": 4, "n_layers": 3, "epochs": 2, "batch_size": 4},
@@ -79,12 +82,38 @@ def _train_model(training_text: str, cfg: dict[str, int], progress: st.delta_gen
 
 
 st.set_page_config(page_title="Kairo Learn Mode", layout="centered")
-st.title("Kairo Learn Mode: Build it. Train it. Talk to it. Understand it.")
-st.info("Kairo uses lightweight classroom guardrails. A teacher should supervise use.")
+st.title("Kairo Learn Mode: Build it. Train it. Talk to it. Retrain it. Understand it.")
+st.info("Kairo uses lightweight classroom guardrails with teacher control and human review.")
 st.caption(safety_notice())
 
-safe_mode = st.toggle("Classroom Safe Mode", value=True)
-safety_cfg = SafetyConfig(enabled=safe_mode)
+st.sidebar.header("Guided lesson")
+lesson_steps = [
+    ("1) Predict the next token yourself", "Student action: Guess what byte/token comes next.", "Reflection: What clue in the prompt helped you?") ,
+    ("2) Inspect Kairo predictions", "Student action: Check top-token probability table.", "Reflection: Did Kairo match your guess?") ,
+    ("3) Train the model", "Student action: Train with classroom text.", "Reflection: Did loss go down?") ,
+    ("4) Generate from a prompt", "Student action: Try a new prompt.", "Reflection: What pattern is repeated?") ,
+    ("5) Retrain on different text", "Student action: Switch domain and retrain.", "Reflection: Which tokens changed most?") ,
+    ("6) Compare before/after", "Student action: Use comparison panel.", "Reflection: What changed and why?") ,
+    ("7) Reflect", "Student action: Write one misconception corrected today.", "Reflection: Does attention imply understanding?") ,
+]
+for title, action, reflection in lesson_steps:
+    with st.sidebar.expander(title):
+        st.write(action)
+        st.caption(reflection)
+
+st.sidebar.header("Teacher controls")
+show_advanced = st.sidebar.toggle("Show advanced hyperparameters", value=False)
+safe_mode = st.sidebar.toggle("Classroom Safe Mode", value=True)
+max_new_tokens_cap = int(st.sidebar.number_input("Allowed max_new_tokens", min_value=5, max_value=80, value=20))
+model_size_preset = st.sidebar.selectbox("Max model size preset", ["Classroom demo", "Moderate"], index=0)
+custom_banned = st.sidebar.text_area("Custom banned terms (comma-separated)", value="")
+if st.sidebar.button("Reset session"):
+    for key in ["kairo_state", "before_output", "last_prompt", "last_output"]:
+        st.session_state.pop(key, None)
+    st.sidebar.success("Session reset.")
+
+banned_terms = tuple(t.strip() for t in custom_banned.split(",") if t.strip()) or None
+safety_cfg = SafetyConfig(enabled=safe_mode, banned_terms=banned_terms or SafetyConfig().banned_terms)
 
 default_text = Path("data/samples/space_adventure.txt").read_text(encoding="utf-8")
 training_text = st.text_area("Build it: choose or paste training text", value=default_text, height=170)
@@ -97,9 +126,12 @@ seq_len = col1.number_input("seq_len", min_value=8, max_value=128, value=base["s
 d_model = col2.number_input("d_model", min_value=32, max_value=256, value=base["d_model"], step=32)
 n_heads = col3.number_input("n_heads", min_value=1, max_value=8, value=base["n_heads"])
 col4, col5, col6 = st.columns(3)
-n_layers = col4.number_input("n_layers", min_value=1, max_value=8, value=base["n_layers"])
-epochs = col5.number_input("epochs", min_value=1, max_value=20, value=base["epochs"])
-batch_size = col6.number_input("batch_size", min_value=1, max_value=32, value=base["batch_size"])
+if show_advanced:
+    n_layers = col4.number_input("n_layers", min_value=1, max_value=8, value=base["n_layers"])
+    epochs = col5.number_input("epochs", min_value=1, max_value=20, value=base["epochs"])
+    batch_size = col6.number_input("batch_size", min_value=1, max_value=32, value=base["batch_size"])
+else:
+    n_layers, epochs, batch_size = base["n_layers"], base["epochs"], base["batch_size"]
 
 for warning in validate_training_text(training_text):
     st.warning(warning)
@@ -159,7 +191,7 @@ if "kairo_state" in st.session_state:
 st.subheader("3) Talk to it")
 prompt = st.text_input("Prompt", value=st.session_state.get("last_prompt", "The robot opened the door"))
 colt1, colt2, colt3 = st.columns(3)
-max_new_tokens = int(colt1.number_input("max_new_tokens", min_value=1, max_value=80, value=20))
+max_new_tokens = int(colt1.number_input("max_new_tokens", min_value=1, max_value=min(MAX_CLASSROOM_NEW_TOKENS, max_new_tokens_cap), value=min(20, max_new_tokens_cap)))
 temperature = float(colt2.number_input("temperature", min_value=0.1, max_value=2.0, value=0.9, step=0.1))
 top_k = int(colt3.number_input("top_k", min_value=0, max_value=100, value=40))
 
@@ -202,3 +234,28 @@ st.markdown(
 - Tiny models often repeat, drift, or produce strange text.
 """
 )
+
+
+st.subheader("6) Attention visualisation")
+if "kairo_state" in st.session_state:
+    state = st.session_state["kairo_state"]
+    attn_prompt = st.text_input("Attention prompt", value=prompt, key="attn_prompt")
+    if st.button("Show attention map"):
+        amap = get_attention_map(state["model"], state["tokenizer"], attn_prompt, seq_len=state["cfg"]["seq_len"], device=torch.device("cpu"))
+        st.write("Attention shows which earlier tokens the model looked at most when making a prediction.")
+        st.table(amap["tokens"])
+        st.table([{"query": r["query_token"], "top_attended": ", ".join(f"{x['token']} ({x['weight']:.2f})" for x in r["top_attended"])} for r in amap["table"]])
+
+st.subheader("7) Save / load experiment")
+exp_path = st.text_input("Experiment folder", value="runs/experiments/latest")
+if st.button("Save experiment") and "kairo_state" in st.session_state:
+    state = st.session_state["kairo_state"]
+    meta = make_experiment_metadata(training_text_length=len(training_text), token_count=state["token_count"], sequence_count=state["sequence_count"], config=state["cfg"], train_loss=state["train_losses"][-1], validation_loss=state["val_losses"][-1], prompt=st.session_state.get("last_prompt", ""), generated_output=st.session_state.get("last_output", ""), safe_mode=safety_cfg.enabled)
+    save_experiment(exp_path, state["model"], meta)
+    st.success("Experiment saved locally.")
+if st.button("Load experiment metadata"):
+    try:
+        loaded = load_experiment(exp_path)
+        st.json(loaded)
+    except FileNotFoundError as exc:
+        st.error(str(exc))

@@ -140,3 +140,9 @@ By the end of a Kairo lesson, students should be able to:
 - compare outputs before and after retraining,
 - identify why outputs can be wrong, repetitive, or odd,
 - apply basic safety thinking when using generative AI.
+
+
+## Guided lesson script additions
+- Run seven-step guided lesson (predict, inspect, train, generate, retrain, compare, reflect).
+- Use attention map as a discussion prompt: "Attention shows which earlier tokens the model looked at most when making a prediction."
+- Save classroom experiments and review metadata later for comparison.

@@ -315,3 +315,10 @@ streamlit run src/kairo_learn.py
 ## O) License
 
 This project is available under the terms of the repository license. See `LICENSE` for details.
+
+
+## Attention visualisation, guided lessons, and experiments
+- Learn Mode now includes a guided lesson sidebar and teacher control panel.
+- Attention visualisation shows which earlier tokens received strongest focus.
+- Save/load experiments locally in `runs/experiments/` with JSON metadata + checkpoint.
+- Teacher controls include safe mode, custom banned terms, generation limits, and advanced-setting visibility.
