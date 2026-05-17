@@ -7,7 +7,7 @@ import torch
 from tiny_llm.data import ByteTokenizer
 from tiny_llm.generation import generate_tokens, resolve_device, set_seed, validate_sampling_args
 from tiny_llm.model import TinyGPT
-from tiny_llm.safety import filter_output, is_prompt_allowed
+from tiny_llm.safety import SafetyConfig, filter_output, is_prompt_allowed, safety_notice
 from tiny_llm.utils import load_checkpoint
 
 
@@ -20,9 +20,11 @@ def main() -> None:
     parser.add_argument("--top_p", type=float, default=1.0)
     parser.add_argument("--device", type=str, default="auto", choices=["auto", "cpu", "cuda"])
     parser.add_argument("--seed", type=int, default=None)
+    parser.add_argument("--unsafe-disable-filter", action="store_true")
     args = parser.parse_args()
 
     validate_sampling_args(args.max_new_tokens, args.temperature, args.top_k, args.top_p)
+    cfg = SafetyConfig(enabled=not args.unsafe_disable_filter)
 
     if args.seed is not None:
         set_seed(args.seed)
@@ -44,14 +46,16 @@ def main() -> None:
     model.eval()
 
     print("Kairo chat ready. Type /exit or /quit to stop.")
-    print("Safety note: prompts/outputs are lightly filtered, not fully moderated.")
+    print(safety_notice())
+    if not cfg.enabled:
+        print("Safety filtering disabled. Use only with trusted local datasets and supervised contexts.")
     with torch.no_grad():
         while True:
             prompt = input("you> ").strip()
             if prompt in {"/exit", "/quit"}:
                 break
-            if not is_prompt_allowed(prompt):
-                print("bot> Prompt blocked by school safety filter.")
+            if cfg.enabled and not is_prompt_allowed(prompt, banned_terms=cfg.banned_terms):
+                print("bot> Prompt blocked by classroom safe mode. Try a kind, school-appropriate prompt.")
                 continue
             out_ids = generate_tokens(
                 model,
@@ -64,7 +68,9 @@ def main() -> None:
                 top_p=args.top_p,
                 device=device,
             )
-            print("bot>", filter_output(tokenizer.decode(out_ids)))
+            decoded = tokenizer.decode(out_ids)
+            out_text = filter_output(decoded, banned_terms=cfg.banned_terms, mask=cfg.mask) if cfg.enabled else decoded
+            print("bot>", out_text)
 
 
 if __name__ == "__main__":

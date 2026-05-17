@@ -3,49 +3,37 @@
 ## Lesson overview
 Kairo is a tiny educational language-model lab for demonstrating next-token prediction.
 
-## Learning objectives
-- Understand tokens.
-- Understand training data.
-- Understand next-token prediction.
-- Understand loss.
-- Understand why small models produce limited results.
-- Understand why LLMs are not magic.
+## Safeguarding (lightweight, teacher-led)
+Kairo includes lightweight guardrails only. It is not full moderation. Teachers should supervise prompts, datasets, and outputs at all times.
 
-## Suggested age range
-Secondary school (roughly ages 12-18), with teacher facilitation.
+## Dataset checklist
+- Use school-appropriate text only.
+- Do not include personal data (emails, phone numbers, addresses).
+- Avoid harmful or distressing themes.
+- Avoid content you do not have permission to reuse.
+- Start with `data/samples/` when possible.
 
-## 45-minute lesson plan
-1. 10 min: Introduce tokens and byte-level text.
-2. 10 min: Show dataset examples and discuss quality.
-3. 15 min: Run a tiny training job and watch loss.
-4. 10 min: Prompt the model and discuss outputs.
+## Prompting rules for pupils
+- Use kind, respectful prompts.
+- Avoid requests about harm, weapons, or illegal activity.
+- Do not paste personal information.
+- Ask a teacher before trying unusual prompts.
 
-## 90-minute workshop plan
-1. 15 min: Intro and safety context.
-2. 20 min: Build a dataset from safe samples.
-3. 25 min: Train model and inspect loss trends.
-4. 20 min: Compare prompts and sampling settings.
-5. 10 min: Reflection and misconceptions.
+## Teacher review workflow
+1. Teacher selects or approves dataset text.
+2. Teacher runs training and checks warnings.
+3. Pupils submit prompts; teacher monitors output.
+4. If output is unsuitable, stop and discuss why.
+5. Adjust dataset/prompting rules and retry.
 
-## Discussion questions
-- Why does better training data usually help output quality?
-- Why can low loss still produce strange text?
-- What is missing from this tiny educational setup compared with modern LLM products?
+## How to respond to unsuitable outputs
+- Pause the activity.
+- Remind students that Kairo predicts tokens and can be wrong/unsafe.
+- Remove unsafe dataset text and retry with safer samples.
+- Re-enable safe filtering if it was disabled.
 
-## Safe dataset guidance
-Use short, school-safe texts. Start with files in `data/samples/`.
-Avoid personal data, harmful content, or copyrighted materials.
-
-## What pupils should observe
-- Loss usually decreases during training.
-- Tiny models copy local patterns.
-- Outputs can be repetitive or nonsensical.
-
-## Common misconceptions
-- "The model understands like a person" (it predicts tokens statistically).
-- "One good output means the model is reliable" (it is not).
-
-## Extension tasks
-- Try different prompts and compare outputs.
-- Train on mixed datasets and discuss bias.
-- Explore top-k and top-p sampling effects.
+## Suggested classroom rules
+- "No personal data in prompts or datasets."
+- "Use only teacher-approved text."
+- "Tell a teacher immediately if output seems unsafe."
+- "Kairo is a learning tool, not a trusted authority."
