@@ -1,6 +1,6 @@
 import torch
 
-from src.generate import sample_next_token
+from generate import sample_next_token
 
 
 def test_sample_next_token_valid_id() -> None:
