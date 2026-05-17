@@ -6,7 +6,7 @@ import streamlit as st
 
 from tiny_llm.data import ByteTokenizer
 from tiny_llm.experiments import load_experiment_metadata, make_experiment_metadata, restore_experiment_model, save_experiment
-from tiny_llm.learn import TEACHER_LIMITS, build_attention_preview, build_probability_preview, build_token_preview, build_training_config, create_model_status, enforce_teacher_limits, generate_learning_output, prepare_retrain_comparison, train_tiny_model, validate_learn_training_text
+from tiny_llm.learn import build_attention_labels, build_attention_matrix_rows, build_attention_preview, build_probability_preview, build_restored_learning_state, build_token_preview, build_training_config, create_model_status, enforce_teacher_limits, generate_learning_output, prepare_retrain_comparison, train_tiny_model, validate_learn_training_text
 from tiny_llm.safety import SafetyConfig, safety_notice
 
 DEFAULTS = {"seq_len": 32, "d_model": 64, "n_heads": 4, "n_layers": 2, "epochs": 1, "batch_size": 4}
@@ -44,9 +44,14 @@ safe_mode = st.sidebar.toggle("Classroom Safe Mode", value=True)
 max_new_tokens_cap = int(st.sidebar.number_input("Allowed max_new_tokens", min_value=5, max_value=80, value=40))
 model_size_preset = st.sidebar.selectbox("Max model size preset", ["Classroom demo", "Moderate"], index=0)
 custom_banned = st.sidebar.text_area("Custom banned terms (comma-separated)", value="")
-if st.sidebar.button("Reset session"):
-    for key in ["kairo_state", "before_output", "last_prompt", "last_output", "restored_meta", "restored_model"]:
+def reset_session_state(keys: list[str] | None = None) -> None:
+    session_keys = keys or ["kairo_state", "before_output", "last_prompt", "last_output", "restored_meta", "restored_model"]
+    for key in session_keys:
         st.session_state.pop(key, None)
+
+
+if st.sidebar.button("Reset session"):
+    reset_session_state()
     st.sidebar.success("Session reset.")
 
 banned_terms = tuple(t.strip() for t in custom_banned.split(",") if t.strip()) or None
@@ -86,7 +91,6 @@ if preview:
     st.code(f"Original snippet: {snippet}\nEncoded bytes: {ids}\nDecoded round trip: {tok.decode(ids)}")
 
 cfg, cfg_warnings = build_training_config({"seq_len": int(seq_len), "d_model": int(d_model), "n_heads": int(n_heads), "n_layers": int(n_layers), "epochs": int(epochs), "batch_size": int(batch_size)}, preset=model_size_preset)
-limits = TEACHER_LIMITS.get(model_size_preset, TEACHER_LIMITS["Classroom demo"])
 max_new_tokens_cap, cap_warn = enforce_teacher_limits({"max_new_tokens": max_new_tokens_cap}, model_size_preset)
 max_new_tokens_cap = max_new_tokens_cap["max_new_tokens"]
 cfg_warnings.extend(cap_warn)
@@ -97,8 +101,7 @@ train_col, retrain_col, reset_col = st.columns(3)
 train_clicked = train_col.button("Train")
 retrain_clicked = retrain_col.button("Retrain")
 if reset_col.button("Reset session"):
-    for key in ["kairo_state", "before_output", "last_prompt"]:
-        st.session_state.pop(key, None)
+    reset_session_state(keys=["kairo_state", "before_output", "last_prompt", "last_output", "restored_meta", "restored_model"])
     st.success("Session reset.")
 
 if train_clicked or retrain_clicked:
@@ -188,11 +191,11 @@ if "kairo_state" in st.session_state:
         st.table([{"query": r["query_token"], "top_attended": ", ".join(f"{x['token']} ({x['weight']:.2f})" for x in r["top_attended"])} for r in amap["table"]])
         matrix = amap.get("attention_matrix")
         if matrix:
-            token_labels = [row.get("token_display", str(i)) for i, row in enumerate(amap.get("tokens", []))]
-            st.caption("Rows are query tokens. Columns are previous tokens the model can attend to. Larger values mean more attention weight.")
-            st.dataframe(matrix, use_container_width=True)
+            token_labels = build_attention_labels(amap.get("tokens", []))
+            st.caption("Rows are the token currently looking back. Columns are earlier tokens it can attend to.")
+            st.dataframe(build_attention_matrix_rows(matrix, token_labels), use_container_width=True)
             if token_labels:
-                st.caption("Token order: " + " | ".join(f"{i}:{tok}" for i, tok in enumerate(token_labels)))
+                st.caption("Token order: " + " | ".join(token_labels))
 
 st.subheader("7) Save / load experiment")
 exp_path = st.text_input("Experiment folder", value="runs/experiments/latest")
@@ -212,20 +215,11 @@ if st.button("Load experiment metadata"):
 if st.button("Restore experiment model"):
     try:
         model, metadata = restore_experiment_model(exp_path)
-        restored_cfg = metadata.get("config") if isinstance(metadata.get("config"), dict) else {}
-        fallback_cfg = {"seq_len": DEFAULTS["seq_len"], "d_model": DEFAULTS["d_model"], "n_heads": DEFAULTS["n_heads"], "n_layers": DEFAULTS["n_layers"]}
-        cfg_missing = [k for k in fallback_cfg if k not in restored_cfg]
-        cfg = {k: int(restored_cfg.get(k, v)) for k, v in fallback_cfg.items()}
-        restored_state = {
-            "model": model,
-            "tokenizer": ByteTokenizer(),
-            "cfg": cfg,
-            "token_count": int(metadata.get("token_count", 0) or 0),
-            "sequence_count": int(metadata.get("sequence_count", 0) or 0),
-            "train_losses": metadata.get("train_losses") or [float(metadata.get("train_loss", 0.0) or 0.0)],
-            "val_losses": metadata.get("val_losses") or [float(metadata.get("validation_loss", 0.0) or 0.0)],
-            "param_count": int(metadata.get("param_count") or sum(p.numel() for p in model.parameters())),
-        }
+        restored_state, cfg_missing = build_restored_learning_state(
+            model,
+            metadata,
+            defaults={"seq_len": DEFAULTS["seq_len"], "d_model": DEFAULTS["d_model"], "n_heads": DEFAULTS["n_heads"], "n_layers": DEFAULTS["n_layers"]},
+        )
         st.session_state["kairo_state"] = restored_state
         st.session_state["restored_model"] = str(model.__class__.__name__)
         st.session_state["restored_meta"] = metadata
@@ -233,9 +227,15 @@ if st.button("Restore experiment model"):
             st.session_state["last_prompt"] = metadata.get("prompt")
         if metadata.get("generated_output"):
             st.session_state["last_output"] = metadata.get("generated_output")
+        st.success("Experiment restored. You can now generate, inspect probabilities, and view attention.")
+        if st.session_state.get("last_prompt"):
+            st.write("Restored prompt")
+            st.code(st.session_state["last_prompt"])
+        if st.session_state.get("last_output"):
+            st.write("Restored output")
+            st.code(st.session_state["last_output"])
         if cfg_missing:
             st.warning("Some saved metadata was missing, so Kairo used safe defaults for parts of the restore.")
-        st.success("Model restored from experiment checkpoint.")
     except (FileNotFoundError, ValueError, KeyError, RuntimeError) as exc:
         st.error(str(exc))
 if "restored_meta" in st.session_state:

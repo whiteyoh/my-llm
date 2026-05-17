@@ -20,6 +20,8 @@ def test_attention_valid_output_contains_matrix_list() -> None:
     assert isinstance(out["attention_matrix"], list)
     assert out["note"] == "Attention is a model mechanism, not human understanding."
     assert out["token_count"] == len(out["token_ids"])
+    assert out["tokens"]
+    assert "display" in out["tokens"][0]
 
 
 def test_attention_invalid_layer_head_topk_limit_prompt() -> None:
