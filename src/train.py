@@ -42,6 +42,7 @@ def main() -> None:
     parser.add_argument("--grad_clip", type=float, default=1.0)
     parser.add_argument("--resume", type=str, default="")
     parser.add_argument("--device", type=str, default="auto", choices=["auto", "cpu", "cuda"])
+    parser.add_argument("--amp", action="store_true", help="Enable mixed precision when running on CUDA")
     args = parser.parse_args()
 
     if args.batch_size <= 0:
@@ -81,6 +82,8 @@ def main() -> None:
         dropout=args.dropout,
     ).to(device)
     optimizer = torch.optim.AdamW(model.parameters(), lr=args.lr)
+    use_amp = bool(args.amp and device.type == "cuda")
+    scaler = torch.amp.GradScaler("cuda", enabled=use_amp)
 
     history: dict[str, list[float]] = {"train_loss": [], "val_loss": []}
     best_val = float("inf")
@@ -105,6 +108,7 @@ def main() -> None:
     print(f"Dataset token count: {len(dataset):,} sequences from {len(text):,} bytes of text")
     print(f"Train/validation split: {train_size:,} / {val_size:,} sequences")
     print(f"Checkpoint output paths: best={out_dir / 'best.pt'} last={out_dir / 'last.pt'}")
+    print(f"AMP mixed precision: {'enabled' if use_amp else 'disabled'}")
 
     for epoch in range(start_epoch, args.epochs + 1):
         model.train()
@@ -112,12 +116,15 @@ def main() -> None:
         for x, y in train_loader:
             x, y = x.to(device), y.to(device)
             optimizer.zero_grad(set_to_none=True)
-            logits = model(x)
-            loss = F.cross_entropy(logits.view(-1, logits.size(-1)), y.view(-1))
-            loss.backward()
+            with torch.amp.autocast("cuda", enabled=use_amp):
+                logits = model(x)
+                loss = F.cross_entropy(logits.view(-1, logits.size(-1)), y.view(-1))
+            scaler.scale(loss).backward()
             if args.grad_clip > 0:
+                scaler.unscale_(optimizer)
                 torch.nn.utils.clip_grad_norm_(model.parameters(), args.grad_clip)
-            optimizer.step()
+            scaler.step(optimizer)
+            scaler.update()
             running += loss.item()
 
         train_loss = running / max(1, len(train_loader))

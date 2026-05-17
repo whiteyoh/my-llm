@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "kairo-llm"
 version = "0.1.0"
-description = "Kairo: an educational byte-level GPT-style language model"
+description = "Kairo: an educational byte-level GPT lab for building, training, and understanding a tiny LLM."
 requires-python = ">=3.11"
 dependencies = [
   "torch>=2.2.0",
@@ -26,5 +26,5 @@ target-version = "py311"
 
 [project.optional-dependencies]
 learn = [
-  "streamlit>=1.35.0",
+  "streamlit>=1.30",
 ]
