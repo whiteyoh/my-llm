@@ -1,0 +1,4 @@
+Language models learn patterns in text.
+They predict the next token given previous context.
+With enough data and compute, they can generate coherent continuations.
+This dataset is intentionally tiny and only for quick experiments.
