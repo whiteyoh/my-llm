@@ -14,7 +14,7 @@ class CausalSelfAttention(nn.Module):
         self.head_dim = d_model // n_heads
         self.qkv = nn.Linear(d_model, 3 * d_model)
         self.proj = nn.Linear(d_model, d_model)
-        self.dropout = nn.Dropout(dropout)
+        self.dropout = dropout
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         b, t, c = x.size()
@@ -25,13 +25,16 @@ class CausalSelfAttention(nn.Module):
         k = k.view(b, t, self.n_heads, self.head_dim).transpose(1, 2)
         v = v.view(b, t, self.n_heads, self.head_dim).transpose(1, 2)
 
-        attn = (q @ k.transpose(-2, -1)) / (self.head_dim ** 0.5)
-        mask = torch.tril(torch.ones(t, t, device=x.device)).unsqueeze(0).unsqueeze(0)
-        attn = attn.masked_fill(mask == 0, float("-inf"))
-        attn = F.softmax(attn, dim=-1)
-        attn = self.dropout(attn)
+        # Uses PyTorch's fused scaled dot product attention when available.
+        y = F.scaled_dot_product_attention(
+            q,
+            k,
+            v,
+            attn_mask=None,
+            dropout_p=self.dropout if self.training else 0.0,
+            is_causal=True,
+        )
 
-        y = attn @ v
         y = y.transpose(1, 2).contiguous().view(b, t, c)
         return self.proj(y)
 
