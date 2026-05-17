@@ -11,7 +11,7 @@ from torch.utils.data import DataLoader, random_split
 
 from tiny_llm.data import ByteTokenizer, SequenceDataset
 from tiny_llm.model import TinyGPT
-from tiny_llm.utils import save_json
+from tiny_llm.utils import load_checkpoint, save_json
 
 
 def evaluate(model: TinyGPT, loader: DataLoader, device: torch.device) -> float:
@@ -35,10 +35,6 @@ def set_seed(seed: int) -> None:
         torch.cuda.manual_seed_all(seed)
 
 
-def load_checkpoint(path: Path, device: torch.device) -> dict:
-    return torch.load(path, map_location=device)
-
-
 def main() -> None:
     parser = argparse.ArgumentParser(description="Train a tiny GPT-style language model.")
     parser.add_argument("--input_file", type=str, required=True)
@@ -52,21 +48,31 @@ def main() -> None:
     parser.add_argument("--n_layers", type=int, default=6)
     parser.add_argument("--dropout", type=float, default=0.1)
     parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument("--val_ratio", type=float, default=0.1)
     parser.add_argument("--grad_clip", type=float, default=1.0)
     parser.add_argument("--resume", type=str, default="")
     args = parser.parse_args()
 
-    set_seed(args.seed)
+    if args.batch_size <= 0:
+        raise ValueError("batch_size must be > 0")
+    if args.seq_len <= 0:
+        raise ValueError("seq_len must be > 0")
+    if args.epochs <= 0:
+        raise ValueError("epochs must be > 0")
+    if not (0.0 < args.val_ratio < 1.0):
+        raise ValueError("val_ratio must be in (0, 1)")
+    if args.lr <= 0:
+        raise ValueError("lr must be > 0")
 
+    set_seed(args.seed)
     out_dir = Path(args.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
 
     text = Path(args.input_file).read_text(encoding="utf-8")
     tokenizer = ByteTokenizer()
-    token_ids = tokenizer.encode(text)
-    dataset = SequenceDataset(token_ids, seq_len=args.seq_len)
+    dataset = SequenceDataset(tokenizer.encode(text), seq_len=args.seq_len)
 
-    val_size = max(1, int(len(dataset) * 0.1))
+    val_size = max(1, int(len(dataset) * args.val_ratio))
     train_size = len(dataset) - val_size
     split_generator = torch.Generator().manual_seed(args.seed)
     train_ds, val_ds = random_split(dataset, [train_size, val_size], generator=split_generator)
@@ -83,18 +89,15 @@ def main() -> None:
         n_layers=args.n_layers,
         dropout=args.dropout,
     ).to(device)
-
     optimizer = torch.optim.AdamW(model.parameters(), lr=args.lr)
 
     history: dict[str, list[float]] = {"train_loss": [], "val_loss": []}
     best_val = float("inf")
     start_epoch = 1
-
     config = vars(args) | {"vocab_size": tokenizer.vocab_size, "device": str(device)}
 
     if args.resume:
-        resume_path = Path(args.resume)
-        ckpt = load_checkpoint(resume_path, device)
+        ckpt = load_checkpoint(Path(args.resume), map_location=device)
         model.load_state_dict(ckpt["model_state"])
         if "optimizer_state" in ckpt:
             optimizer.load_state_dict(ckpt["optimizer_state"])
@@ -114,7 +117,8 @@ def main() -> None:
             logits = model(x)
             loss = F.cross_entropy(logits.view(-1, logits.size(-1)), y.view(-1))
             loss.backward()
-            torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=args.grad_clip)
+            if args.grad_clip > 0:
+                torch.nn.utils.clip_grad_norm_(model.parameters(), args.grad_clip)
             optimizer.step()
             running += loss.item()
 
@@ -122,7 +126,6 @@ def main() -> None:
         val_loss = evaluate(model, val_loader, device)
         history["train_loss"].append(train_loss)
         history["val_loss"].append(val_loss)
-
         print(f"Epoch {epoch}/{args.epochs} - train_loss={train_loss:.4f} val_loss={val_loss:.4f}")
 
         ckpt = {

@@ -1,39 +1,40 @@
-name: quality
+name: Quality
 
 on:
-  push:
   pull_request:
+  push:
+    branches: [main]
 
 jobs:
   quality:
     runs-on: ubuntu-latest
+
     strategy:
       matrix:
         python-version: ["3.11", "3.12"]
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v5
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Install dependencies
-        run: pip install -r requirements.txt
+      - name: Install package and test tools
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e .
+          pip install pytest ruff
 
-      - name: Install quality tools
-        run: pip install pytest ruff
-
-      - name: Install package
-        run: pip install -e .
-
-      - name: Ruff
+      - name: Ruff lint
         run: ruff check .
 
-      - name: Compile
+      - name: Compile Python files
         run: python -m compileall src tests
 
-      - name: Pytest
+      - name: Unit tests
         run: pytest -q
 
       - name: Smoke train
@@ -54,3 +55,10 @@ jobs:
             --checkpoint runs/ci/best.pt \
             --prompt "Once upon a time" \
             --max_new_tokens 10
+
+      - name: Smoke evaluate
+        run: |
+          python src/evaluate.py \
+            --checkpoint runs/ci/best.pt \
+            --input_file data/sample.txt \
+            --batch_size 4
