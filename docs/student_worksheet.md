@@ -4,6 +4,7 @@
 
 <p align="center">
   <a href="../README.md">Home</a> •
+  <a href="first_lesson_walkthrough.md">First Lesson Walkthrough</a> •
   <a href="teacher_guide.md">Teacher Guide</a> •
   <a href="student_worksheet.md">Student Worksheet</a> •
   <a href="architecture.md">Architecture</a> •
@@ -138,3 +139,28 @@ __________________________________________________
 - Mix different writing styles
 - Intentionally overfit the model
 - Compare outputs before and after retraining
+
+---
+
+<p align="center">
+  <a href="../README.md">Home</a> •
+  <a href="first_lesson_walkthrough.md">First Lesson Walkthrough</a> •
+  <a href="teacher_guide.md">Teacher Guide</a> •
+  <a href="student_worksheet.md">Student Worksheet</a> •
+  <a href="architecture.md">Architecture</a> •
+  <a href="how_llms_work.md">How LLMs Work</a>
+</p>
+
+
+## New sample datasets
+
+Use one starter file from `data/samples/`:
+- `pirate_dialogue.txt`
+- `sci_fi_micro_story.txt`
+- `short_poems.txt`
+
+## Before/after retrain prompt ideas
+
+- `Captain Rowan:`
+- `The station woke`
+- `Rain taps softly`

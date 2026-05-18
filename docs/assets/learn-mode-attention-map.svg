@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="700" viewBox="0 0 1200 700">
+<rect width="1200" height="700" fill="#0f172a"/>
+<rect x="40" y="40" width="1120" height="620" rx="18" fill="#111827" stroke="#a78bfa" stroke-width="3"/>
+<text x="80" y="120" fill="#e5e7eb" font-size="44" font-family="Arial" font-weight="700">Attention Map</text>
+<text x="80" y="170" fill="#93c5fd" font-size="28" font-family="Arial">Learn Mode classroom screenshot</text>
+<rect x="80" y="210" width="1040" height="390" rx="12" fill="#1f2937" stroke="#374151"/>
+<text x="110" y="280" fill="#d1d5db" font-size="26" font-family="Courier New">Layer/head selector with heatmap-style attention intensity grid.</text>
+<text x="110" y="340" fill="#9ca3af" font-size="22" font-family="Courier New">Designed as a printable-friendly visual reference for STEM workshops.</text>
+</svg>

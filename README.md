@@ -63,6 +63,8 @@ This is where LLMs stop feeling like magic and start feeling understandable.
 
 ## Simple architecture
 
+![Simple architecture flowchart](docs/assets/simple-architecture-flowchart.svg)
+
 ```text
 Training text
 ↓
@@ -146,6 +148,15 @@ You can walk students through:
 - attention maps
 - retrain-and-compare experiments
 
+
+
+## Learn Mode screenshots
+
+- Token preview: ![Token preview screenshot](docs/assets/learn-mode-token-preview.svg)
+- Attention maps: ![Attention map screenshot](docs/assets/learn-mode-attention-map.svg)
+- Probability tables: ![Probability table screenshot](docs/assets/learn-mode-probability-table.svg)
+- Before/after retrain comparisons: ![Retrain comparison screenshot](docs/assets/learn-mode-retrain-compare.svg)
+
 ## Why byte-level tokens?
 
 Byte-level tokenisation is:
@@ -190,6 +201,19 @@ Start with:
 
 - [First Lesson Walkthrough](docs/first_lesson_walkthrough.md)
 - [Teacher Guide](docs/teacher_guide.md)
+- [Student Worksheet](docs/student_worksheet.md)
+
+### Printable lesson packs
+
+- [Teacher Guide (PDF)](docs/printable/teacher_guide.pdf)
+- [Student Worksheet (PDF)](docs/printable/student_worksheet.pdf)
+- [First Lesson Walkthrough (PDF)](docs/printable/first_lesson_walkthrough.pdf)
+
+### New sample datasets
+
+- [Pirate dialogue](data/samples/pirate_dialogue.txt)
+- [Sci-fi micro-story](data/samples/sci_fi_micro_story.txt)
+- [Short poems](data/samples/short_poems.txt)
 
 ## Safety and supervision
 
@@ -224,6 +248,17 @@ pytest -q
 - [Student Worksheet](docs/student_worksheet.md)
 - [Architecture](docs/architecture.md)
 - [How LLMs Work](docs/how_llms_work.md)
+- [Simple architecture flowchart](docs/assets/simple-architecture-flowchart.svg)
+- [Learn Mode token preview screenshot](docs/assets/learn-mode-token-preview.svg)
+- [Learn Mode attention map screenshot](docs/assets/learn-mode-attention-map.svg)
+- [Learn Mode probability table screenshot](docs/assets/learn-mode-probability-table.svg)
+- [Learn Mode retrain comparison screenshot](docs/assets/learn-mode-retrain-compare.svg)
+- [Teacher Guide PDF](docs/printable/teacher_guide.pdf)
+- [Student Worksheet PDF](docs/printable/student_worksheet.pdf)
+- [First Lesson Walkthrough PDF](docs/printable/first_lesson_walkthrough.pdf)
+- [Pirate dialogue dataset](data/samples/pirate_dialogue.txt)
+- [Sci-fi micro-story dataset](data/samples/sci_fi_micro_story.txt)
+- [Short poems dataset](data/samples/short_poems.txt)
 
 ## Roadmap
 
