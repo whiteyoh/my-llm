@@ -38,6 +38,15 @@ Kairo exists to make those mechanics:
 - discussable
 - visible in a classroom
 
+## The magic moment
+
+Retrain Kairo on pirate stories and watch the model immediately start speaking differently.
+Same model. Different data. Different behaviour.
+That moment is where many learners suddenly understand what a language model actually is.
+The model did not become “smarter”.
+It changed because the training data changed.
+This is where LLMs stop feeling like magic and start feeling understandable.
+
 ## The learning loop
 
 | Step          | Learner action                      | Concept learned              |
