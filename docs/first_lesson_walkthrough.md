@@ -4,6 +4,7 @@
 
 <p align="center">
   <a href="../README.md">Home</a> •
+  <a href="first_lesson_walkthrough.md">First Lesson Walkthrough</a> •
   <a href="teacher_guide.md">Teacher Guide</a> •
   <a href="student_worksheet.md">Student Worksheet</a> •
   <a href="architecture.md">Architecture</a> •
@@ -67,11 +68,10 @@ streamlit run src/kairo_learn.py
 
 Choose a small training dataset.
 
-Good starter datasets:
-- sci-fi stories
-- pirate text
-- fantasy dialogue
-- tiny poems
+Good starter datasets from `data/samples/`:
+- `sci_fi_micro_story.txt`
+- `pirate_dialogue.txt`
+- `short_poems.txt`
 
 Ask learners:
 
@@ -208,8 +208,20 @@ Learners should leave understanding:
 
 ---
 
+---
+
 <p align="center">
-  <a href="../README.md">← Home</a> •
+  <a href="../README.md">Home</a> •
+  <a href="first_lesson_walkthrough.md">First Lesson Walkthrough</a> •
   <a href="teacher_guide.md">Teacher Guide</a> •
-  <a href="student_worksheet.md">Student Worksheet</a>
+  <a href="student_worksheet.md">Student Worksheet</a> •
+  <a href="architecture.md">Architecture</a> •
+  <a href="how_llms_work.md">How LLMs Work</a>
 </p>
+
+
+## Before/after retrain exercise prompts
+
+- Before retrain prompt: `Captain Rowan whispered`
+- After retrain prompt: `The station woke as`
+- Compare tone, repeated phrases, and top-3 token probabilities.

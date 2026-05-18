@@ -4,6 +4,7 @@
 
 <p align="center">
   <a href="../README.md">Home</a> •
+  <a href="first_lesson_walkthrough.md">First Lesson Walkthrough</a> •
   <a href="teacher_guide.md">Teacher Guide</a> •
   <a href="student_worksheet.md">Student Worksheet</a> •
   <a href="architecture.md">Architecture</a> •
@@ -139,3 +140,14 @@ Prompt
 Safe mode is lightweight and classroom-focused.
 
 Teacher supervision is still required.
+
+---
+
+<p align="center">
+  <a href="../README.md">Home</a> •
+  <a href="first_lesson_walkthrough.md">First Lesson Walkthrough</a> •
+  <a href="teacher_guide.md">Teacher Guide</a> •
+  <a href="student_worksheet.md">Student Worksheet</a> •
+  <a href="architecture.md">Architecture</a> •
+  <a href="how_llms_work.md">How LLMs Work</a>
+</p>
