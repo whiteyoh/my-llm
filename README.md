@@ -1,19 +1,12 @@
+<p align="center"> <img src="docs/assets/kairo-logo.svg" alt="Kairo logo" width="760"/> </p>
+<p align="center"> <strong>Build it. Train it. Talk to it. Retrain it. Understand it.</strong> </p>
+<p align="center"> <a href="README.md">Home</a> • <a href="docs/first_lesson_walkthrough.md">First Lesson</a> • <a href="docs/teacher_guide.md">Teacher Guide</a> • <a href="docs/student_worksheet.md">Student Worksheet</a> • <a href="docs/architecture.md">Architecture</a> • <a href="docs/how_llms_work.md">How LLMs Work</a> </p>
+
 # Kairo
 
 Build it. Train it. Talk to it. Retrain it. Understand it.
 
 Kairo is a hands-on educational GPT lab that helps learners inspect how language models actually work.
-
-Logo: docs/assets/kairo-logo.svg
-
-## Navigation
-
-- Home: README.md
-- First Lesson: docs/first_lesson_walkthrough.md
-- Teacher Guide: docs/teacher_guide.md
-- Student Worksheet: docs/student_worksheet.md
-- Architecture: docs/architecture.md
-- How LLMs Work: docs/how_llms_work.md
 
 ## The idea
 
@@ -213,3 +206,5 @@ Future educational improvements:
 - additional explainability activities
 - printable lesson packs
 - screenshots and walkthrough images
+
+<p align="center"> <a href="README.md">Home</a> • <a href="docs/first_lesson_walkthrough.md">First Lesson</a> • <a href="docs/teacher_guide.md">Teacher Guide</a> • <a href="docs/student_worksheet.md">Student Worksheet</a> • <a href="docs/architecture.md">Architecture</a> • <a href="docs/how_llms_work.md">How LLMs Work</a> </p>
