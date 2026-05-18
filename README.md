@@ -1,10 +1,16 @@
-<p align="center"> <img src="docs/assets/kairo-logo.svg" alt="Kairo logo" width="760"/> </p>
-<p align="center"> <strong>Build it. Train it. Talk to it. Retrain it. Understand it.</strong> </p>
-<p align="center"> <a href="README.md">Home</a> • <a href="docs/first_lesson_walkthrough.md">First Lesson</a> • <a href="docs/teacher_guide.md">Teacher Guide</a> • <a href="docs/student_worksheet.md">Student Worksheet</a> • <a href="docs/architecture.md">Architecture</a> • <a href="docs/how_llms_work.md">How LLMs Work</a> </p>
+<p align="center">
+  <img src="docs/assets/kairo-logo.svg" alt="Kairo logo" width="760"/>
+</p>
+<p align="center">
+  <strong>Build it. Train it. Talk to it. Retrain it. Understand it.</strong>
+</p>
+<p align="center">
+  <a href="README.md">Home</a> • <a href="docs/first_lesson_walkthrough.md">First Lesson</a> • <a href="docs/teacher_guide.md">Teacher Guide</a> • <a href="docs/student_worksheet.md">Student Worksheet</a> • <a href="docs/architecture.md">Architecture</a> • <a href="docs/how_llms_work.md">How LLMs Work</a>
+</p>
+
+---
 
 # Kairo
-
-Build it. Train it. Talk to it. Retrain it. Understand it.
 
 Kairo is a hands-on educational GPT lab that helps learners inspect how language models actually work.
 
@@ -34,10 +40,15 @@ Kairo exists to make those mechanics:
 ## The magic moment
 
 Retrain Kairo on pirate stories and watch the model immediately start speaking differently.
+
 Same model. Different data. Different behaviour.
+
 That moment is where many learners suddenly understand what a language model actually is.
+
 The model did not become “smarter”.
+
 It changed because the training data changed.
+
 This is where LLMs stop feeling like magic and start feeling understandable.
 
 ## The learning loop
@@ -52,47 +63,61 @@ This is where LLMs stop feeling like magic and start feeling understandable.
 
 ## Simple architecture
 
-Training text  
-↓  
-Byte tokenizer  
-↓  
-Sequence dataset  
-↓  
-TinyGPT  
-↓  
-Loss and updates  
-↓  
+```text
+Training text
+↓
+Byte tokenizer
+↓
+Sequence dataset
+↓
+TinyGPT
+↓
+Loss and updates
+↓
 Generation and inspection
+```
 
 ## Installation
 
 Run:
 
+```bash
 python -m venv .venv
 source .venv/bin/activate
 pip install -e .
+```
 
 Optional Learn Mode:
 
+```bash
 pip install -e ".[learn]"
+```
 
 ## Try it in 3 minutes
 
 Train:
 
+```bash
 python src/train.py --input_file data/samples/space_adventure.txt --out_dir runs/demo --epochs 1 --batch_size 4 --seq_len 32 --d_model 64 --n_heads 4 --n_layers 2 --device cpu
+```
 
 Generate:
 
+```bash
 python src/generate.py --checkpoint runs/demo/best.pt --prompt "The robot opened the door" --max_new_tokens 20 --device cpu
+```
 
 Evaluate:
 
+```bash
 python src/evaluate.py --checkpoint runs/demo/best.pt --input_file data/samples/space_adventure.txt --device cpu
+```
 
 Chat:
 
+```bash
 python src/chat.py --checkpoint runs/demo/best.pt --device cpu
+```
 
 ## What you should see
 
@@ -109,7 +134,9 @@ That weirdness is the point: it reveals the mechanism.
 
 Launch interactive Learn Mode:
 
+```bash
 streamlit run src/kairo_learn.py
+```
 
 You can walk students through:
 
@@ -161,8 +188,8 @@ Kairo works for:
 
 Start with:
 
-- First Lesson Walkthrough: docs/first_lesson_walkthrough.md
-- Teacher Guide: docs/teacher_guide.md
+- [First Lesson Walkthrough](docs/first_lesson_walkthrough.md)
+- [Teacher Guide](docs/teacher_guide.md)
 
 ## Safety and supervision
 
@@ -184,17 +211,19 @@ It is a learning tool for inspecting core LLM mechanics.
 
 ## Developer quickstart
 
+```bash
 ruff check .
 python -m compileall src tests
 pytest -q
+```
 
 ## Documentation map
 
-- First Lesson Walkthrough: docs/first_lesson_walkthrough.md
-- Teacher Guide: docs/teacher_guide.md
-- Student Worksheet: docs/student_worksheet.md
-- Architecture: docs/architecture.md
-- How LLMs Work: docs/how_llms_work.md
+- [First Lesson Walkthrough](docs/first_lesson_walkthrough.md)
+- [Teacher Guide](docs/teacher_guide.md)
+- [Student Worksheet](docs/student_worksheet.md)
+- [Architecture](docs/architecture.md)
+- [How LLMs Work](docs/how_llms_work.md)
 
 ## Roadmap
 
@@ -207,4 +236,8 @@ Future educational improvements:
 - printable lesson packs
 - screenshots and walkthrough images
 
-<p align="center"> <a href="README.md">Home</a> • <a href="docs/first_lesson_walkthrough.md">First Lesson</a> • <a href="docs/teacher_guide.md">Teacher Guide</a> • <a href="docs/student_worksheet.md">Student Worksheet</a> • <a href="docs/architecture.md">Architecture</a> • <a href="docs/how_llms_work.md">How LLMs Work</a> </p>
+---
+
+<p align="center">
+  <a href="README.md">Home</a> • <a href="docs/first_lesson_walkthrough.md">First Lesson</a> • <a href="docs/teacher_guide.md">Teacher Guide</a> • <a href="docs/student_worksheet.md">Student Worksheet</a> • <a href="docs/architecture.md">Architecture</a> • <a href="docs/how_llms_work.md">How LLMs Work</a>
+</p>
