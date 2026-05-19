@@ -7,69 +7,69 @@
 BT
 /F1 11 Tf
 50 790 Td
-(<p align="center">) Tj
+( ) Tj
 0 -14 Td
-(  <img src="assets/kairo-logo.svg" alt="Kairo logo" width="640"/>) Tj
+(  Kairo) Tj
 0 -14 Td
-(</p>) Tj
-0 -14 Td
-() Tj
-0 -14 Td
-(<p align="center">) Tj
-0 -14 Td
-(  <a href="../README.md">Home</a> ?) Tj
-0 -14 Td
-(  <a href="first_lesson_walkthrough.md">First Lesson Walkthrough</a> ?) Tj
-0 -14 Td
-(  <a href="teacher_guide.md">Teacher Guide</a> ?) Tj
-0 -14 Td
-(  <a href="student_worksheet.md">Student Worksheet</a> ?) Tj
-0 -14 Td
-(  <a href="architecture.md">Architecture</a> ?) Tj
-0 -14 Td
-(  <a href="how_llms_work.md">How LLMs Work</a>) Tj
-0 -14 Td
-(</p>) Tj
+( ) Tj
 0 -14 Td
 () Tj
 0 -14 Td
-(---) Tj
+( ) Tj
+0 -14 Td
+(  Home) Tj
+0 -14 Td
+(  First Lesson Walkthrough) Tj
+0 -14 Td
+(  Teacher Guide) Tj
+0 -14 Td
+(  Student Worksheet) Tj
+0 -14 Td
+(  Architecture) Tj
+0 -14 Td
+(  How LLMs Work) Tj
+0 -14 Td
+( ) Tj
 0 -14 Td
 () Tj
 0 -14 Td
-(# Student Worksheet) Tj
+() Tj
 0 -14 Td
 () Tj
 0 -14 Td
-(# Can you train a tiny AI?) Tj
+(Student Worksheet) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Can you train a tiny AI?) Tj
 0 -14 Td
 () Tj
 0 -14 Td
 (In this activity you will:) Tj
 0 -14 Td
-(- build a tiny language model) Tj
+(build a tiny language model) Tj
 0 -14 Td
-(- train it) Tj
+(train it) Tj
 0 -14 Td
-(- talk to it) Tj
+(talk to it) Tj
 0 -14 Td
-(- retrain it) Tj
+(retrain it) Tj
 0 -14 Td
-(- inspect attention) Tj
+(inspect attention) Tj
 0 -14 Td
-(- understand how training data changes behaviour) Tj
-0 -14 Td
-() Tj
-0 -14 Td
-(---) Tj
+(understand how training data changes behaviour) Tj
 0 -14 Td
 () Tj
 0 -14 Td
-(# Challenge 1 ? Build it) Tj
+() Tj
 0 -14 Td
 () Tj
 0 -14 Td
-(## My dataset) Tj
+(Challenge 1 ? Build it) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(My dataset) Tj
 0 -14 Td
 () Tj
 0 -14 Td
@@ -77,7 +77,7 @@ BT
 0 -14 Td
 () Tj
 0 -14 Td
-(## Predict) Tj
+(Predict) Tj
 0 -14 Td
 () Tj
 0 -14 Td
@@ -89,15 +89,15 @@ BT
 0 -14 Td
 () Tj
 0 -14 Td
-(---) Tj
+() Tj
 0 -14 Td
 () Tj
 0 -14 Td
-(# Challenge 2 ? Train it) Tj
+(Challenge 2 ? Train it) Tj
 0 -14 Td
 () Tj
 0 -14 Td
-(## Observe) Tj
+(Observe) Tj
 0 -14 Td
 () Tj
 0 -14 Td
@@ -109,7 +109,7 @@ BT
 0 -14 Td
 () Tj
 0 -14 Td
-(## Reflection) Tj
+(Reflection) Tj
 0 -14 Td
 () Tj
 0 -14 Td
@@ -121,23 +121,15 @@ BT
 0 -14 Td
 () Tj
 0 -14 Td
-(---) Tj
+() Tj
 0 -14 Td
 () Tj
 0 -14 Td
-(# Challenge 3 ? Talk to it) Tj
+(Challenge 3 ? Talk to it) Tj
 0 -14 Td
 () Tj
 0 -14 Td
-(## My prompt) Tj
-0 -14 Td
-() Tj
-0 -14 Td
-(__________________________________________________) Tj
-0 -14 Td
-() Tj
-0 -14 Td
-(## Top predicted next token) Tj
+(My prompt) Tj
 0 -14 Td
 () Tj
 0 -14 Td
@@ -145,7 +137,7 @@ BT
 0 -14 Td
 () Tj
 0 -14 Td
-(## Generated output) Tj
+(Top predicted next token) Tj
 0 -14 Td
 () Tj
 0 -14 Td
@@ -153,7 +145,15 @@ BT
 0 -14 Td
 () Tj
 0 -14 Td
-(## Reflection) Tj
+(Generated output) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(__________________________________________________) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Reflection) Tj
 0 -14 Td
 () Tj
 0 -14 Td
@@ -165,15 +165,15 @@ BT
 0 -14 Td
 () Tj
 0 -14 Td
-(---) Tj
+() Tj
 0 -14 Td
 () Tj
 0 -14 Td
-(# Challenge 4 ? Retrain it) Tj
+(Challenge 4 ? Retrain it) Tj
 0 -14 Td
 () Tj
 0 -14 Td
-(## Output before retrain) Tj
+(Output before retrain) Tj
 0 -14 Td
 () Tj
 0 -14 Td
@@ -181,7 +181,7 @@ BT
 0 -14 Td
 () Tj
 0 -14 Td
-(## Output after retrain) Tj
+(Output after retrain) Tj
 0 -14 Td
 () Tj
 0 -14 Td

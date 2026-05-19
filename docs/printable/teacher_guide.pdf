@@ -7,113 +7,113 @@
 BT
 /F1 11 Tf
 50 790 Td
-(<p align="center">) Tj
+( ) Tj
 0 -14 Td
-(  <img src="assets/kairo-logo.svg" alt="Kairo logo" width="640"/>) Tj
+(  Kairo) Tj
 0 -14 Td
-(</p>) Tj
-0 -14 Td
-() Tj
-0 -14 Td
-(<p align="center">) Tj
-0 -14 Td
-(  <a href="../README.md">Home</a> ?) Tj
-0 -14 Td
-(  <a href="first_lesson_walkthrough.md">First Lesson Walkthrough</a> ?) Tj
-0 -14 Td
-(  <a href="teacher_guide.md">Teacher Guide</a> ?) Tj
-0 -14 Td
-(  <a href="student_worksheet.md">Student Worksheet</a> ?) Tj
-0 -14 Td
-(  <a href="architecture.md">Architecture</a> ?) Tj
-0 -14 Td
-(  <a href="how_llms_work.md">How LLMs Work</a>) Tj
-0 -14 Td
-(</p>) Tj
+( ) Tj
 0 -14 Td
 () Tj
 0 -14 Td
-(---) Tj
+( ) Tj
+0 -14 Td
+(  Home) Tj
+0 -14 Td
+(  First Lesson Walkthrough) Tj
+0 -14 Td
+(  Teacher Guide) Tj
+0 -14 Td
+(  Student Worksheet) Tj
+0 -14 Td
+(  Architecture) Tj
+0 -14 Td
+(  How LLMs Work) Tj
+0 -14 Td
+( ) Tj
 0 -14 Td
 () Tj
 0 -14 Td
-(# Teacher Guide) Tj
+() Tj
 0 -14 Td
 () Tj
 0 -14 Td
-(## Before-lesson checklist) Tj
+(Teacher Guide) Tj
 0 -14 Td
 () Tj
 0 -14 Td
-(- Python installed) Tj
-0 -14 Td
-(- Repo cloned) Tj
-0 -14 Td
-(- `pip install -e .` completed) Tj
-0 -14 Td
-(- Sample data available in `data/samples/`) Tj
-0 -14 Td
-(- Optional Learn Mode extras installed with:) Tj
+(Before-lesson checklist) Tj
 0 -14 Td
 () Tj
 0 -14 Td
-(```bash) Tj
+(Python installed) Tj
+0 -14 Td
+(Repo cloned) Tj
+0 -14 Td
+(`pip install -e .` completed) Tj
+0 -14 Td
+(Sample data available in `data/samples/`) Tj
+0 -14 Td
+(Optional Learn Mode extras installed with:) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+() Tj
 0 -14 Td
 (pip install -e ".[learn]") Tj
 0 -14 Td
-(```) Tj
+() Tj
 0 -14 Td
 () Tj
 0 -14 Td
-(---) Tj
+() Tj
 0 -14 Td
 () Tj
 0 -14 Td
-(## Hardware expectations) Tj
+(Hardware expectations) Tj
 0 -14 Td
 () Tj
 0 -14 Td
-(- CPU-only works well) Tj
+(CPU-only works well) Tj
 0 -14 Td
-(- 8GB RAM recommended) Tj
+(8GB RAM recommended) Tj
 0 -14 Td
-(- No GPU required) Tj
+(No GPU required) Tj
 0 -14 Td
-(- Classroom demo preset recommended for slower laptops) Tj
-0 -14 Td
-() Tj
-0 -14 Td
-(---) Tj
+(Classroom demo preset recommended for slower laptops) Tj
 0 -14 Td
 () Tj
 0 -14 Td
-(## Setup options) Tj
+() Tj
 0 -14 Td
 () Tj
 0 -14 Td
-(### Teacher-led demo) Tj
+(Setup options) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Teacher-led demo) Tj
 0 -14 Td
 (One machine projected to the class.) Tj
 0 -14 Td
 () Tj
 0 -14 Td
-(### Pair activity) Tj
+(Pair activity) Tj
 0 -14 Td
 (Two learners work together on one laptop.) Tj
 0 -14 Td
 () Tj
 0 -14 Td
-(### Individual exploration) Tj
+(Individual exploration) Tj
 0 -14 Td
 (Each learner trains and experiments independently.) Tj
 0 -14 Td
 () Tj
 0 -14 Td
-(---) Tj
+() Tj
 0 -14 Td
 () Tj
 0 -14 Td
-(## Suggested classroom pacing) Tj
+(Suggested classroom pacing) Tj
 0 -14 Td
 () Tj
 0 -14 Td
@@ -133,11 +133,11 @@ BT
 0 -14 Td
 () Tj
 0 -14 Td
-(---) Tj
+() Tj
 0 -14 Td
 () Tj
 0 -14 Td
-(## 45-minute lesson script) Tj
+(45-minute lesson script) Tj
 0 -14 Td
 () Tj
 0 -14 Td
@@ -153,39 +153,39 @@ BT
 0 -14 Td
 () Tj
 0 -14 Td
-(---) Tj
+() Tj
 0 -14 Td
 () Tj
 0 -14 Td
-(## 90-minute workshop script) Tj
+(90-minute workshop script) Tj
 0 -14 Td
 () Tj
 0 -14 Td
 (Add:) Tj
 0 -14 Td
-(- retraining) Tj
+(retraining) Tj
 0 -14 Td
-(- attention inspection) Tj
+(attention inspection) Tj
 0 -14 Td
-(- experiment save/restore) Tj
+(experiment save/restore) Tj
 0 -14 Td
-(- comparing datasets) Tj
+(comparing datasets) Tj
 0 -14 Td
-(- changing prompts and temperatures) Tj
-0 -14 Td
-() Tj
-0 -14 Td
-(---) Tj
+(changing prompts and temperatures) Tj
 0 -14 Td
 () Tj
 0 -14 Td
-(## What students usually find surprising) Tj
+() Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(What students usually find surprising) Tj
 0 -14 Td
 () Tj
 0 -14 Td
 (Learners are often surprised that:) Tj
 0 -14 Td
-(- the model repeats itself) Tj
+(the model repeats itself) Tj
 ET
 endstream endobj
 xref
