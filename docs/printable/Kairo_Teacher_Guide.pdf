@@ -1,0 +1,202 @@
+%PDF-1.4
+1 0 obj << /Type /Catalog /Pages 2 0 R >> endobj
+2 0 obj << /Type /Pages /Kids [3 0 R] /Count 1 >> endobj
+3 0 obj << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 4 0 R >> >> /Contents 5 0 R >> endobj
+4 0 obj << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> endobj
+5 0 obj << /Length 3047 >> stream
+BT
+/F1 11 Tf
+50 790 Td
+( ) Tj
+0 -14 Td
+(  Kairo) Tj
+0 -14 Td
+( ) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+( ) Tj
+0 -14 Td
+(  Home) Tj
+0 -14 Td
+(  First Lesson Walkthrough) Tj
+0 -14 Td
+(  Teacher Guide) Tj
+0 -14 Td
+(  Student Worksheet) Tj
+0 -14 Td
+(  Architecture) Tj
+0 -14 Td
+(  How LLMs Work) Tj
+0 -14 Td
+( ) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+() Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Teacher Guide) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Before-lesson checklist) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Python installed) Tj
+0 -14 Td
+(Repo cloned) Tj
+0 -14 Td
+(`pip install -e .` completed) Tj
+0 -14 Td
+(Sample data available in `data/samples/`) Tj
+0 -14 Td
+(Optional Learn Mode extras installed with:) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(pip install -e ".[learn]") Tj
+0 -14 Td
+() Tj
+0 -14 Td
+() Tj
+0 -14 Td
+() Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Hardware expectations) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(CPU-only works well) Tj
+0 -14 Td
+(8GB RAM recommended) Tj
+0 -14 Td
+(No GPU required) Tj
+0 -14 Td
+(Classroom demo preset recommended for slower laptops) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+() Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Setup options) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Teacher-led demo) Tj
+0 -14 Td
+(One machine projected to the class.) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Pair activity) Tj
+0 -14 Td
+(Two learners work together on one laptop.) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Individual exploration) Tj
+0 -14 Td
+(Each learner trains and experiments independently.) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+() Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Suggested classroom pacing) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(| Time | Activity |) Tj
+0 -14 Td
+(|---|---|) Tj
+0 -14 Td
+(| 0?10 mins | Introduce AI prediction concepts |) Tj
+0 -14 Td
+(| 10?20 mins | Tokenisation + Build it |) Tj
+0 -14 Td
+(| 20?35 mins | Train a tiny model |) Tj
+0 -14 Td
+(| 35?45 mins | Generate text + reflection |) Tj
+0 -14 Td
+(| 45?90 mins | Retraining, attention inspection, experiment save/restore |) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+() Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(45-minute lesson script) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(1. Build it \(token viewer\)) Tj
+0 -14 Td
+(2. Train it \(1 epoch\)) Tj
+0 -14 Td
+(3. Talk to it) Tj
+0 -14 Td
+(4. Inspect probabilities) Tj
+0 -14 Td
+(5. Reflection and discussion) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+() Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(90-minute workshop script) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Add:) Tj
+0 -14 Td
+(retraining) Tj
+0 -14 Td
+(attention inspection) Tj
+0 -14 Td
+(experiment save/restore) Tj
+0 -14 Td
+(comparing datasets) Tj
+0 -14 Td
+(changing prompts and temperatures) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+() Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(What students usually find surprising) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Learners are often surprised that:) Tj
+0 -14 Td
+(the model repeats itself) Tj
+ET
+endstream endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000241 00000 n 
+0000000311 00000 n 
+trailer << /Size 6 /Root 1 0 R >>
+startxref
+3410
+%%EOF

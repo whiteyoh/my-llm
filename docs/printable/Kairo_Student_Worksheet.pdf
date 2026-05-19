@@ -1,0 +1,202 @@
+%PDF-1.4
+1 0 obj << /Type /Catalog /Pages 2 0 R >> endobj
+2 0 obj << /Type /Pages /Kids [3 0 R] /Count 1 >> endobj
+3 0 obj << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 4 0 R >> >> /Contents 5 0 R >> endobj
+4 0 obj << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> endobj
+5 0 obj << /Length 2908 >> stream
+BT
+/F1 11 Tf
+50 790 Td
+( ) Tj
+0 -14 Td
+(  Kairo) Tj
+0 -14 Td
+( ) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+( ) Tj
+0 -14 Td
+(  Home) Tj
+0 -14 Td
+(  First Lesson Walkthrough) Tj
+0 -14 Td
+(  Teacher Guide) Tj
+0 -14 Td
+(  Student Worksheet) Tj
+0 -14 Td
+(  Architecture) Tj
+0 -14 Td
+(  How LLMs Work) Tj
+0 -14 Td
+( ) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+() Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Student Worksheet) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Can you train a tiny AI?) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(In this activity you will:) Tj
+0 -14 Td
+(build a tiny language model) Tj
+0 -14 Td
+(train it) Tj
+0 -14 Td
+(talk to it) Tj
+0 -14 Td
+(retrain it) Tj
+0 -14 Td
+(inspect attention) Tj
+0 -14 Td
+(understand how training data changes behaviour) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+() Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Challenge 1 ? Build it) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(My dataset) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(__________________________________________________) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Predict) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(What kind of text do you think the model will learn?) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(__________________________________________________) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+() Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Challenge 2 ? Train it) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Observe) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(What happened to the loss value?) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(__________________________________________________) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Reflection) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Why do you think the loss changed?) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(__________________________________________________) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+() Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Challenge 3 ? Talk to it) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(My prompt) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(__________________________________________________) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Top predicted next token) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(__________________________________________________) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Generated output) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(__________________________________________________) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Reflection) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Did the generated text make sense?) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(__________________________________________________) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+() Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Challenge 4 ? Retrain it) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Output before retrain) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(__________________________________________________) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Output after retrain) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(__________________________________________________) Tj
+ET
+endstream endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000241 00000 n 
+0000000311 00000 n 
+trailer << /Size 6 /Root 1 0 R >>
+startxref
+3271
+%%EOF
