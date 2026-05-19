@@ -15,7 +15,19 @@
 
 # Teacher Guide
 
-## Before-lesson checklist
+## Quick-reference classroom flow
+
+| Step | Suggested timing | Teacher action | Student outcome |
+|---|---:|---|---|
+| 1. Build it | 10 min | Select dataset and preview tokenisation | Learners predict model behaviour |
+| 2. Train it | 15 min | Run 1 short epoch and watch loss | Learners connect training to pattern learning |
+| 3. Talk to it | 10 min | Prompt model and inspect output | Learners observe uncertainty and repetition |
+| 4. Retrain it | 15 min | Swap dataset and rerun train | Learners compare style shift before/after |
+| 5. Reflect | 10 min | Lead discussion using prompts below | Learners explain what changed and why |
+
+---
+
+## Before-lesson checklist (5–10 min setup)
 
 - Python installed
 - Repo cloned
@@ -27,9 +39,15 @@
 pip install -e ".[learn]"
 ```
 
+### Pacing tips by learner age/experience
+
+- **Ages 11–13 / beginners:** Use only one dataset and one fixed prompt.
+- **Ages 14–16 / mixed experience:** Add retrain comparison and one misconception check.
+- **Advanced learners:** Add temperature experiments and multiple prompt evaluations.
+
 ---
 
-## Hardware expectations
+## Hardware expectations (2 min)
 
 - CPU-only works well
 - 8GB RAM recommended
@@ -38,7 +56,7 @@ pip install -e ".[learn]"
 
 ---
 
-## Setup options
+## Setup options (3–5 min)
 
 ### Teacher-led demo
 One machine projected to the class.
@@ -65,22 +83,22 @@ Each learner trains and experiments independently.
 
 ## 45-minute lesson script
 
-1. Build it (token viewer)
-2. Train it (1 epoch)
-3. Talk to it
-4. Inspect probabilities
-5. Reflection and discussion
+1. Build it (token viewer) — **10 min**
+2. Train it (1 epoch) — **15 min**
+3. Talk to it — **10 min**
+4. Inspect probabilities — **5 min**
+5. Reflection and discussion — **5 min**
 
 ---
 
 ## 90-minute workshop script
 
 Add:
-- retraining
-- attention inspection
-- experiment save/restore
-- comparing datasets
-- changing prompts and temperatures
+- retraining (**15 min**)
+- attention inspection (**10 min**)
+- experiment save/restore (**10 min**)
+- comparing datasets (**10 min**)
+- changing prompts and temperatures (**10 min**)
 
 ---
 
@@ -94,6 +112,17 @@ Learners are often surprised that:
 - tiny models can still feel convincing
 
 These moments create strong discussion opportunities.
+
+---
+
+## Common misconceptions to watch for
+
+- **"Lower loss means the model understands."**
+- **"Attention maps show what the model is thinking."**
+- **"If text sounds fluent, it must be true."**
+- **"Retraining adds facts rather than shifting pattern probabilities."**
+
+Coaching move: ask students to point to evidence in output before accepting a claim.
 
 ---
 
@@ -134,7 +163,7 @@ A useful explanation for learners:
 
 ---
 
-## Experiment save/restore workflow
+## Experiment save/restore workflow (10 min)
 
 1. Train model
 2. Save experiment

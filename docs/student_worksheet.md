@@ -89,9 +89,25 @@ __________________________________________________
 
 __________________________________________________
 
+## What changed and why?
+
+- Compare word choices before and after retraining.
+- Describe style changes (tone, topic, repetition, or sentence shape).
+- Identify one misconception you had before this step and explain how the output changed your thinking.
+
+__________________________________________________
+
 ## Reflection
 
 What changed after retraining?
+
+__________________________________________________
+
+## Extension challenges
+
+- Run the same prompt with two different sample datasets.
+- Try a second retrain round and track whether differences become stronger.
+- Write one sentence predicting how outputs would change with a much larger dataset.
 
 __________________________________________________
 
@@ -142,16 +158,6 @@ __________________________________________________
 
 ---
 
-<p align="center">
-  <a href="../README.md">Home</a> •
-  <a href="first_lesson_walkthrough.md">First Lesson Walkthrough</a> •
-  <a href="teacher_guide.md">Teacher Guide</a> •
-  <a href="student_worksheet.md">Student Worksheet</a> •
-  <a href="architecture.md">Architecture</a> •
-  <a href="how_llms_work.md">How LLMs Work</a>
-</p>
-
-
 ## New sample datasets
 
 Use one starter file from `data/samples/`:
@@ -164,3 +170,14 @@ Use one starter file from `data/samples/`:
 - `Captain Rowan:`
 - `The station woke`
 - `Rain taps softly`
+
+---
+
+<p align="center">
+  <a href="../README.md">Home</a> •
+  <a href="first_lesson_walkthrough.md">First Lesson Walkthrough</a> •
+  <a href="teacher_guide.md">Teacher Guide</a> •
+  <a href="student_worksheet.md">Student Worksheet</a> •
+  <a href="architecture.md">Architecture</a> •
+  <a href="how_llms_work.md">How LLMs Work</a>
+</p>
