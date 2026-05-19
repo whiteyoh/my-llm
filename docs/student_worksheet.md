@@ -15,41 +15,35 @@
 
 # Student Worksheet
 
-# Can you train a tiny AI?
+## Can you train a tiny AI?
 
-In this activity you will:
-- build a tiny language model
-- train it
-- talk to it
-- retrain it
-- inspect attention
-- understand how training data changes behaviour
+In this activity you will build, train, test, retrain, and analyze a tiny language model named Kairo.
 
 ---
 
-# Challenge 1 — Build it
+## Challenge 1 — Build it
 
-## My dataset
+### My dataset
 
 __________________________________________________
 
-## Predict
+### Prediction (before training)
 
-What kind of text do you think the model will learn?
+What kind of text do you think the model will generate?
 
 __________________________________________________
 
 ---
 
-# Challenge 2 — Train it
+## Challenge 2 — Train it
 
-## Observe
+### Loss notes
 
-What happened to the loss value?
+What happened to the loss value while training?
 
 __________________________________________________
 
-## Reflection
+### Reflection
 
 Why do you think the loss changed?
 
@@ -57,119 +51,127 @@ __________________________________________________
 
 ---
 
-# Challenge 3 — Talk to it
+## Challenge 3 — Talk to it
 
-## My prompt
-
-__________________________________________________
-
-## Top predicted next token
+### My prompt
 
 __________________________________________________
 
-## Generated output
+### Top predicted next token
 
 __________________________________________________
 
-## Reflection
-
-Did the generated text make sense?
+### Generated output
 
 __________________________________________________
 
----
+### Reflection
 
-# Challenge 4 — Retrain it
-
-## Output before retrain
-
-__________________________________________________
-
-## Output after retrain
-
-__________________________________________________
-
-## What changed and why?
-
-- Compare word choices before and after retraining.
-- Describe style changes (tone, topic, repetition, or sentence shape).
-- Identify one misconception you had before this step and explain how the output changed your thinking.
-
-__________________________________________________
-
-## Reflection
-
-What changed after retraining?
-
-__________________________________________________
-
-## Extension challenges
-
-- Run the same prompt with two different sample datasets.
-- Try a second retrain round and track whether differences become stronger.
-- Write one sentence predicting how outputs would change with a much larger dataset.
+Did the generated text make sense? Why or why not?
 
 __________________________________________________
 
 ---
 
-# Challenge 5 — Inspect attention
+## Challenge 4 — Retrain it
 
-## Token with strongest attention
+### Output Before Retrain
+
+Prompt used:
 
 __________________________________________________
 
-## Reflection
+Output recorded:
 
-Does attention mean understanding? Why or why not?
+__________________________________________________
+
+### Output After Retrain
+
+Prompt used (same prompt recommended):
+
+__________________________________________________
+
+Output recorded:
+
+__________________________________________________
+
+### What Changed and Why?
+
+Compare the two outputs. Note style, vocabulary, repetition, and topic shifts.
+
+__________________________________________________
+
+Why do you think retraining changed the output?
+
+__________________________________________________
+
+### Reflection
+
+How did this change your understanding of how AI models learn?
+
+__________________________________________________
+
+### Extension exercises
+
+- Try two different datasets with the same prompt and compare outputs.
+- Run one additional retrain round and record whether style shifts become stronger.
+- Write one prediction about what might happen with a much larger dataset.
+
+Notes:
 
 __________________________________________________
 
 ---
 
-# Challenge 6 — Save experiment
+## Challenge 5 — Inspect attention
 
-## Experiment folder
+### Token with strongest attention
+
+__________________________________________________
+
+### Reflection
+
+Does attention mean understanding? Explain your answer.
 
 __________________________________________________
 
 ---
 
-# Challenge 7 — Understand it
+## Challenge 6 — Save experiment
 
-## What surprised you most?
-
-__________________________________________________
-
-## What did you learn about AI?
+### Experiment folder name
 
 __________________________________________________
 
 ---
 
-# Try this next
+## Challenge 7 — Understand it
 
-- Train on pirate text
-- Train on song lyrics
-- Train on very tiny datasets
-- Mix different writing styles
-- Intentionally overfit the model
-- Compare outputs before and after retraining
+### What surprised you most?
+
+__________________________________________________
+
+### What did you learn about AI?
+
+__________________________________________________
 
 ---
+
+## Before/after retrain prompt ideas
+
+```text
+Captain Rowan:
+The station woke
+Rain taps softly
+```
 
 ## New sample datasets
 
 Use one starter file from `data/samples/`:
+
 - `pirate_dialogue.txt`
 - `sci_fi_micro_story.txt`
 - `short_poems.txt`
-
-## Before/after retrain prompt ideas
-
-- `Captain Rowan:`
-- `The station woke`
-- `Rain taps softly`
 
 ---
 

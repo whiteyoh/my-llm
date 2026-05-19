@@ -17,35 +17,26 @@
 
 ## What is next-token prediction?
 
-Language models work by predicting what token is most likely to come next.
-
-Example:
+LLMs predict one token at a time based on previous tokens.
 
 ```text
-The robot opened the _____
+Prompt: The robot opened the
+Top candidates: door (0.31), gate (0.18), hatch (0.14)
 ```
-
-The model might predict:
-- door
-- gate
-- hatch
-- window
-
-Generation happens by repeating this prediction process many times.
 
 ---
 
 ## What is a token?
 
-A token is a chunk of text the model works with.
+A token is a unit of text the model processes.
 
-Kairo uses byte-level tokens because they are:
-- simple
-- universal
-- easy to inspect
-- useful for learning the raw mechanics
+Token illustration:
 
-Production models often use more advanced tokenisation systems.
+```text
+"matey!" -> [m][a][t][e][y][!]
+```
+
+Kairo uses byte-level tokenization to make this easy to inspect.
 
 ---
 
@@ -53,111 +44,55 @@ Production models often use more advanced tokenisation systems.
 
 Loss measures prediction error.
 
-High loss:
-- poor predictions
-- weak pattern learning
+```text
+Higher loss  -> poorer predictions
+Lower loss   -> better predictions
+```
 
-Lower loss:
-- better predictions
-- stronger pattern learning
-
-Lower loss does not mean human-like intelligence.
+Lower loss does **not** mean human-like understanding.
 
 ---
 
 ## What is attention?
 
-Attention is a weighting mechanism over earlier tokens.
+Attention weights earlier tokens when predicting the next token.
 
-It helps the model decide:
-- which earlier words matter most
-- which patterns are useful for prediction
+```text
+Prompt tokens: [Captain] [Rowan] [raised] [the]
+Predict next: "sail"
+Attention weights to next token:
+Captain: 0.08
+Rowan:   0.12
+raised:  0.46
+the:     0.34
+```
 
 ---
 
 ## Attention is not understanding
 
-Attention does not mean:
-- thoughts
-- beliefs
-- emotions
-- consciousness
-- human reasoning
-
-Attention is a mathematical mechanism, not a mind.
+Attention does not prove thoughts, beliefs, or consciousness.
+It is a mathematical weighting mechanism.
 
 ---
 
-## Why retraining changes behaviour
+## Why retraining changes behavior
 
-Changing training text changes token statistics and patterns.
+Changing datasets changes token statistics and style patterns.
 
-That means the model starts predicting differently.
+Example retrain effect:
 
-This is why:
-- datasets matter
-- tone changes
-- style changes
-- biases can appear
-
----
-
-## Why small models fail
-
-Tiny models have:
-- limited memory
-- limited capacity
-- short context windows
-
-They often:
-- repeat themselves
-- drift off-topic
-- produce strange grammar
-- memorise text
-
-This behaviour is useful for learning because the mechanics are easier to observe.
+```text
+Before retrain: "The station door opened quietly"
+After retrain:  "Arrr, the hatch swung wide, matey"
+```
 
 ---
 
-## Why AI hallucinations happen
+## Why tiny models can fail
 
-Language models predict plausible patterns.
-
-They do not:
-- verify truth
-- understand facts like humans
-- know when they are wrong
-
-This is why models can confidently generate incorrect information.
-
----
-
-## Why tiny models can still feel intelligent
-
-Even small models can produce surprisingly convincing text.
-
-This can create the illusion of understanding.
-
-But language models are still fundamentally:
-- prediction systems
-- pattern learners
-- probability engines
-
-Kairo is designed to help learners inspect these mechanics directly.
-
----
-
-## Why data quality matters
-
-Cleaner and more focused training data usually produces:
-- more coherent outputs
-- fewer random errors
-- more stable style
-
-Poor or mixed data often creates:
-- inconsistency
-- repetition
-- unstable behaviour
+Tiny models often repeat, drift, or contradict themselves because capacity is limited.
+That visible failure is useful for classroom learning.
 
 ---
 
