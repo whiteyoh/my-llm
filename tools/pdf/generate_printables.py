@@ -25,6 +25,15 @@ DOC_MAP = {
 }
 
 
+def sanitize_markdown(src: str) -> str:
+    """Remove HTML-only nav/logo wrappers that are noisy in PDFs."""
+    src = re.sub(r"<p align=\"center\">\s*<img[^>]*>\s*</p>\s*", "", src, flags=re.S)
+    src = re.sub(r"<p align=\"center\">[\s\S]*?</p>\s*", "", src, count=1)
+    src = re.sub(r"\n---\n", "\n", src, count=1)
+    src = re.sub(r"\n---\n\s*$", "\n", src)
+    return src.strip() + "\n"
+
+
 def with_nav_cues(html: str) -> str:
     parts = re.split(r"(<h2[^>]*>.*?</h2>)", html, flags=re.S)
     if len(parts) < 3:
@@ -43,7 +52,7 @@ def with_nav_cues(html: str) -> str:
 
 
 def render(md_path: Path, out_pdf: Path, page_size: str) -> None:
-    src = md_path.read_text(encoding="utf-8")
+    src = sanitize_markdown(md_path.read_text(encoding="utf-8"))
     body = markdown.markdown(src, extensions=["fenced_code", "tables", "toc", "md_in_html"])
     body = body.replace("<pre><code>", '<pre class="command"><code>$ ').replace("</code></pre>", "</code></pre>")
     body = with_nav_cues(body)

@@ -7,61 +7,61 @@
 BT
 /F1 11 Tf
 50 790 Td
-(<p align="center">) Tj
+( ) Tj
 0 -14 Td
-(  <img src="assets/kairo-logo.svg" alt="Kairo logo" width="640"/>) Tj
+(  Kairo) Tj
 0 -14 Td
-(</p>) Tj
-0 -14 Td
-() Tj
-0 -14 Td
-(<p align="center">) Tj
-0 -14 Td
-(  <a href="../README.md">Home</a> ?) Tj
-0 -14 Td
-(  <a href="first_lesson_walkthrough.md">First Lesson Walkthrough</a> ?) Tj
-0 -14 Td
-(  <a href="teacher_guide.md">Teacher Guide</a> ?) Tj
-0 -14 Td
-(  <a href="student_worksheet.md">Student Worksheet</a> ?) Tj
-0 -14 Td
-(  <a href="architecture.md">Architecture</a> ?) Tj
-0 -14 Td
-(  <a href="how_llms_work.md">How LLMs Work</a>) Tj
-0 -14 Td
-(</p>) Tj
+( ) Tj
 0 -14 Td
 () Tj
 0 -14 Td
-(---) Tj
+( ) Tj
+0 -14 Td
+(  Home) Tj
+0 -14 Td
+(  First Lesson Walkthrough) Tj
+0 -14 Td
+(  Teacher Guide) Tj
+0 -14 Td
+(  Student Worksheet) Tj
+0 -14 Td
+(  Architecture) Tj
+0 -14 Td
+(  How LLMs Work) Tj
+0 -14 Td
+( ) Tj
 0 -14 Td
 () Tj
 0 -14 Td
-(# First Lesson Walkthrough) Tj
+() Tj
 0 -14 Td
 () Tj
 0 -14 Td
-(## Goal) Tj
+(First Lesson Walkthrough) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Goal) Tj
 0 -14 Td
 () Tj
 0 -14 Td
 (By the end of this session, learners should understand:) Tj
 0 -14 Td
-(- language models predict tokens) Tj
+(language models predict tokens) Tj
 0 -14 Td
-(- training data changes behaviour) Tj
+(training data changes behaviour) Tj
 0 -14 Td
-(- low loss is not intelligence) Tj
+(low loss is not intelligence) Tj
 0 -14 Td
-(- attention is not human reasoning) Tj
-0 -14 Td
-() Tj
-0 -14 Td
-(---) Tj
+(attention is not human reasoning) Tj
 0 -14 Td
 () Tj
 0 -14 Td
-(# Suggested lesson length) Tj
+() Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Suggested lesson length) Tj
 0 -14 Td
 () Tj
 0 -14 Td
@@ -69,11 +69,11 @@ BT
 0 -14 Td
 () Tj
 0 -14 Td
-(---) Tj
+() Tj
 0 -14 Td
 () Tj
 0 -14 Td
-(# Lesson flow) Tj
+(Lesson flow) Tj
 0 -14 Td
 () Tj
 0 -14 Td
@@ -95,11 +95,11 @@ BT
 0 -14 Td
 () Tj
 0 -14 Td
-(---) Tj
+() Tj
 0 -14 Td
 () Tj
 0 -14 Td
-(# Step 1 ? Introduce the idea) Tj
+(Step 1 ? Introduce the idea) Tj
 0 -14 Td
 () Tj
 0 -14 Td
@@ -123,11 +123,11 @@ BT
 0 -14 Td
 () Tj
 0 -14 Td
-(---) Tj
+() Tj
 0 -14 Td
 () Tj
 0 -14 Td
-(# Step 2 ? Build it) Tj
+(Step 2 ? Build it) Tj
 0 -14 Td
 () Tj
 0 -14 Td
@@ -135,11 +135,11 @@ BT
 0 -14 Td
 () Tj
 0 -14 Td
-(```bash) Tj
+() Tj
 0 -14 Td
 (streamlit run src/kairo_learn.py) Tj
 0 -14 Td
-(```) Tj
+() Tj
 0 -14 Td
 () Tj
 0 -14 Td
@@ -149,11 +149,11 @@ BT
 0 -14 Td
 (Good starter datasets from `data/samples/`:) Tj
 0 -14 Td
-(- `sci_fi_micro_story.txt`) Tj
+(`sci_fi_micro_story.txt`) Tj
 0 -14 Td
-(- `pirate_dialogue.txt`) Tj
+(`pirate_dialogue.txt`) Tj
 0 -14 Td
-(- `short_poems.txt`) Tj
+(`short_poems.txt`) Tj
 0 -14 Td
 () Tj
 0 -14 Td
@@ -165,11 +165,11 @@ BT
 0 -14 Td
 () Tj
 0 -14 Td
-(---) Tj
+() Tj
 0 -14 Td
 () Tj
 0 -14 Td
-(# Step 3 ? Train it) Tj
+(Step 3 ? Train it) Tj
 0 -14 Td
 () Tj
 0 -14 Td
@@ -179,11 +179,11 @@ BT
 0 -14 Td
 (Explain:) Tj
 0 -14 Td
-(- loss = prediction error) Tj
+(loss = prediction error) Tj
 0 -14 Td
-(- lower loss = better prediction) Tj
+(lower loss = better prediction) Tj
 0 -14 Td
-(- lower loss does not mean understanding) Tj
+(lower loss does not mean understanding) Tj
 0 -14 Td
 () Tj
 ET
