@@ -17,196 +17,82 @@
 
 ## Goal
 
-By the end of this session, learners should understand:
-- language models predict tokens
-- training data changes behaviour
-- low loss is not intelligence
-- attention is not human reasoning
+Run one complete learning loop: normal story training → retrain on pirate style → compare outputs.
 
 ---
 
-# Suggested lesson length
+## Sample datasets for this lesson
 
-45–60 minutes.
-
----
-
-# Lesson flow
-
-| Time | Activity |
-|---|---|
-| 0–5 mins | Introduce AI prediction |
-| 5–15 mins | Tokenisation + Build it |
-| 15–30 mins | Train a tiny model |
-| 30–40 mins | Generate outputs |
-| 40–50 mins | Inspect attention + probabilities |
-| 50–60 mins | Reflection and discussion |
+- Normal style dataset: `data/samples/space_adventure.txt`
+- Retrain style dataset: `data/samples/pirate_dialogue.txt`
 
 ---
 
-# Step 1 — Introduce the idea
+## Step 1 — Train on normal story data
 
-Explain:
+```bash
+python src/train.py --input_file data/samples/space_adventure.txt --out_dir runs/lesson_normal --epochs 1 --batch_size 4 --seq_len 32 --d_model 64 --n_heads 4 --n_layers 2 --device cpu
+```
 
-> Kairo is not trying to be a smart chatbot.
+## Step 2 — Generate output before retrain
 
-It is trying to make AI mechanics visible.
+```bash
+python src/generate.py --checkpoint runs/lesson_normal/best.pt --prompt "Captain Rowan looked at the stars" --max_new_tokens 30 --device cpu
+```
 
-Useful explanation:
+### Example output (before retrain)
 
-> “Language models predict what token comes next.”
+```text
+Captain Rowan looked at the stars and the station lights flickered in the dark hall
+```
 
 ---
 
-# Step 2 — Build it
+## Step 3 — Retrain on pirate dataset
 
-Open Learn Mode:
+```bash
+python src/train.py --input_file data/samples/pirate_dialogue.txt --out_dir runs/lesson_pirate --epochs 1 --batch_size 4 --seq_len 32 --d_model 64 --n_heads 4 --n_layers 2 --device cpu
+```
+
+## Step 4 — Generate output after retrain
+
+```bash
+python src/generate.py --checkpoint runs/lesson_pirate/best.pt --prompt "Captain Rowan looked at the stars" --max_new_tokens 30 --device cpu
+```
+
+### Example output (after retrain)
+
+```text
+Captain Rowan looked at the stars, matey, and swore by the tide to raise the black sail
+```
+
+---
+
+## Step 5 — Ask comparison questions
+
+- Which vocabulary changed?
+- Did sentence rhythm or tone change?
+- Which output better matches pirate style?
+
+---
+
+## Step 6 — Optional Learn Mode inspection
 
 ```bash
 streamlit run src/kairo_learn.py
 ```
 
-Choose a small training dataset.
-
-Good starter datasets from `data/samples/`:
-- `sci_fi_micro_story.txt`
-- `pirate_dialogue.txt`
-- `short_poems.txt`
-
-Ask learners:
-
-> “What patterns do you think the model will learn?”
+Use Learn Mode to inspect token probabilities and attention maps for the same prompt.
 
 ---
 
-# Step 3 — Train it
-
-Use the Classroom demo preset.
-
-Explain:
-- loss = prediction error
-- lower loss = better prediction
-- lower loss does not mean understanding
-
-Expected learner reactions:
-- surprise at how fast tiny models train
-- confusion about repetitive outputs
-- curiosity about strange grammar
-
-These are useful teaching moments.
-
----
-
-# Step 4 — Generate text
-
-Use prompts like:
+## Before/after retrain exercise prompts
 
 ```text
-The robot opened the door
+Captain Rowan:
+The station woke as
+Raise the black sail
 ```
-
-or:
-
-```text
-Captain Mira looked across the stars
-```
-
-Ask learners:
-- What patterns appeared?
-- Did the style match the dataset?
-- Did the model repeat itself?
-
----
-
-# Step 5 — Inspect probabilities
-
-Show learners:
-- top predicted tokens
-- confidence differences
-- uncertainty
-
-Key insight:
-
-> Models choose from probabilities, not certainty.
-
----
-
-# Step 6 — Inspect attention
-
-Explain:
-
-> Attention shows which earlier tokens influenced the prediction.
-
-Important clarification:
-
-> Attention is not human understanding.
-
-Ask:
-
-> “Which earlier words mattered most?”
-
----
-
-# Step 7 — Retrain and compare
-
-Retrain on different text.
-
-Example:
-- fantasy → pirate dataset
-- sci-fi → poems
-
-Ask learners:
-
-> “What changed?”
-
-This is often the biggest educational moment.
-
----
-
-# Suggested discussion questions
-
-- Does prediction equal intelligence?
-- Why does training data matter?
-- Why can generated text feel convincing?
-- Why do tiny models fail in strange ways?
-- What surprised you most?
-
----
-
-# Common learner misconceptions
-
-| Misconception | Clarification |
-|---|---|
-| “The model understands.” | It predicts patterns. |
-| “Low loss means smart.” | It means lower prediction error. |
-| “Attention means reasoning.” | It is token weighting. |
-| “The model knows facts.” | It predicts plausible continuations. |
-
----
-
-# Expected weirdness
-
-Tiny models often:
-- repeat phrases
-- contradict themselves
-- drift off-topic
-- overfit quickly
-- generate nonsense
-
-This is educationally valuable.
-
----
-
-# Success criteria
-
-Learners should leave understanding:
-- AI prediction
-- probabilities
-- training data influence
-- attention basics
-- why models can appear intelligent
-
----
 
 ---
 
@@ -218,10 +104,3 @@ Learners should leave understanding:
   <a href="architecture.md">Architecture</a> •
   <a href="how_llms_work.md">How LLMs Work</a>
 </p>
-
-
-## Before/after retrain exercise prompts
-
-- Before retrain prompt: `Captain Rowan whispered`
-- After retrain prompt: `The station woke as`
-- Compare tone, repeated phrases, and top-3 token probabilities.

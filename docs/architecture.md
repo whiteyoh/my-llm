@@ -15,37 +15,19 @@
 
 # Architecture
 
-## Why Kairo + `tiny_llm`
+## System diagram
 
-Kairo is the product and learning experience name.
-
-`tiny_llm` is the internal Python package containing reusable:
-- model logic
-- learning helpers
-- explainability tools
-- safety logic
-- experiment persistence
-
-This separation keeps the educational experience clean while keeping the code modular.
-
----
-
-## High-level flow
+![Simple architecture flowchart](assets/simple-architecture-flowchart.svg)
 
 ```text
-Training text
-      ↓
- Byte tokenizer
-      ↓
- Sequence dataset
-      ↓
-   TinyGPT
-      ↓
- Prediction loss
-      ↓
- Weight updates
-      ↓
- Text generation
+Text data
+  -> byte tokenizer
+  -> sequence windows
+  -> TinyGPT forward pass
+  -> next-token logits
+  -> loss
+  -> optimizer update
+  -> improved weights
 ```
 
 ---
@@ -53,93 +35,57 @@ Training text
 ## What happens during training?
 
 ```text
-Input text
-→ tokens
-→ sequences
-→ predictions
-→ prediction error
-→ weight updates
-→ improved predictions
+input: "Captain Rowan looked"
+shifted target: "Rowan looked at"
+model predicts token probabilities at each position
+loss compares predictions vs targets
+optimizer nudges weights to lower error
 ```
 
-The model slowly improves by reducing prediction error.
-
----
-
-## Learn Mode flow
+Small example output after a short training run:
 
 ```text
-Learner input
-      ↓
- Build it
-      ↓
- Train it
-      ↓
- Generate text
-      ↓
- Inspect probabilities
-      ↓
- Inspect attention
-      ↓
- Retrain and compare
+Prompt: Captain Rowan
+Output: Captain Rowan crossed the bridge and checked the star map
 ```
-
-UI rendering lives in:
-- `src/kairo_learn.py`
-
-Reusable educational helpers live in:
-- `src/tiny_llm/learn.py`
 
 ---
 
-## Attention visualisation flow
+## Generation flow
 
 ```text
-Prompt
-→ tokenize
-→ model forward with return_attn=True
-→ select layer/head
-→ attention matrix
-→ heatmap/table rendering
+Prompt tokens
+  -> model predicts next-token distribution
+  -> sample one token
+  -> append token
+  -> repeat until max tokens reached
 ```
-
-Attention shows which previous tokens influenced a prediction.
-
-It does not mean:
-- understanding
-- beliefs
-- consciousness
 
 ---
 
-## Experiment persistence flow
+## Learn Mode architecture flow
 
 ```text
-Train model
-→ save metadata.json
-→ save model.pt
-→ restore config
-→ load checkpoint
-→ continue experimenting
+Learner selects dataset
+  -> training controls
+  -> train/evaluate model
+  -> generate output
+  -> inspect probabilities
+  -> inspect attention
+  -> retrain and compare
 ```
-
-Experiments allow learners to compare outputs before and after retraining.
 
 ---
 
-## Safety flow
+## Attention visualization flow
 
 ```text
 Prompt
-→ safe-mode checks
-→ optional filtering
-→ generation
-→ output filtering
+  -> tokenize
+  -> forward pass with attention weights
+  -> pick layer/head
+  -> render attention table or heatmap
 ```
-
-Safe mode is lightweight and classroom-focused.
-
-Teacher supervision is still required.
 
 ---
 

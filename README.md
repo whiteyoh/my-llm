@@ -12,76 +12,46 @@
 
 # Kairo
 
-Kairo is a hands-on educational GPT lab that helps learners inspect how language models actually work.
+Kairo is a classroom-ready mini LLM lab for making AI behavior visible. Learners can train a tiny model, compare outputs before and after retraining, and inspect probabilities and attention so LLMs feel understandable rather than magical.
+
+---
+
+## Who This Is For
+
+- Teachers running AI literacy lessons
+- Middle/high school students learning ML basics
+- Clubs and workshops wanting hands-on LLM demos
+- Developers who want a tiny transparent transformer example
+
+---
 
 ## The idea
 
-Kairo makes model behaviour visible:
-
-- tokenisation
-- next-token prediction
-- probabilities
-- attention
-- retraining effects
-
-Instead of treating AI like magic, Kairo exposes the mechanics directly.
+Kairo exposes model mechanics directly: tokenization, next-token prediction, loss, attention, and retraining effects.
 
 ## Why it exists
 
-Many learners meet AI through polished products that hide the mechanics.
-
-Kairo exists to make those mechanics:
-
-- concrete
-- testable
-- discussable
-- visible in a classroom
+Many AI tools hide how models behave. Kairo surfaces the mechanism so students can observe, test, and discuss model behavior with evidence.
 
 ## The magic moment
 
-Retrain Kairo on pirate stories and watch the model immediately start speaking differently.
+Train on normal stories, then retrain on pirate text and watch style shift immediately.
 
-Same model. Different data. Different behaviour.
+Same model architecture. Different data. Different behavior.
 
-That moment is where many learners suddenly understand what a language model actually is.
+---
 
-The model did not become “smarter”.
+## Step-by-step learning flow
 
-It changed because the training data changed.
+1. **Normal stories:** train on a neutral dataset (for example `space_adventure.txt`).
+2. **Retrain:** switch datasets without changing model architecture.
+3. **Pirate style:** retrain on `pirate_dialogue.txt` and compare tone/word choices.
+4. **Questions:** ask what changed and why, using output evidence.
+5. **Learn Mode:** inspect token probabilities and attention maps.
 
-This is where LLMs stop feeling like magic and start feeling understandable.
-
-## The learning loop
-
-| Step          | Learner action                      | Concept learned              |
-| ------------- | ----------------------------------- | ---------------------------- |
-| Build it      | Pick training text                  | Tokens and dataset shape     |
-| Train it      | Run a tiny transformer              | Loss and pattern learning    |
-| Talk to it    | Prompt the model                    | Sampling and uncertainty     |
-| Retrain it    | Change the data                     | Distribution shift           |
-| Understand it | Inspect probabilities and attention | Influence, not understanding |
-
-## Simple architecture
-
-![Simple architecture flowchart](docs/assets/simple-architecture-flowchart.svg)
-
-```text
-Training text
-↓
-Byte tokenizer
-↓
-Sequence dataset
-↓
-TinyGPT
-↓
-Loss and updates
-↓
-Generation and inspection
-```
+---
 
 ## Installation
-
-Run:
 
 ```bash
 python -m venv .venv
@@ -89,13 +59,15 @@ source .venv/bin/activate
 pip install -e .
 ```
 
-Optional Learn Mode:
+Optional Learn Mode dependencies:
 
 ```bash
 pip install -e ".[learn]"
 ```
 
-## Try it in 3 minutes
+---
+
+## Quickstart commands
 
 Train:
 
@@ -121,125 +93,13 @@ Chat:
 python src/chat.py --checkpoint runs/demo/best.pt --device cpu
 ```
 
-## What you should see
-
-With tiny datasets and tiny models, you should expect:
-
-- short repetitive phrases
-- unstable grammar
-- occasional nonsense
-- noticeable style shifts after retraining
-
-That weirdness is the point: it reveals the mechanism.
-
-## Learn Mode
-
-Launch interactive Learn Mode:
+Learn Mode:
 
 ```bash
 streamlit run src/kairo_learn.py
 ```
 
-You can walk students through:
-
-- token previews
-- training curves
-- next-token probabilities
-- attention maps
-- retrain-and-compare experiments
-
-
-
-## Learn Mode screenshots
-
-- Token preview: ![Token preview screenshot](docs/assets/learn-mode-token-preview.svg)
-- Attention maps: ![Attention map screenshot](docs/assets/learn-mode-attention-map.svg)
-- Probability tables: ![Probability table screenshot](docs/assets/learn-mode-probability-table.svg)
-- Before/after retrain comparisons: ![Retrain comparison screenshot](docs/assets/learn-mode-retrain-compare.svg)
-
-## Why byte-level tokens?
-
-Byte-level tokenisation is:
-
-- simple
-- deterministic
-- easy to visualise
-- suitable for any text
-
-Production models often use more advanced tokenisers, but byte-level tokens make the mechanics easier to inspect.
-
-## Expected weirdness
-
-Tiny models frequently:
-
-- copy chunks from training text
-- overfit quickly
-- drift off-topic
-- contradict themselves
-- repeat phrases
-
-These are valuable teaching moments, not failures.
-
-## Common misconceptions
-
-- Low loss means intelligence: No, it means lower prediction error.
-- Attention is reasoning: No, it is weighting over previous tokens.
-- The model knows facts: No, it predicts plausible continuations.
-- Generated text means understanding: No, it means the model learned patterns.
-
-## Classroom use
-
-Kairo works for:
-
-- teacher-led demos
-- pair labs
-- short workshops
-- independent experiments
-- STEM clubs
-
-Start with:
-
-- [First Lesson Walkthrough](docs/first_lesson_walkthrough.md)
-- [Teacher Guide](docs/teacher_guide.md)
-- [Student Worksheet](docs/student_worksheet.md)
-
-### Printable lesson packs
-
-- [Teacher Guide (PDF)](docs/printable/teacher_guide.pdf)
-- [Student Worksheet (PDF)](docs/printable/student_worksheet.pdf)
-- [First Lesson Walkthrough (PDF)](docs/printable/first_lesson_walkthrough.pdf)
-
-### New sample datasets
-
-- [Pirate dialogue](data/samples/pirate_dialogue.txt)
-- [Sci-fi micro-story](data/samples/sci_fi_micro_story.txt)
-- [Short poems](data/samples/short_poems.txt)
-
-## Safety and supervision
-
-Kairo includes lightweight classroom-safe checks, but it is not fully moderated.
-Teacher supervision is required.
-Kairo is not suitable for unsupervised public deployment.
-
-## What Kairo is not
-
-Kairo is not:
-
-- a production chatbot
-- a benchmark-leading model
-- an autonomous agent
-- a replacement for critical thinking
-- a fully moderated child-safety system
-
-It is a learning tool for inspecting core LLM mechanics.
-
-## Developer quickstart
-
-```bash
-ruff check .
-python -m compileall src tests
-pytest -q
-```
+---
 
 ## Documentation map
 
@@ -248,28 +108,21 @@ pytest -q
 - [Student Worksheet](docs/student_worksheet.md)
 - [Architecture](docs/architecture.md)
 - [How LLMs Work](docs/how_llms_work.md)
+
+### Printable lesson packs
+
+- [Teacher Guide (PDF)](docs/printable/teacher_guide.pdf)
+- [Student Worksheet (PDF)](docs/printable/student_worksheet.pdf)
+- [First Lesson Walkthrough (PDF)](docs/printable/first_lesson_walkthrough.pdf)
+
+### Assets and diagrams
+
+- [Kairo logo](docs/assets/kairo-logo.svg)
 - [Simple architecture flowchart](docs/assets/simple-architecture-flowchart.svg)
-- [Learn Mode token preview screenshot](docs/assets/learn-mode-token-preview.svg)
-- [Learn Mode attention map screenshot](docs/assets/learn-mode-attention-map.svg)
-- [Learn Mode probability table screenshot](docs/assets/learn-mode-probability-table.svg)
-- [Learn Mode retrain comparison screenshot](docs/assets/learn-mode-retrain-compare.svg)
-- [Teacher Guide PDF](docs/printable/teacher_guide.pdf)
-- [Student Worksheet PDF](docs/printable/student_worksheet.pdf)
-- [First Lesson Walkthrough PDF](docs/printable/first_lesson_walkthrough.pdf)
-- [Pirate dialogue dataset](data/samples/pirate_dialogue.txt)
-- [Sci-fi micro-story dataset](data/samples/sci_fi_micro_story.txt)
-- [Short poems dataset](data/samples/short_poems.txt)
-
-## Roadmap
-
-Future educational improvements:
-
-- richer attention visuals
-- clearer experiment comparison UI
-- more classroom-ready sample datasets
-- additional explainability activities
-- printable lesson packs
-- screenshots and walkthrough images
+- [Learn Mode token preview](docs/assets/learn-mode-token-preview.svg)
+- [Learn Mode attention map](docs/assets/learn-mode-attention-map.svg)
+- [Learn Mode probability table](docs/assets/learn-mode-probability-table.svg)
+- [Learn Mode retrain compare](docs/assets/learn-mode-retrain-compare.svg)
 
 ---
 
