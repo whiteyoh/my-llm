@@ -34,6 +34,8 @@ def test_required_docs_assets_and_datasets_exist() -> None:
         "docs/printable/teacher_guide.pdf",
         "docs/printable/student_worksheet.pdf",
         "docs/printable/first_lesson_walkthrough.pdf",
+        "tools/pdf/generate_printables.py",
+        "tools/pdf/printable.css",
         "data/samples/pirate_dialogue.txt",
         "data/samples/sci_fi_micro_story.txt",
         "data/samples/short_poems.txt",
