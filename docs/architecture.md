@@ -32,6 +32,22 @@ Text data
 
 ---
 
+## Normal to pirate retrain flow
+
+```text
+Normal story data
+-> train TinyGPT
+-> generate normal-style output
+-> pirate dialogue data
+-> retrain TinyGPT
+-> generate pirate-style output
+-> compare behavior
+```
+
+The architecture stays the same; the training data changes the model behavior.
+
+---
+
 ## What happens during training?
 
 ```text

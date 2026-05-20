@@ -23,8 +23,8 @@ NAV_LABELS = [
 REQUIRED_SECTIONS = {
     "README.md": [
         "# Kairo",
-        "## Who This Is For",
-        "## Step-by-step learning flow",
+        "## Why Kairo?",
+        "## The magic moment",
         "## Documentation map",
     ],
     "docs/first_lesson_walkthrough.md": [
@@ -32,6 +32,8 @@ REQUIRED_SECTIONS = {
         "## Sample datasets for this lesson",
         "## Step 1 — Train on normal story data",
         "## Step 4 — Generate output after retrain",
+        "## What success looks like",
+        "Expected style",
         "## Before/after retrain exercise prompts",
     ],
     "docs/teacher_guide.md": [
@@ -40,6 +42,8 @@ REQUIRED_SECTIONS = {
         "## Suggested classroom pacing",
         "## Facilitation tips",
         "## Common misconceptions and Q&A guidance",
+        "## Teacher gotchas",
+        "## Example teacher script",
     ],
     "docs/student_worksheet.md": [
         "# Student Worksheet",
@@ -48,16 +52,19 @@ REQUIRED_SECTIONS = {
         "### What Changed and Why?",
         "### Reflection",
         "### Extension exercises",
+        "## Final reflection",
     ],
     "docs/architecture.md": [
         "# Architecture",
         "## System diagram",
+        "## Normal to pirate retrain flow",
         "## What happens during training?",
     ],
     "docs/how_llms_work.md": [
         "# How LLMs Work (Simple)",
         "## What is next-token prediction?",
         "## What is attention?",
+        "## FAQ",
     ],
 }
 

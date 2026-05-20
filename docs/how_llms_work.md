@@ -94,6 +94,26 @@ After retrain:  "Arrr, the hatch swung wide, matey"
 Tiny models often repeat, drift, or contradict themselves because capacity is limited.
 That visible failure is useful for classroom learning.
 
+
+---
+
+## FAQ
+
+### Why does the model repeat itself?
+Tiny models have limited capacity, so they may fall into repeating patterns instead of producing varied text.
+
+### Why did pirate training change the style?
+Retraining changed the token patterns the model sees most often, so pirate-like words and rhythm become more likely.
+
+### Does attention mean understanding?
+No. Attention shows which tokens are weighted more during prediction, not human-like understanding.
+
+### Does lower loss mean the model is smart?
+Not by itself. Lower loss means prediction error is lower on the training pattern, not that the model is generally intelligent.
+
+### Can tiny models be wrong?
+Yes. They can be fluent and still incorrect, repetitive, or off-topic.
+
 ---
 
 <p align="center">
