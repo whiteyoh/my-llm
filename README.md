@@ -16,6 +16,22 @@ Kairo is a classroom-ready mini LLM lab for making AI behavior visible. Learners
 
 ---
 
+## Why Kairo?
+
+Kairo helps learners understand how language models learn from text by making the hidden steps visible and discussable. Students can inspect tokenization, next-token prediction, loss trends, retraining effects, probability distributions, and attention patterns.
+
+It is designed for classrooms, STEM clubs, workshops, and self-learning where people need a clear, hands-on model of how LLM behavior changes with data.
+
+---
+
+## What you will see
+
+- Normal story-style output before retraining.
+- A changed style after pirate retraining with different vocabulary and rhythm.
+- A realistic reminder that tiny models may repeat themselves or produce strange text, which is useful for learning.
+
+---
+
 ## Who This Is For
 
 - Teachers running AI literacy lessons
