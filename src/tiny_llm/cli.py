@@ -26,6 +26,25 @@ def chat() -> None:
     _run_main("tiny_llm.chat")
 
 
+def qa() -> None:
+    _run_main("tiny_llm.qa")
+
+
+def build_qa_corpus() -> None:
+    _run_main("tiny_llm.qa_data")
+
+
+def agents_dashboard() -> None:
+    try:
+        from streamlit.web import cli as streamlit_cli
+    except ImportError as exc:
+        raise SystemExit('Agent dashboard requires Streamlit. Install it with: pip install -e ".[learn]"') from exc
+
+    script_path = Path(__file__).resolve().with_name("agents_dashboard.py")
+    sys.argv = ["streamlit", "run", str(script_path), *sys.argv[1:]]
+    streamlit_cli.main()
+
+
 def learn() -> None:
     try:
         from streamlit.web import cli as streamlit_cli

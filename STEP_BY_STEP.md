@@ -131,6 +131,29 @@ working.
 
 ---
 
+## 9. Optional: Turn it into QA behavior
+
+Create QA training text from JSONL:
+
+```bash
+kairo-build-qa-corpus --input_jsonl qa_space_facts.jsonl --output_file runs/qa_space_facts.txt
+```
+
+`--input_jsonl` accepts either a full path or a bundled sample name.
+
+Train and ask a question with context:
+
+```bash
+kairo-train --input_file runs/qa_space_facts.txt --out_dir runs/qa_demo --epochs 1 --batch_size 4 --seq_len 32 --d_model 64 --n_heads 4 --n_layers 2 --device cpu
+kairo-qa --checkpoint runs/qa_demo/best.pt --question "Who pilots the Aurora?" --context "Captain Rowan is the pilot of the starship Aurora."
+```
+
+Tip for classrooms: always provide `--context` or `--context_file`. If tiny-model
+generation quality is weak, Kairo QA now falls back to the best matching
+sentence from the supplied context.
+
+---
+
 ## Reflection questions
 
 - What changed after switching datasets?

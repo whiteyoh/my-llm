@@ -74,6 +74,8 @@ Same model architecture. Different data. Different behavior.
 | `src/generate.py` | Generate text from a checkpoint. |
 | `src/evaluate.py` | Report loss and perplexity for a checkpoint and dataset. |
 | `src/chat.py` | Run a small terminal chat loop from a checkpoint. |
+| `src/qa.py` | Ask question/answer prompts from a checkpoint (optional context). |
+| `src/build_qa_corpus.py` | Convert JSONL Q/A records into training text. |
 | `src/kairo_learn.py` | Streamlit Learn Mode for classroom exploration. |
 | `src/tiny_llm/` | Tokenizer, model, generation, attention, safety, and Learn Mode helpers. |
 | `data/samples/` | Starter datasets for lessons and demos. |
@@ -140,11 +142,41 @@ Chat:
 kairo-chat --checkpoint runs/demo/best.pt --device cpu
 ```
 
+Build a QA training corpus from JSONL records:
+
+```bash
+kairo-build-qa-corpus --input_jsonl qa_space_facts.jsonl --output_file runs/qa_space_facts.txt
+```
+
+The QA sample JSONL is included in both `data/samples/` (repo use) and
+`src/tiny_llm/samples/` (packaged installs).
+You can pass either a full path or just the bundled sample name.
+
+Train and ask QA with context:
+
+```bash
+kairo-train --input_file runs/qa_space_facts.txt --out_dir runs/qa_demo --epochs 1 --batch_size 4 --seq_len 32 --d_model 64 --n_heads 4 --n_layers 2 --device cpu
+kairo-qa --checkpoint runs/qa_demo/best.pt --question "Who pilots the Aurora?" --context "Captain Rowan is the pilot of the starship Aurora."
+```
+
+`kairo-qa` now includes a classroom-safe grounding fallback: if the generated
+answer looks low-quality and a context is supplied, it returns the best matching
+context sentence instead of random token noise.
+
 Learn Mode (after installing the `learn` extra):
 
 ```bash
 kairo-learn
 ```
+
+Agent operations dashboard (after installing the `learn` extra):
+
+```bash
+kairo-agents-dashboard
+```
+
+The dashboard reads agent definitions from `.Codex/agents/` and `Codex/agents/`,
+shows live status by agent, and stores session state in `runs/agent_dashboard/state.json`.
 
 Regenerate classroom PDFs:
 

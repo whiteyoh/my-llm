@@ -19,13 +19,16 @@ where = ["src"]
 include-package-data = true
 
 [tool.setuptools.package-data]
-tiny_llm = ["samples/*.txt"]
+tiny_llm = ["samples/*.txt", "samples/*.jsonl"]
 
 [project.scripts]
 kairo-train = "tiny_llm.cli:train"
 kairo-generate = "tiny_llm.cli:generate"
 kairo-evaluate = "tiny_llm.cli:evaluate"
 kairo-chat = "tiny_llm.cli:chat"
+kairo-qa = "tiny_llm.cli:qa"
+kairo-build-qa-corpus = "tiny_llm.cli:build_qa_corpus"
+kairo-agents-dashboard = "tiny_llm.cli:agents_dashboard"
 kairo-learn = "tiny_llm.cli:learn"
 
 [tool.pytest.ini_options]

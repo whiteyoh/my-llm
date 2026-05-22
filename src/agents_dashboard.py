@@ -1,0 +1,11 @@
+from __future__ import annotations
+
+import runpy
+
+
+def main() -> None:
+    runpy.run_module("tiny_llm.agents_dashboard", run_name="__main__")
+
+
+if __name__ == "__main__":
+    main()
