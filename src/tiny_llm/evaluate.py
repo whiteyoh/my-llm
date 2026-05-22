@@ -49,7 +49,10 @@ def main() -> None:
         parser.exit(2, f"Evaluation input file not found: {input_path}\n")
     text = input_path.read_text(encoding="utf-8")
     token_ids = tokenizer.encode(text)
-    dataset = SequenceDataset(token_ids, seq_len=config["seq_len"])
+    try:
+        dataset = SequenceDataset(token_ids, seq_len=config["seq_len"])
+    except ValueError as exc:
+        parser.exit(2, f"Evaluation input is too short for checkpoint seq_len={config['seq_len']}: {exc}\n")
     loader = DataLoader(dataset, batch_size=args.batch_size)
 
     total_loss = 0.0

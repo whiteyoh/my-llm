@@ -29,7 +29,11 @@ def test_read_sample_text_falls_back_to_package_data(monkeypatch, tmp_path: Path
     monkeypatch.setattr(paths, "SAMPLE_DIR", tmp_path / "missing-samples")
 
     assert "Captain Rowan" in paths.read_sample_text("space_adventure.txt")
-    assert paths.sample_path("space_adventure.txt").exists()
+    first = paths.sample_path("space_adventure.txt")
+    second = paths.sample_path("space_adventure.txt")
+    assert first.exists()
+    assert second.exists()
+    assert first == second
 
 
 def test_sample_paths_reject_nested_names() -> None:

@@ -8,10 +8,12 @@ import sys
 import textwrap
 
 try:
+    from reportlab import rl_config
     from reportlab.lib import colors
     from reportlab.lib.pagesizes import A4, letter
     from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
     from reportlab.lib.units import mm
+    from reportlab.pdfgen.canvas import Canvas
     from reportlab.platypus import (
         Paragraph,
         Preformatted,
@@ -48,6 +50,15 @@ ALIASES = {
         "Kairo_First_Lesson_Walkthrough.pdf",
     ],
 }
+
+# Keep generated PDFs byte-stable across repeated runs when content is unchanged.
+rl_config.invariant = 1
+
+
+class DeterministicCanvas(Canvas):
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault("invariant", 1)
+        super().__init__(*args, **kwargs)
 
 
 def page_size_from_arg(value: str) -> tuple[float, float]:
@@ -363,7 +374,7 @@ def render(md_path: Path, out_pdf: Path, page_size: tuple[float, float]) -> None
     )
     doc.printable_title = title
     story = markdown_to_story(printable_lines(md_path.read_text(encoding="utf-8")), styles, doc.width)
-    doc.build(story, onFirstPage=draw_page, onLaterPages=draw_page)
+    doc.build(story, onFirstPage=draw_page, onLaterPages=draw_page, canvasmaker=DeterministicCanvas)
 
 
 def main() -> int:
