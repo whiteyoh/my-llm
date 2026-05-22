@@ -4,6 +4,7 @@ import re
 
 DOC_FILES = [
     "README.md",
+    "STEP_BY_STEP.md",
     "docs/first_lesson_walkthrough.md",
     "docs/teacher_guide.md",
     "docs/student_worksheet.md",
@@ -26,6 +27,12 @@ REQUIRED_SECTIONS = {
         "## Who This Is For",
         "## Step-by-step learning flow",
         "## Documentation map",
+    ],
+    "STEP_BY_STEP.md": [
+        "# Kairo Step-by-Step Guide",
+        "## 2. Train on normal story text",
+        "## 5. Generate with the same prompt",
+        "## 8. Print classroom materials",
     ],
     "docs/first_lesson_walkthrough.md": [
         "# First Lesson Walkthrough",
@@ -86,6 +93,12 @@ def test_assets_and_docs_exist_and_are_referenced() -> None:
         "docs/student_worksheet.md",
         "docs/architecture.md",
         "docs/how_llms_work.md",
+        "docs/printable/teacher_guide.pdf",
+        "docs/printable/student_worksheet.pdf",
+        "docs/printable/first_lesson_walkthrough.pdf",
+        "docs/printable/Kairo_Teacher_Guide.pdf",
+        "docs/printable/Kairo_Student_Worksheet.pdf",
+        "docs/printable/Kairo_First_Lesson_Walkthrough.pdf",
     ]
     for path in required_paths:
         assert Path(path).exists(), f"Missing required path: {path}"
@@ -104,6 +117,8 @@ def test_assets_and_docs_exist_and_are_referenced() -> None:
 
 def test_top_and_footer_navigation_present() -> None:
     for path in DOC_FILES:
+        if path == "STEP_BY_STEP.md":
+            continue
         content = _read(path)
         for label in NAV_LABELS:
             assert label in content, f"Missing nav label '{label}' in {path}"
@@ -133,3 +148,34 @@ def test_markdown_links_and_image_src_are_valid() -> None:
         for img_src in image_src_pattern.findall(content):
             resolved = (base_dir / img_src).resolve()
             assert resolved.exists(), f"Broken image source in {path}: {img_src}"
+
+
+def test_printable_pdfs_are_committed_and_readable() -> None:
+    pdfs = [
+        "docs/printable/teacher_guide.pdf",
+        "docs/printable/student_worksheet.pdf",
+        "docs/printable/first_lesson_walkthrough.pdf",
+        "docs/printable/Kairo_Teacher_Guide.pdf",
+        "docs/printable/Kairo_Student_Worksheet.pdf",
+        "docs/printable/Kairo_First_Lesson_Walkthrough.pdf",
+    ]
+
+    for path in pdfs:
+        data = Path(path).read_bytes()
+        assert data.startswith(b"%PDF-"), f"Printable is not a PDF: {path}"
+        assert len(data) > 1_000, f"Printable looks unexpectedly small: {path}"
+
+
+def test_printable_pdf_aliases_match_primary_files() -> None:
+    aliases = {
+        "docs/printable/teacher_guide.pdf": "docs/printable/Kairo_Teacher_Guide.pdf",
+        "docs/printable/student_worksheet.pdf": "docs/printable/Kairo_Student_Worksheet.pdf",
+        "docs/printable/first_lesson_walkthrough.pdf": (
+            "docs/printable/Kairo_First_Lesson_Walkthrough.pdf"
+        ),
+    }
+
+    for primary, alias in aliases.items():
+        assert Path(primary).read_bytes() == Path(alias).read_bytes(), (
+            f"Printable alias differs from primary file: {alias}"
+        )

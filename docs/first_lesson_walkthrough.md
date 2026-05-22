@@ -17,7 +17,15 @@
 
 ## Goal
 
-Run one complete learning loop: normal story training → retrain on pirate style → compare outputs.
+Run one complete learning loop: normal story training → same prompt comparison →
+pirate-style retrain → evidence-based reflection.
+
+By the end, students should be able to say:
+
+- an LLM predicts the next token from earlier tokens
+- training data changes output patterns
+- lower loss means lower prediction error, not human understanding
+- attention is useful to inspect, but it is not proof of thinking
 
 ---
 
@@ -26,6 +34,9 @@ Run one complete learning loop: normal story training → retrain on pirate styl
 - Normal style dataset: `data/samples/space_adventure.txt`
 - Retrain style dataset: `data/samples/pirate_dialogue.txt`
 
+Keep the prompt the same in both generation steps. That makes the dataset change
+easier to see.
+
 ---
 
 ## Step 1 — Train on normal story data
@@ -33,6 +44,12 @@ Run one complete learning loop: normal story training → retrain on pirate styl
 ```bash
 python src/train.py --input_file data/samples/space_adventure.txt --out_dir runs/lesson_normal --epochs 1 --batch_size 4 --seq_len 32 --d_model 64 --n_heads 4 --n_layers 2 --device cpu
 ```
+
+Ask students to notice:
+
+- the number of parameters
+- the train and validation loss
+- the `best.pt` checkpoint path
 
 ## Step 2 — Generate output before retrain
 
@@ -46,6 +63,9 @@ python src/generate.py --checkpoint runs/lesson_normal/best.pt --prompt "Captain
 Captain Rowan looked at the stars and the station lights flickered in the dark hall
 ```
 
+Record the real classroom output even if it is odd. Tiny models are allowed to
+be imperfect; that imperfection makes the mechanism easier to discuss.
+
 ---
 
 ## Step 3 — Retrain on pirate dataset
@@ -53,6 +73,10 @@ Captain Rowan looked at the stars and the station lights flickered in the dark h
 ```bash
 python src/train.py --input_file data/samples/pirate_dialogue.txt --out_dir runs/lesson_pirate --epochs 1 --batch_size 4 --seq_len 32 --d_model 64 --n_heads 4 --n_layers 2 --device cpu
 ```
+
+In the command-line lesson, "retrain" means training the same tiny architecture
+again with different data and then comparing behavior. Learn Mode keeps the
+before/after comparison in the same interactive session.
 
 ## Step 4 — Generate output after retrain
 
@@ -68,11 +92,20 @@ Captain Rowan looked at the stars, matey, and swore by the tide to raise the bla
 
 ---
 
-## Step 5 — Ask comparison questions
+## Step 5 — Compare with evidence
 
-- Which vocabulary changed?
-- Did sentence rhythm or tone change?
-- Which output better matches pirate style?
+| Question | Evidence to collect |
+|---|---|
+| Which vocabulary changed? | New words, repeated words, style markers |
+| Did the tone change? | Adventure, pirate, poetic, helpful, factual |
+| Did the structure change? | Sentence length, punctuation, repetition |
+| Did the model become "smarter"? | Separate fluency from truth or understanding |
+
+Teacher prompt:
+
+```text
+What changed because the model saw different text, and what stayed the same because the model architecture stayed the same?
+```
 
 ---
 
@@ -82,7 +115,12 @@ Captain Rowan looked at the stars, matey, and swore by the tide to raise the bla
 streamlit run src/kairo_learn.py
 ```
 
-Use Learn Mode to inspect token probabilities and attention maps for the same prompt.
+Use Learn Mode to inspect:
+
+- the byte tokens in the training text
+- top next-token probabilities for the same prompt
+- attention patterns for selected tokens
+- before/after outputs after changing training text
 
 ---
 
@@ -92,6 +130,25 @@ Use Learn Mode to inspect token probabilities and attention maps for the same pr
 Captain Rowan:
 The station woke as
 Raise the black sail
+Rain taps softly
+The robot opened the door
+```
+
+---
+
+## Exit ticket
+
+Ask each learner to complete one sentence:
+
+```text
+Changing the training data changed the model because...
+```
+
+Then ask:
+
+```text
+One thing attention can show is...
+One thing attention cannot prove is...
 ```
 
 ---

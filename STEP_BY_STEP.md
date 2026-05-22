@@ -1,110 +1,145 @@
-# Kairo – Hands-On LLM Learning Lab
+# Kairo Step-by-Step Guide
 
 **Build it. Train it. Talk to it. Retrain it. Understand it.**
 
+This guide is the shortest complete path through Kairo. It uses the sample
+datasets already included in the repository, so learners can focus on what
+changes in the model rather than on setup work.
+
 ---
 
-## Overview
+## 1. Set up Kairo
 
-Kairo is an educational platform that lets learners train, experiment with, and understand small language models (LLMs). It is designed for schools, STEM clubs, workshops, and independent learners to explore how models learn from text and change their behavior after retraining.
-
-## Quick Start (CPU-Friendly)
-
-### 1. Clone the repository
-```bash
-git clone https://github.com/whiteyoh/my-llm.git
-cd my-llm
-```
-
-### 2. Set up virtual environment
 ```bash
 python -m venv .venv
-# Windows
-.venv\Scripts\activate
-# Mac/Linux
 source .venv/bin/activate
+pip install -e .
 ```
 
-### 3. Install dependencies
-```bash
-pip install -r requirements.txt
-```
-Optional for Learn Mode:
+For the interactive classroom app:
+
 ```bash
 pip install -e ".[learn]"
 ```
 
-## Step-by-Step Learning Flow
+---
 
-### Step 1 – Train on normal stories
-Create `data/samples/normal.txt` with normal story text.
+## 2. Train on normal story text
 
-Train:
+Use the space-adventure sample as the "normal" baseline.
+
 ```bash
-python src/train.py --input_file data/samples/normal.txt --out_dir runs/normal_demo --epochs 2 --batch_size 4 --seq_len 32 --d_model 64 --n_heads 4 --n_layers 2 --device cpu
+python src/train.py --input_file data/samples/space_adventure.txt --out_dir runs/normal_demo --epochs 1 --batch_size 4 --seq_len 32 --d_model 64 --n_heads 4 --n_layers 2 --device cpu
 ```
 
-### Step 2 – Ask a question
+Watch for:
+
+- the device used for training
+- the number of model parameters
+- train and validation loss
+- the saved `best.pt` checkpoint
+
+---
+
+## 3. Generate from the baseline model
+
 ```bash
-python src/generate.py --checkpoint runs/normal_demo/best.pt --prompt "Tell me a story about the child and the magical stone" --max_new_tokens 50 --temperature 0.9 --top_k 20 --device cpu
+python src/generate.py --checkpoint runs/normal_demo/best.pt --prompt "Captain Rowan looked at the stars" --max_new_tokens 40 --temperature 0.9 --top_k 20 --device cpu
 ```
 
-### Step 3 – Retrain with additional normal data
-Add `data/samples/normal_extra.txt` with extra normal story phrases and retrain using the same command.
+Record the output before changing the dataset. It may be repetitive or strange;
+that is expected for a tiny model.
 
-### Step 4 – Ask another question
+---
+
+## 4. Train the same architecture on pirate text
+
+Use the same model size and training settings, but change the data.
+
 ```bash
-python src/generate.py --checkpoint runs/normal_demo/best.pt --prompt "What happens next in the village?" --max_new_tokens 50 --temperature 0.9 --top_k 20 --device cpu
+python src/train.py --input_file data/samples/pirate_dialogue.txt --out_dir runs/pirate_demo --epochs 1 --batch_size 4 --seq_len 32 --d_model 64 --n_heads 4 --n_layers 2 --device cpu
 ```
 
-### Step 5 – Train on pirate text
-Create `data/samples/pirate.txt` with pirate phrases.
+This classroom comparison trains a fresh tiny model with the same architecture.
+The learning question is: what changes when the data changes?
+
+---
+
+## 5. Generate with the same prompt
+
 ```bash
-python src/train.py --input_file data/samples/pirate.txt --out_dir runs/pirate_demo --epochs 2 --batch_size 4 --seq_len 32 --d_model 64 --n_heads 4 --n_layers 2 --device cpu
+python src/generate.py --checkpoint runs/pirate_demo/best.pt --prompt "Captain Rowan looked at the stars" --max_new_tokens 40 --temperature 0.9 --top_k 20 --device cpu
 ```
 
-### Step 6 – Ask a pirate question
+Compare the before and after outputs:
+
+| Evidence to compare | What to look for |
+|---|---|
+| Vocabulary | New words, repeated words, style markers |
+| Tone | Story-like, pirate-like, poetic, technical |
+| Structure | Sentence length, punctuation, repetition |
+| Reliability | Fluent text vs true statements |
+
+---
+
+## 6. Evaluate a checkpoint
+
 ```bash
-python src/generate.py --checkpoint runs/pirate_demo/best.pt --prompt "Raise the anchor," --max_new_tokens 50 --temperature 0.9 --top_k 20 --device cpu
+python src/evaluate.py --checkpoint runs/normal_demo/best.pt --input_file data/samples/space_adventure.txt --device cpu
 ```
 
-### Step 7 – Explore Learn Mode
+Lower loss and perplexity usually mean the model predicts this dataset better.
+They do not mean the model understands the text like a person.
+
+---
+
+## 7. Open Learn Mode
+
 ```bash
 streamlit run src/kairo_learn.py
 ```
-- Visualize token predictions
-- Inspect attention maps
-- See probability changes after retraining
-- Experiment interactively
 
-## Key Concepts Learners Will Explore
-- Tokens and tokenization
-- Next-token prediction
-- Attention patterns
-- Model retraining effects
-- How dataset changes impact output style
+Use Learn Mode to:
 
-## Classroom Use
-- Designed for schools, STEM clubs, and workshops
-- Worksheets, Teacher Guide, and First Lesson Walkthrough available
-- Easy to run on normal laptops (CPU only)
-- Students can experiment with text, retraining, and prompts
+- preview byte tokens
+- train and retrain interactively
+- compare before and after outputs
+- inspect top next-token probabilities
+- inspect attention patterns
+- save and restore local experiments
 
-## Documentation Map
-- [First Lesson Walkthrough](docs/first_lesson_walkthrough.md)
-- [Teacher Guide](docs/teacher_guide.md)
-- [Student Worksheet](docs/student_worksheet.md)
-- [Architecture](docs/architecture.md)
-- [How LLMs Work](docs/how_llms_work.md)
+---
 
-## Roadmap
-- Richer visuals (attention maps, token previews, retraining comparisons)
-- Printable lesson packs
-- More sample datasets (pirate, sci-fi, poems)
-- Improved Learn Mode walkthroughs
-- Classroom-ready exercises
+## 8. Print classroom materials
 
-## Safety & Scope
-- Kairo is a learning tool, not a production chatbot
-- Supervision recommended for younger learners
-- Designed to demystify LLMs, not provide factual guarantees
+```bash
+pip install -e ".[pdf]"
+python tools/pdf/generate_printables.py
+```
+
+Generated PDFs are written to `docs/printable/`.
+Use `python tools/pdf/generate_printables.py letter` if your class needs US
+Letter instead of A4.
+
+The generator writes both simple filenames, such as `teacher_guide.pdf`, and
+title-cased aliases, such as `Kairo_Teacher_Guide.pdf`, so older links keep
+working.
+
+---
+
+## Reflection questions
+
+- What changed after switching datasets?
+- Which output details are evidence of the training data?
+- Why can tiny models sound fluent but still be wrong?
+- What does attention help inspect?
+- What does attention not prove?
+
+---
+
+## Next experiments
+
+- Compare `space_adventure.txt` with `short_poems.txt`.
+- Compare `robot_helper.txt` with `pirate_dialogue.txt`.
+- Change only `epochs` and observe loss and output changes.
+- Keep the same prompt across every run for a fair comparison.

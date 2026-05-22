@@ -17,13 +17,24 @@
 
 ## Can you train a tiny AI?
 
-In this activity you will build, train, test, retrain, and analyze a tiny language model named Kairo.
+In this activity you will build, train, test, retrain, and analyze a tiny
+language model named Kairo.
+
+Name: ________________________________________________
+
+Date: ________________________________________________
 
 ---
 
 ## Challenge 1 — Build it
 
 ### My dataset
+
+Dataset name or file:
+
+__________________________________________________
+
+What kind of text is in the dataset?
 
 __________________________________________________
 
@@ -33,11 +44,23 @@ What kind of text do you think the model will generate?
 
 __________________________________________________
 
+Which words or style do you expect to appear?
+
+__________________________________________________
+
 ---
 
 ## Challenge 2 — Train it
 
 ### Loss notes
+
+Starting train loss:
+
+__________________________________________________
+
+Ending train loss:
+
+__________________________________________________
 
 What happened to the loss value while training?
 
@@ -46,6 +69,10 @@ __________________________________________________
 ### Reflection
 
 Why do you think the loss changed?
+
+__________________________________________________
+
+Does lower loss mean the model understands like a person?
 
 __________________________________________________
 
@@ -65,9 +92,15 @@ __________________________________________________
 
 __________________________________________________
 
+__________________________________________________
+
 ### Reflection
 
 Did the generated text make sense? Why or why not?
+
+__________________________________________________
+
+Which parts sounded fluent but might not be true?
 
 __________________________________________________
 
@@ -85,6 +118,8 @@ Output recorded:
 
 __________________________________________________
 
+__________________________________________________
+
 ### Output After Retrain
 
 Prompt used (same prompt recommended):
@@ -95,11 +130,18 @@ Output recorded:
 
 __________________________________________________
 
+__________________________________________________
+
 ### What Changed and Why?
 
 Compare the two outputs. Note style, vocabulary, repetition, and topic shifts.
 
-__________________________________________________
+| Evidence | Before | After |
+|---|---|---|
+| Vocabulary | | |
+| Tone | | |
+| Repetition | | |
+| Topic | | |
 
 Why do you think retraining changed the output?
 
@@ -115,6 +157,7 @@ __________________________________________________
 
 - Try two different datasets with the same prompt and compare outputs.
 - Run one additional retrain round and record whether style shifts become stronger.
+- Change `max_new_tokens`, `temperature`, or `top_k` and describe the effect.
 - Write one prediction about what might happen with a much larger dataset.
 
 Notes:
@@ -127,6 +170,16 @@ __________________________________________________
 
 ### Token with strongest attention
 
+Prompt:
+
+__________________________________________________
+
+Token inspected:
+
+__________________________________________________
+
+Strongest attended token:
+
 __________________________________________________
 
 ### Reflection
@@ -135,11 +188,19 @@ Does attention mean understanding? Explain your answer.
 
 __________________________________________________
 
+What can attention help you inspect?
+
+__________________________________________________
+
 ---
 
 ## Challenge 6 — Save experiment
 
 ### Experiment folder name
+
+__________________________________________________
+
+What would you need to record so someone else could repeat your experiment?
 
 __________________________________________________
 
@@ -155,6 +216,14 @@ __________________________________________________
 
 __________________________________________________
 
+One sentence I can now explain:
+
+```text
+Language models learn...
+```
+
+__________________________________________________
+
 ---
 
 ## Before/after retrain prompt ideas
@@ -163,15 +232,20 @@ __________________________________________________
 Captain Rowan:
 The station woke
 Rain taps softly
+The robot opened the door
+Raise the black sail
 ```
 
 ## New sample datasets
 
 Use one starter file from `data/samples/`:
 
+- `space_adventure.txt`
 - `pirate_dialogue.txt`
 - `sci_fi_micro_story.txt`
 - `short_poems.txt`
+- `nature_notes.txt`
+- `robot_helper.txt`
 
 ---
 

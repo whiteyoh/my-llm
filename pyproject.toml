@@ -28,3 +28,10 @@ target-version = "py311"
 learn = [
   "streamlit>=1.30",
 ]
+pdf = [
+  "reportlab>=4.0",
+]
+dev = [
+  "pytest>=8.0",
+  "ruff>=0.5",
+]
