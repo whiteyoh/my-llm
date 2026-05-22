@@ -23,10 +23,13 @@ def main() -> None:
     args = parser.parse_args()
 
     if args.batch_size <= 0:
-        raise ValueError("batch_size must be > 0")
+        parser.error("batch_size must be > 0")
 
     device = resolve_device(args.device)
-    ckpt = load_checkpoint(args.checkpoint, map_location=device)
+    try:
+        ckpt = load_checkpoint(args.checkpoint, map_location=device)
+    except FileNotFoundError as exc:
+        parser.exit(2, f"{exc}\n")
     config = ckpt["config"]
 
     model = TinyGPT(
@@ -41,7 +44,10 @@ def main() -> None:
     model.eval()
 
     tokenizer = ByteTokenizer()
-    text = Path(args.input_file).read_text(encoding="utf-8")
+    input_path = Path(args.input_file)
+    if not input_path.exists():
+        parser.exit(2, f"Evaluation input file not found: {input_path}\n")
+    text = input_path.read_text(encoding="utf-8")
     token_ids = tokenizer.encode(text)
     dataset = SequenceDataset(token_ids, seq_len=config["seq_len"])
     loader = DataLoader(dataset, batch_size=args.batch_size)

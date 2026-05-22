@@ -12,6 +12,7 @@ from tiny_llm.explain import tokens_preview, top_next_token_predictions
 from tiny_llm.generation import generate_tokens, resolve_device, validate_sampling_args
 from tiny_llm.model import TinyGPT
 from tiny_llm.safety import SafetyConfig, filter_output, is_prompt_allowed, validate_training_text
+from tiny_llm.training import train_val_split_sizes, validate_training_token_count
 
 DEFAULTS = {"seq_len": 32, "d_model": 64, "n_heads": 4, "n_layers": 2, "epochs": 1, "batch_size": 4, "max_new_tokens": 40}
 TEACHER_LIMITS = {
@@ -43,11 +44,20 @@ def validate_learn_training_text(text: str, banned_terms: tuple[str, ...] | None
 def train_tiny_model(training_text: str, cfg: dict[str, int], progress_callback: Any | None = None) -> dict[str, Any]:
     tok = ByteTokenizer()
     token_ids = tok.encode(training_text)
+    validate_training_token_count(len(token_ids), cfg["seq_len"])
     ds = SequenceDataset(token_ids, seq_len=cfg["seq_len"])
-    val_size = max(1, int(len(ds) * 0.1))
-    train_size = len(ds) - val_size
-    train_ds, val_ds = random_split(ds, [train_size, val_size])
-    train_loader = DataLoader(train_ds, batch_size=cfg["batch_size"], shuffle=True)
+    train_size, val_size = train_val_split_sizes(len(ds), 0.1)
+    seed = int(cfg.get("seed", 42))
+    torch.manual_seed(seed)
+    split_generator = torch.Generator().manual_seed(seed)
+    loader_generator = torch.Generator().manual_seed(seed)
+    train_ds, val_ds = random_split(ds, [train_size, val_size], generator=split_generator)
+    train_loader = DataLoader(
+        train_ds,
+        batch_size=cfg["batch_size"],
+        shuffle=True,
+        generator=loader_generator,
+    )
     val_loader = DataLoader(val_ds, batch_size=cfg["batch_size"])
 
     device = resolve_device("cpu")

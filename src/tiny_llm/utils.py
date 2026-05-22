@@ -14,8 +14,14 @@ def save_json(path: str | Path, payload: dict) -> None:
 
 
 def load_checkpoint(path: str | Path, map_location: str | torch.device = "cpu") -> dict:
+    checkpoint_path = Path(path)
+    if not checkpoint_path.exists():
+        raise FileNotFoundError(
+            f"Checkpoint not found: {checkpoint_path}. "
+            "Train a model first or check the checkpoint path."
+        )
     try:
-        return torch.load(path, map_location=map_location, weights_only=True)
+        return torch.load(checkpoint_path, map_location=map_location, weights_only=True)
     except TypeError:
         # Older PyTorch versions may not support weights_only; only use this fallback for trusted local files.
-        return torch.load(path, map_location=map_location)
+        return torch.load(checkpoint_path, map_location=map_location)

@@ -30,7 +30,10 @@ def main() -> None:
         set_seed(args.seed)
 
     device = resolve_device(args.device)
-    ckpt = load_checkpoint(args.checkpoint, map_location=device)
+    try:
+        ckpt = load_checkpoint(args.checkpoint, map_location=device)
+    except FileNotFoundError as exc:
+        parser.exit(2, f"{exc}\n")
     config = ckpt["config"]
     tokenizer = ByteTokenizer()
 

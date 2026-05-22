@@ -15,6 +15,16 @@ dependencies = [
 [tool.setuptools.packages.find]
 where = ["src"]
 
+[tool.setuptools]
+py-modules = ["chat", "evaluate", "generate", "kairo_learn", "train"]
+
+[project.scripts]
+kairo-train = "tiny_llm.cli:train"
+kairo-generate = "tiny_llm.cli:generate"
+kairo-evaluate = "tiny_llm.cli:evaluate"
+kairo-chat = "tiny_llm.cli:chat"
+kairo-learn = "tiny_llm.cli:learn"
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["src"]

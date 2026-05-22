@@ -1,19 +1,18 @@
 from __future__ import annotations
 
-from pathlib import Path
-
 import streamlit as st
 
 from tiny_llm.data import ByteTokenizer
 from tiny_llm.experiments import load_experiment_metadata, make_experiment_metadata, restore_experiment_model, save_experiment
 from tiny_llm.learn import build_attention_labels, build_attention_matrix_rows, build_attention_preview, build_probability_preview, build_restored_learning_state, build_token_preview, build_training_config, create_model_status, enforce_teacher_limits, generate_learning_output, prepare_retrain_comparison, train_tiny_model, validate_learn_training_text
+from tiny_llm.paths import read_sample_text
 from tiny_llm.safety import SafetyConfig, safety_notice
 
-DEFAULTS = {"seq_len": 32, "d_model": 64, "n_heads": 4, "n_layers": 2, "epochs": 1, "batch_size": 4}
+DEFAULTS = {"seq_len": 32, "d_model": 64, "n_heads": 4, "n_layers": 2, "epochs": 1, "batch_size": 4, "seed": 42}
 MAX_CLASSROOM_NEW_TOKENS = 40
 PRESETS = {
     "Very small / classroom demo": DEFAULTS,
-    "Small / better output": {"seq_len": 48, "d_model": 96, "n_heads": 4, "n_layers": 3, "epochs": 2, "batch_size": 4},
+    "Small / better output": {"seq_len": 48, "d_model": 96, "n_heads": 4, "n_layers": 3, "epochs": 2, "batch_size": 4, "seed": 42},
     "Custom": DEFAULTS,
 }
 
@@ -57,7 +56,7 @@ if st.sidebar.button("Reset session"):
 banned_terms = tuple(t.strip() for t in custom_banned.split(",") if t.strip()) or None
 safety_cfg = SafetyConfig(enabled=safe_mode, banned_terms=banned_terms or SafetyConfig().banned_terms)
 
-default_text = Path("data/samples/space_adventure.txt").read_text(encoding="utf-8")
+default_text = read_sample_text("space_adventure.txt")
 training_text = st.text_area("Build it: choose or paste training text", value=default_text, height=170)
 
 st.subheader("Training configuration")
@@ -90,7 +89,7 @@ if preview:
     ids = [int(row["token_id"]) for row in preview]
     st.code(f"Original snippet: {snippet}\nEncoded bytes: {ids}\nDecoded round trip: {tok.decode(ids)}")
 
-cfg, cfg_warnings = build_training_config({"seq_len": int(seq_len), "d_model": int(d_model), "n_heads": int(n_heads), "n_layers": int(n_layers), "epochs": int(epochs), "batch_size": int(batch_size)}, preset=model_size_preset)
+cfg, cfg_warnings = build_training_config({"seq_len": int(seq_len), "d_model": int(d_model), "n_heads": int(n_heads), "n_layers": int(n_layers), "epochs": int(epochs), "batch_size": int(batch_size), "seed": int(base.get("seed", 42))}, preset=model_size_preset)
 max_new_tokens_cap, cap_warn = enforce_teacher_limits({"max_new_tokens": max_new_tokens_cap}, model_size_preset)
 max_new_tokens_cap = max_new_tokens_cap["max_new_tokens"]
 cfg_warnings.extend(cap_warn)

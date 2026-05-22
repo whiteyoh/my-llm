@@ -22,6 +22,10 @@ For the interactive classroom app:
 pip install -e ".[learn]"
 ```
 
+Commands in this guide use the installed `kairo-*` aliases. The older
+`python src/...` script paths still work when you are developing inside the
+repository.
+
 ---
 
 ## 2. Train on normal story text
@@ -29,7 +33,7 @@ pip install -e ".[learn]"
 Use the space-adventure sample as the "normal" baseline.
 
 ```bash
-python src/train.py --input_file data/samples/space_adventure.txt --out_dir runs/normal_demo --epochs 1 --batch_size 4 --seq_len 32 --d_model 64 --n_heads 4 --n_layers 2 --device cpu
+kairo-train --input_file data/samples/space_adventure.txt --out_dir runs/normal_demo --epochs 1 --batch_size 4 --seq_len 32 --d_model 64 --n_heads 4 --n_layers 2 --device cpu
 ```
 
 Watch for:
@@ -44,7 +48,7 @@ Watch for:
 ## 3. Generate from the baseline model
 
 ```bash
-python src/generate.py --checkpoint runs/normal_demo/best.pt --prompt "Captain Rowan looked at the stars" --max_new_tokens 40 --temperature 0.9 --top_k 20 --device cpu
+kairo-generate --checkpoint runs/normal_demo/best.pt --prompt "Captain Rowan looked at the stars" --max_new_tokens 40 --temperature 0.9 --top_k 20 --device cpu
 ```
 
 Record the output before changing the dataset. It may be repetitive or strange;
@@ -57,7 +61,7 @@ that is expected for a tiny model.
 Use the same model size and training settings, but change the data.
 
 ```bash
-python src/train.py --input_file data/samples/pirate_dialogue.txt --out_dir runs/pirate_demo --epochs 1 --batch_size 4 --seq_len 32 --d_model 64 --n_heads 4 --n_layers 2 --device cpu
+kairo-train --input_file data/samples/pirate_dialogue.txt --out_dir runs/pirate_demo --epochs 1 --batch_size 4 --seq_len 32 --d_model 64 --n_heads 4 --n_layers 2 --device cpu
 ```
 
 This classroom comparison trains a fresh tiny model with the same architecture.
@@ -68,7 +72,7 @@ The learning question is: what changes when the data changes?
 ## 5. Generate with the same prompt
 
 ```bash
-python src/generate.py --checkpoint runs/pirate_demo/best.pt --prompt "Captain Rowan looked at the stars" --max_new_tokens 40 --temperature 0.9 --top_k 20 --device cpu
+kairo-generate --checkpoint runs/pirate_demo/best.pt --prompt "Captain Rowan looked at the stars" --max_new_tokens 40 --temperature 0.9 --top_k 20 --device cpu
 ```
 
 Compare the before and after outputs:
@@ -85,7 +89,7 @@ Compare the before and after outputs:
 ## 6. Evaluate a checkpoint
 
 ```bash
-python src/evaluate.py --checkpoint runs/normal_demo/best.pt --input_file data/samples/space_adventure.txt --device cpu
+kairo-evaluate --checkpoint runs/normal_demo/best.pt --input_file data/samples/space_adventure.txt --device cpu
 ```
 
 Lower loss and perplexity usually mean the model predicts this dataset better.
@@ -96,7 +100,7 @@ They do not mean the model understands the text like a person.
 ## 7. Open Learn Mode
 
 ```bash
-streamlit run src/kairo_learn.py
+kairo-learn
 ```
 
 Use Learn Mode to:

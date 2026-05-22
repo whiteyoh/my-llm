@@ -36,7 +36,7 @@ Quick preflight:
 
 ```bash
 python -m compileall src tests
-python src/train.py --input_file data/samples/space_adventure.txt --out_dir runs/preflight --epochs 1 --batch_size 4 --seq_len 32 --d_model 64 --n_heads 4 --n_layers 2 --device cpu
+kairo-train --input_file data/samples/space_adventure.txt --out_dir runs/preflight --epochs 1 --batch_size 4 --seq_len 32 --d_model 64 --n_heads 4 --n_layers 2 --device cpu
 ```
 
 ---

@@ -113,34 +113,37 @@ pip install -e ".[dev]"
 
 ## Quickstart commands
 
+After `pip install -e .`, you can use either the `kairo-*` commands or the
+script paths shown in older examples.
+
 Train:
 
 ```bash
-python src/train.py --input_file data/samples/space_adventure.txt --out_dir runs/demo --epochs 1 --batch_size 4 --seq_len 32 --d_model 64 --n_heads 4 --n_layers 2 --device cpu
+kairo-train --input_file data/samples/space_adventure.txt --out_dir runs/demo --epochs 1 --batch_size 4 --seq_len 32 --d_model 64 --n_heads 4 --n_layers 2 --device cpu
 ```
 
 Generate:
 
 ```bash
-python src/generate.py --checkpoint runs/demo/best.pt --prompt "The robot opened the door" --max_new_tokens 20 --device cpu
+kairo-generate --checkpoint runs/demo/best.pt --prompt "The robot opened the door" --max_new_tokens 20 --device cpu
 ```
 
 Evaluate:
 
 ```bash
-python src/evaluate.py --checkpoint runs/demo/best.pt --input_file data/samples/space_adventure.txt --device cpu
+kairo-evaluate --checkpoint runs/demo/best.pt --input_file data/samples/space_adventure.txt --device cpu
 ```
 
 Chat:
 
 ```bash
-python src/chat.py --checkpoint runs/demo/best.pt --device cpu
+kairo-chat --checkpoint runs/demo/best.pt --device cpu
 ```
 
 Learn Mode:
 
 ```bash
-streamlit run src/kairo_learn.py
+kairo-learn
 ```
 
 Regenerate classroom PDFs:

@@ -11,6 +11,7 @@ from tiny_llm.data import ByteTokenizer, SequenceDataset
 from tiny_llm.generation import resolve_device, set_seed
 from tiny_llm.model import TinyGPT
 from tiny_llm.safety import validate_training_text
+from tiny_llm.training import train_val_split_sizes, validate_training_token_count
 from tiny_llm.utils import load_checkpoint, save_json
 
 
@@ -47,28 +48,39 @@ def main() -> None:
     args = parser.parse_args()
 
     if args.batch_size <= 0:
-        raise ValueError("batch_size must be > 0")
+        parser.error("batch_size must be > 0")
     if args.seq_len <= 0:
-        raise ValueError("seq_len must be > 0")
+        parser.error("seq_len must be > 0")
     if args.epochs <= 0:
-        raise ValueError("epochs must be > 0")
+        parser.error("epochs must be > 0")
     if args.lr <= 0:
-        raise ValueError("lr must be > 0")
+        parser.error("lr must be > 0")
     if not (0.0 < args.val_ratio < 1.0):
-        raise ValueError("val_ratio must be in (0, 1)")
+        parser.error("val_ratio must be in (0, 1)")
 
     set_seed(args.seed)
     out_dir = Path(args.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    text = Path(args.input_file).read_text(encoding="utf-8")
+    input_path = Path(args.input_file)
+    if not input_path.exists():
+        parser.exit(2, f"Training input file not found: {input_path}\n")
+
+    text = input_path.read_text(encoding="utf-8")
     for warning in validate_training_text(text):
         print(f"[safety warning] {warning}")
     tokenizer = ByteTokenizer()
-    dataset = SequenceDataset(tokenizer.encode(text), seq_len=args.seq_len)
+    token_ids = tokenizer.encode(text)
+    try:
+        validate_training_token_count(len(token_ids), args.seq_len)
+    except ValueError as exc:
+        parser.exit(2, f"{exc}\n")
+    dataset = SequenceDataset(token_ids, seq_len=args.seq_len)
 
-    val_size = max(1, int(len(dataset) * args.val_ratio))
-    train_size = len(dataset) - val_size
+    try:
+        train_size, val_size = train_val_split_sizes(len(dataset), args.val_ratio)
+    except ValueError as exc:
+        parser.exit(2, f"{exc}\n")
     split_generator = torch.Generator().manual_seed(args.seed)
     train_ds, val_ds = random_split(dataset, [train_size, val_size], generator=split_generator)
 
@@ -94,7 +106,10 @@ def main() -> None:
     config = vars(args) | {"vocab_size": tokenizer.vocab_size, "device": str(device)}
 
     if args.resume:
-        ckpt = load_checkpoint(Path(args.resume), map_location=device)
+        try:
+            ckpt = load_checkpoint(Path(args.resume), map_location=device)
+        except FileNotFoundError as exc:
+            parser.exit(2, f"{exc}\n")
         model.load_state_dict(ckpt["model_state"])
         if "optimizer_state" in ckpt:
             optimizer.load_state_dict(ckpt["optimizer_state"])

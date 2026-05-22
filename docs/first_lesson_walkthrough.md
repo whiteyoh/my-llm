@@ -58,7 +58,7 @@ easier to see.
 ## Step 1 — Train on normal story data
 
 ```bash
-python src/train.py --input_file data/samples/space_adventure.txt --out_dir runs/lesson_normal --epochs 1 --batch_size 4 --seq_len 32 --d_model 64 --n_heads 4 --n_layers 2 --device cpu
+kairo-train --input_file data/samples/space_adventure.txt --out_dir runs/lesson_normal --epochs 1 --batch_size 4 --seq_len 32 --d_model 64 --n_heads 4 --n_layers 2 --device cpu
 ```
 
 Ask students to notice:
@@ -70,7 +70,7 @@ Ask students to notice:
 ## Step 2 — Generate output before retrain
 
 ```bash
-python src/generate.py --checkpoint runs/lesson_normal/best.pt --prompt "Captain Rowan looked at the stars" --max_new_tokens 30 --device cpu
+kairo-generate --checkpoint runs/lesson_normal/best.pt --prompt "Captain Rowan looked at the stars" --max_new_tokens 30 --device cpu
 ```
 
 ### Example output (before retrain)
@@ -87,7 +87,7 @@ be imperfect; that imperfection makes the mechanism easier to discuss.
 ## Step 3 — Retrain on pirate dataset
 
 ```bash
-python src/train.py --input_file data/samples/pirate_dialogue.txt --out_dir runs/lesson_pirate --epochs 1 --batch_size 4 --seq_len 32 --d_model 64 --n_heads 4 --n_layers 2 --device cpu
+kairo-train --input_file data/samples/pirate_dialogue.txt --out_dir runs/lesson_pirate --epochs 1 --batch_size 4 --seq_len 32 --d_model 64 --n_heads 4 --n_layers 2 --device cpu
 ```
 
 In the command-line lesson, "retrain" means training the same tiny architecture
@@ -97,7 +97,7 @@ before/after comparison in the same interactive session.
 ## Step 4 — Generate output after retrain
 
 ```bash
-python src/generate.py --checkpoint runs/lesson_pirate/best.pt --prompt "Captain Rowan looked at the stars" --max_new_tokens 30 --device cpu
+kairo-generate --checkpoint runs/lesson_pirate/best.pt --prompt "Captain Rowan looked at the stars" --max_new_tokens 30 --device cpu
 ```
 
 ### Example output (after retrain)
@@ -128,7 +128,7 @@ What changed because the model saw different text, and what stayed the same beca
 ## Step 6 — Optional Learn Mode inspection
 
 ```bash
-streamlit run src/kairo_learn.py
+kairo-learn
 ```
 
 Use Learn Mode to inspect:
