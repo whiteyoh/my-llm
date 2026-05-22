@@ -39,6 +39,22 @@ easier to see.
 
 ---
 
+## What success looks like
+
+- The model trains without errors.
+- The first output resembles normal story text.
+- Pirate retrain output shows some pirate vocabulary or rhythm.
+- Learners can explain that changed data changed model behavior.
+
+### Before/after comparison table
+
+| Stage | Prompt | Expected style | What learners should notice |
+|---|---|---|---|
+| Before retrain | `Captain Rowan looked at the stars` | Neutral or space-story tone | Word choices are closer to the normal story dataset. |
+| After pirate retrain | `Captain Rowan looked at the stars` | Pirate-flavored tone | Terms like “matey,” “sail,” or “tide” may appear, and rhythm may shift. |
+
+---
+
 ## Step 1 — Train on normal story data
 
 ```bash

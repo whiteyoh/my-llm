@@ -32,19 +32,19 @@ Text data
 
 ---
 
-## Code map
+## Normal to pirate retrain flow
 
-| Area | Files | Responsibility |
-|---|---|---|
-| Training CLI | `src/train.py` | Load text, build dataset, train, save checkpoints and metrics |
-| Generation CLI | `src/generate.py`, `src/chat.py` | Load checkpoint, sample tokens, apply classroom safety filter |
-| Evaluation CLI | `src/evaluate.py` | Report loss and perplexity for a saved checkpoint |
-| Learn Mode | `src/kairo_learn.py`, `src/tiny_llm/learn.py` | Interactive classroom training, comparison, and inspection |
-| Model core | `src/tiny_llm/model.py` | Tiny GPT-style transformer blocks and causal self-attention |
-| Data | `src/tiny_llm/data.py` | Byte tokenizer and sequence dataset |
-| Explanation | `src/tiny_llm/explain.py`, `src/tiny_llm/attention.py` | Token previews, top-token probabilities, attention maps |
-| Safety | `src/tiny_llm/safety.py` | Lightweight prompt/output guardrails for classroom demos |
-| Experiments | `src/tiny_llm/experiments.py` | Save and restore Learn Mode experiment folders |
+```text
+Normal story data
+-> train TinyGPT
+-> generate normal-style output
+-> pirate dialogue data
+-> retrain TinyGPT
+-> generate pirate-style output
+-> compare behavior
+```
+
+The architecture stays the same; the training data changes the model behavior.
 
 ---
 

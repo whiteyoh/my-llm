@@ -118,7 +118,15 @@ Output recorded:
 
 __________________________________________________
 
-__________________________________________________
+Example prompt:
+
+`Captain Rowan looked at the stars`
+
+Example observation before retrain:
+
+`The output sounds like a space story.`
+
+---
 
 ### Output After Retrain
 
@@ -130,7 +138,11 @@ Output recorded:
 
 __________________________________________________
 
-__________________________________________________
+Example observation after pirate retrain:
+
+`The output includes pirate-style words such as "matey", "sail", or "tide".`
+
+---
 
 ### What Changed and Why?
 
@@ -147,11 +159,15 @@ Why do you think retraining changed the output?
 
 __________________________________________________
 
+---
+
 ### Reflection
 
 How did this change your understanding of how AI models learn?
 
 __________________________________________________
+
+---
 
 ### Extension exercises
 
@@ -226,6 +242,8 @@ __________________________________________________
 
 ---
 
+---
+
 ## Before/after retrain prompt ideas
 
 ```text
@@ -235,6 +253,8 @@ Rain taps softly
 The robot opened the door
 Raise the black sail
 ```
+
+---
 
 ## New sample datasets
 
@@ -246,6 +266,14 @@ Use one starter file from `data/samples/`:
 - `short_poems.txt`
 - `nature_notes.txt`
 - `robot_helper.txt`
+
+---
+
+## Final reflection
+
+- What did Kairo help you understand about language models?
+- What changed when the training data changed?
+- Why does this show that AI output depends on data?
 
 ---
 

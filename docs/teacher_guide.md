@@ -132,6 +132,28 @@ more or less likely. It is not the same as saving a fact in a table.
 
 ---
 
+
+## Teacher gotchas
+
+| Gotcha | What it means | What to do |
+|---|---|---|
+| Training is slow | CPU training can take longer than expected with larger settings. | Use shorter runs (`epochs 1`, smaller `seq_len`) and frame waiting time as part of experimentation. |
+| Output repeats | Tiny models often loop or reuse phrases. | Treat repetition as evidence of model limits and ask students why it happens. |
+| Students think attention means thinking | Learners may interpret attention maps as human reasoning. | Repeat that attention is a weighting mechanism over tokens, not consciousness. |
+| Students think low loss means intelligence | Lower loss can be mistaken for true understanding. | Explain loss as prediction error only; compare fluent text with incorrect claims. |
+| Pirate style does not appear strongly enough | One short retrain may not produce dramatic style shift. | Retrain briefly again or use stronger pirate prompts and compare vocabulary changes. |
+
+---
+
+## Example teacher script
+
+- “A language model predicts the next token.”
+- “Retraining changes the patterns the model has seen.”
+- “Attention is not thinking; it is a weighting mechanism.”
+- “Strange output is useful because it shows the limits of small models.”
+
+---
+
 ## Troubleshooting quick guide
 
 ### Training is too slow
