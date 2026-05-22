@@ -11,19 +11,19 @@ def _run_main(module_name: str) -> None:
 
 
 def train() -> None:
-    _run_main("train")
+    _run_main("tiny_llm.train")
 
 
 def generate() -> None:
-    _run_main("generate")
+    _run_main("tiny_llm.generate")
 
 
 def evaluate() -> None:
-    _run_main("evaluate")
+    _run_main("tiny_llm.evaluate")
 
 
 def chat() -> None:
-    _run_main("chat")
+    _run_main("tiny_llm.chat")
 
 
 def learn() -> None:
@@ -32,6 +32,6 @@ def learn() -> None:
     except ImportError as exc:
         raise SystemExit('Learn Mode requires Streamlit. Install it with: pip install -e ".[learn]"') from exc
 
-    script_path = Path(__file__).resolve().parents[1] / "kairo_learn.py"
+    script_path = Path(__file__).resolve().with_name("kairo_learn.py")
     sys.argv = ["streamlit", "run", str(script_path), *sys.argv[1:]]
     streamlit_cli.main()

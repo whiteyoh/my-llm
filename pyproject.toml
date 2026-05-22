@@ -16,7 +16,10 @@ dependencies = [
 where = ["src"]
 
 [tool.setuptools]
-py-modules = ["chat", "evaluate", "generate", "kairo_learn", "train"]
+include-package-data = true
+
+[tool.setuptools.package-data]
+tiny_llm = ["samples/*.txt"]
 
 [project.scripts]
 kairo-train = "tiny_llm.cli:train"

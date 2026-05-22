@@ -71,3 +71,4 @@ def test_train_cli_rejects_too_short_training_text(tmp_path: Path) -> None:
     assert result.returncode == 2
     assert "Training text is too short" in result.stderr
     assert "Traceback" not in result.stderr
+    assert not out_dir.exists()

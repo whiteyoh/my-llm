@@ -14,4 +14,4 @@ def test_kairo_learn_import_only_when_streamlit_is_available() -> None:
     if importlib.util.find_spec("streamlit") is None:
         pytest.skip("streamlit not installed; skipping Learn Mode import smoke test")
 
-    __import__("kairo_learn")
+    __import__("tiny_llm.kairo_learn")

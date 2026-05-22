@@ -140,7 +140,7 @@ Chat:
 kairo-chat --checkpoint runs/demo/best.pt --device cpu
 ```
 
-Learn Mode:
+Learn Mode (after installing the `learn` extra):
 
 ```bash
 kairo-learn
