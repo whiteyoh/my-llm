@@ -106,6 +106,7 @@ def test_assets_and_docs_exist_and_are_referenced() -> None:
         "docs/printable/Kairo_Teacher_Guide.pdf",
         "docs/printable/Kairo_Student_Worksheet.pdf",
         "docs/printable/Kairo_First_Lesson_Walkthrough.pdf",
+        "docs/printable/Tech_I_Can_Kairo_Book.pdf",
     ]
     for path in required_paths:
         assert Path(path).exists(), f"Missing required path: {path}"
@@ -165,6 +166,7 @@ def test_printable_pdfs_are_committed_and_readable() -> None:
         "docs/printable/Kairo_Teacher_Guide.pdf",
         "docs/printable/Kairo_Student_Worksheet.pdf",
         "docs/printable/Kairo_First_Lesson_Walkthrough.pdf",
+        "docs/printable/Tech_I_Can_Kairo_Book.pdf",
     ]
 
     for path in pdfs:

@@ -119,6 +119,7 @@ Use Learn Mode to:
 ```bash
 pip install -e ".[pdf]"
 python tools/pdf/generate_printables.py
+python tools/pdf/generate_tech_i_can_book.py
 ```
 
 Generated PDFs are written to `docs/printable/`.

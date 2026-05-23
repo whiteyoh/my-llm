@@ -46,8 +46,13 @@ learn = [
 ]
 pdf = [
   "reportlab>=4.0",
+  "pillow>=10.0.0",
+  "pypdf>=5.0.0",
 ]
 dev = [
   "pytest>=8.0",
   "ruff>=0.5",
+  "reportlab>=4.0",
+  "pillow>=10.0.0",
+  "pypdf>=5.0.0",
 ]

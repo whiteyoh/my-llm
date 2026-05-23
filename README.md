@@ -79,6 +79,7 @@ Same model architecture. Different data. Different behavior.
 | `src/kairo_learn.py` | Streamlit Learn Mode for classroom exploration. |
 | `src/tiny_llm/` | Tokenizer, model, generation, attention, safety, and Learn Mode helpers. |
 | `data/samples/` | Starter datasets for lessons and demos. |
+| `data/samples/README.md` | Intro + insight guide for each training text file. |
 | `docs/` | Lesson guides, architecture notes, and printable sources. |
 | `tools/pdf/` | Printable PDF generation tooling. |
 | `tests/` | Smoke, model, dataset, safety, docs, and helper tests. |
@@ -109,6 +110,12 @@ Optional extras:
 pip install -e ".[learn]"
 pip install -e ".[pdf]"
 pip install -e ".[dev]"
+```
+
+Contributor setup (installs everything needed for checks, tests, and printables):
+
+```bash
+pip install -e ".[dev,learn,pdf]"
 ```
 
 ---
@@ -182,6 +189,7 @@ Regenerate classroom PDFs:
 
 ```bash
 python tools/pdf/generate_printables.py
+python tools/pdf/generate_tech_i_can_book.py
 ```
 
 Use `python tools/pdf/generate_printables.py letter` for US Letter output.
@@ -190,7 +198,7 @@ Run quality checks:
 
 ```bash
 ruff check .
-python -m compileall src tests
+python -m compileall src tests tools
 pytest -q
 ```
 
@@ -204,12 +212,14 @@ pytest -q
 - [Student Worksheet](docs/student_worksheet.md)
 - [Architecture](docs/architecture.md)
 - [How LLMs Work](docs/how_llms_work.md)
+- [Sample Training Text Guide](data/samples/README.md)
 
 ### Printable lesson packs
 
 - [Teacher Guide (PDF)](docs/printable/teacher_guide.pdf)
 - [Student Worksheet (PDF)](docs/printable/student_worksheet.pdf)
 - [First Lesson Walkthrough (PDF)](docs/printable/first_lesson_walkthrough.pdf)
+- [Tech I Can: Kairo Book (PDF)](docs/printable/Tech_I_Can_Kairo_Book.pdf)
 
 ### Assets and diagrams
 
