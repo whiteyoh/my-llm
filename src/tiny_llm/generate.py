@@ -25,6 +25,8 @@ def main() -> None:
     args = parser.parse_args()
 
     validate_sampling_args(args.max_new_tokens, args.temperature, args.top_k, args.top_p)
+    if not args.prompt.strip():
+        parser.error("prompt must not be empty")
     cfg = SafetyConfig(enabled=not args.unsafe_disable_filter)
 
     print(safety_notice())

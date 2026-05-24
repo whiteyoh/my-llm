@@ -171,7 +171,11 @@ def expected_agent_files(root: Path | None = None) -> list[str]:
     if not agents_md.exists():
         return []
     text = agents_md.read_text(encoding="utf-8")
-    block = _parse_tag_block(text, "examples")
+    # `examples` are illustrative. Missing-agent alerts should only use explicit
+    # required lists to avoid false-positive warnings in the dashboard.
+    block = _parse_tag_block(text, "required-agents")
+    if not block:
+        return []
     files: list[str] = []
     for item in block:
         stripped = item.strip()

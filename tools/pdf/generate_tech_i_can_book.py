@@ -56,6 +56,11 @@ FIGURE_LEARNING_LOOP = ASSETS / "figure-learning-loop.jpg"
 FIGURE_LEARN_MODE = ASSETS / "figure-learn-mode.jpg"
 FIGURE_TRAINING_CURVE = ASSETS / "figure-training-curve.jpg"
 FIGURE_QA_GROUNDING = ASSETS / "figure-qa-grounding.jpg"
+FIGURE_LESSON_DELIVERY_MAP = ASSETS / "figure-lesson-delivery-map.jpg"
+FIGURE_WEEKLY_IMPLEMENTATION_MAP = ASSETS / "figure-weekly-implementation-map.jpg"
+FIGURE_IMPROVEMENT_CYCLE = ASSETS / "figure-improvement-cycle.jpg"
+FIGURE_GLOSSARY_LOOKUP_MAP = ASSETS / "figure-glossary-lookup-map.jpg"
+FIGURE_INDEX_LOOKUP_FLOW = ASSETS / "figure-index-lookup-flow.jpg"
 ICON_LIGHTBULB = ASSETS / "icon-lightbulb.png"
 ICON_DEFINITION = ASSETS / "icon-definition.png"
 ICON_NOTE = ASSETS / "icon-note.png"
@@ -115,6 +120,22 @@ TERM_SEARCH_ALIASES: dict[str, list[str]] = {
     "Prompt (--prompt)": ["prompt", "--prompt"],
     "Temperature (--temperature)": ["temperature", "--temperature"],
     "Top-k (--top_k)": ["top-k", "top k", "--top_k"],
+}
+KEYWORD_PRIMARY_PAGE_OVERRIDES: dict[str, int] = {
+    "Batch": 27,
+    "Capstone": 136,
+    "Context": 38,
+    "Model architecture": 31,
+    "Next-token prediction": 42,
+    "Reliability": 84,
+}
+KEYWORD_FULL_RANGE_START_OVERRIDES: dict[str, int] = {
+    "Batch": 27,
+    "Capstone": 136,
+    "Context": 38,
+    "Model architecture": 31,
+    "Next-token prediction": 42,
+    "Reliability": 84,
 }
 KEY_WORDS_INDEX_HEADING_RE = re.compile(r"^#\s+Chapter\s+\d+:\s+Key Words Index\s*$", re.IGNORECASE)
 
@@ -217,7 +238,9 @@ def ensure_support_figure_images() -> None:
         # subtle header band
         draw.rectangle((0, 0, w, 92), fill="#e2e8f0")
         painter(draw, w, h)
-        img.save(path, format="JPEG", quality=66, optimize=True, progressive=True, subsampling=2)
+        resampling = getattr(PILImage, "Resampling", PILImage)
+        img = img.resize((960, 540), resample=resampling.LANCZOS)
+        img.save(path, format="JPEG", quality=36, optimize=True, progressive=True, subsampling=2)
 
     def _paint_learning_loop(draw: ImageDraw.ImageDraw, w: int, h: int) -> None:
         title = _font(44)
@@ -297,10 +320,117 @@ def ensure_support_figure_images() -> None:
         draw.line((840, 258, 908, 258), fill="#334155", width=5)
         draw.text((52, 654), "Better context gives clearer, safer answers.", fill="#334155", font=body)
 
+    def _paint_lesson_delivery_map(draw: ImageDraw.ImageDraw, w: int, h: int) -> None:
+        title = _font(44)
+        body = _font(22)
+        draw.text((52, 20), "45-Minute Lesson Arc", fill="#0f172a", font=title)
+        stages = [
+            ("Warm-up", "#dbeafe"),
+            ("Baseline", "#dcfce7"),
+            ("Retrain", "#fef3c7"),
+            ("Compare", "#ede9fe"),
+            ("Debrief", "#fee2e2"),
+        ]
+        x = 70
+        for label, fill in stages:
+            draw.rounded_rectangle((x, 214, x + 220, 414), radius=20, fill=fill, outline="#334155", width=3)
+            draw.text((x + 36, 290), label, fill="#0f172a", font=body)
+            if x < 1030:
+                draw.line((x + 220, 314, x + 256, 314), fill="#334155", width=5)
+            x += 236
+        draw.text((52, 654), "Plan time intentionally so evidence discussion is never rushed.", fill="#334155", font=body)
+
+    def _paint_weekly_implementation_map(draw: ImageDraw.ImageDraw, w: int, h: int) -> None:
+        title = _font(44)
+        body = _font(22)
+        draw.text((52, 20), "Week-by-Week Delivery Map", fill="#0f172a", font=title)
+        draw.rounded_rectangle((76, 166, 1210, 558), radius=18, outline="#334155", width=3, fill="#ffffff")
+        week_labels = [
+            ("Week 1", "Setup + Baseline"),
+            ("Week 2", "Retrain + Compare"),
+            ("Week 3", "QA + Grounding"),
+            ("Week 4", "Capstone Share"),
+        ]
+        x = 116
+        colors_map = ["#dbeafe", "#dcfce7", "#fef3c7", "#ede9fe"]
+        for idx, (week, detail) in enumerate(week_labels):
+            draw.rounded_rectangle((x, 222, x + 252, 510), radius=16, fill=colors_map[idx], outline="#475569", width=2)
+            draw.text((x + 24, 270), week, fill="#0f172a", font=body)
+            draw.text((x + 24, 334), detail, fill="#334155", font=_font(18))
+            if idx < len(week_labels) - 1:
+                draw.line((x + 252, 366, x + 286, 366), fill="#334155", width=4)
+            x += 286
+        draw.text((52, 654), "Each week should end with one clear artifact and one clear explanation.", fill="#334155", font=body)
+
+    def _paint_improvement_cycle(draw: ImageDraw.ImageDraw, w: int, h: int) -> None:
+        title = _font(44)
+        body = _font(22)
+        draw.text((52, 20), "Continuous Improvement Cycle", fill="#0f172a", font=title)
+        nodes = [
+            ("Collect", 210, 270),
+            ("Prioritize", 520, 174),
+            ("Test", 870, 250),
+            ("Measure", 930, 470),
+            ("Adjust", 470, 520),
+        ]
+        for i, (_label, x, y) in enumerate(nodes):
+            nx, ny = nodes[(i + 1) % len(nodes)][1:]
+            draw.line((x + 60, y + 40, nx + 60, ny + 40), fill="#334155", width=4)
+        for label, x, y in nodes:
+            draw.rounded_rectangle((x, y, x + 180, y + 86), radius=18, fill="#e2e8f0", outline="#334155", width=3)
+            draw.text((x + 22, y + 30), label, fill="#0f172a", font=body)
+        draw.text((52, 654), "Improve one thing at a time, then prove whether it helped.", fill="#334155", font=body)
+
+    def _paint_glossary_lookup_map(draw: ImageDraw.ImageDraw, w: int, h: int) -> None:
+        title = _font(44)
+        body = _font(22)
+        draw.text((52, 20), "Glossary to Classroom Use", fill="#0f172a", font=title)
+        steps = [
+            ("Term", "Grounding"),
+            ("Meaning", "Answer tied to context"),
+            ("Command", "--context / --context_file"),
+            ("Use", "Explain output limits"),
+        ]
+        y = 168
+        for label, detail in steps:
+            draw.rounded_rectangle((126, y, 1150, y + 120), radius=16, fill="#f8fafc", outline="#334155", width=2)
+            draw.text((156, y + 22), label, fill="#1e3a8a", font=body)
+            draw.text((390, y + 22), detail, fill="#0f172a", font=body)
+            if y < 520:
+                draw.line((638, y + 120, 638, y + 150), fill="#64748b", width=4)
+            y += 150
+        draw.text((52, 654), "Map each term to action so definitions become teaching tools.", fill="#334155", font=body)
+
+    def _paint_index_lookup_flow(draw: ImageDraw.ImageDraw, w: int, h: int) -> None:
+        title = _font(44)
+        body = _font(22)
+        draw.text((52, 20), "Index Lookup Workflow", fill="#0f172a", font=title)
+        draw.rounded_rectangle((96, 188, 1180, 548), radius=18, fill="#ffffff", outline="#334155", width=3)
+        columns = [
+            ("Pick term", "Temperature"),
+            ("Find page", "Primary: 84"),
+            ("Open chapter", "Read command + example"),
+            ("Apply", "Use in your lesson plan"),
+        ]
+        x = 140
+        for idx, (label, detail) in enumerate(columns):
+            draw.rounded_rectangle((x, 252, x + 220, 478), radius=14, fill="#e2e8f0", outline="#64748b", width=2)
+            draw.text((x + 18, 302), label, fill="#0f172a", font=body)
+            draw.text((x + 18, 360), detail, fill="#334155", font=_font(18))
+            if idx < len(columns) - 1:
+                draw.line((x + 220, 364, x + 252, 364), fill="#334155", width=4)
+            x += 252
+        draw.text((52, 654), "Use the index first, then jump to the chapter where the term is taught in context.", fill="#334155", font=body)
+
     _save_figure(FIGURE_LEARNING_LOOP, _paint_learning_loop)
     _save_figure(FIGURE_LEARN_MODE, _paint_learn_mode)
     _save_figure(FIGURE_TRAINING_CURVE, _paint_training_curve)
     _save_figure(FIGURE_QA_GROUNDING, _paint_qa_grounding)
+    _save_figure(FIGURE_LESSON_DELIVERY_MAP, _paint_lesson_delivery_map)
+    _save_figure(FIGURE_WEEKLY_IMPLEMENTATION_MAP, _paint_weekly_implementation_map)
+    _save_figure(FIGURE_IMPROVEMENT_CYCLE, _paint_improvement_cycle)
+    _save_figure(FIGURE_GLOSSARY_LOOKUP_MAP, _paint_glossary_lookup_map)
+    _save_figure(FIGURE_INDEX_LOOKUP_FLOW, _paint_index_lookup_flow)
 
 
 def ensure_callout_icons() -> None:
@@ -1633,6 +1763,22 @@ def build_chapter_prelude_summary(heading_text: str, intro_text: str, learn_item
     return f"This chapter focuses on {topic_clause}. You will work through the topic in clear, practical steps."
 
 
+def chapter_prelude_visual_meta(heading_text: str) -> tuple[Path | None, str, str]:
+    match = re.match(r"^Chapter\s+(\d+):", heading_text, flags=re.IGNORECASE)
+    chapter_no = int(match.group(1)) if match else 0
+    if 1 <= chapter_no <= 8:
+        return (ICON_LIGHTBULB, "Foundations", "Build confidence with the core workflow.")
+    if 9 <= chapter_no <= 16:
+        return (ICON_NOTE, "Classroom Core", "Move from setup to repeatable delivery.")
+    if 17 <= chapter_no <= 25:
+        return (ICON_DEFINITION, "Technical Depth", "Understand why model behavior changes.")
+    if 26 <= chapter_no <= 34:
+        return (ICON_SNIPPET_PURPOSE, "Applied Practice", "Run guided labs and evidence-rich tasks.")
+    if 35 <= chapter_no <= 40:
+        return (ICON_SNIPPET_CHANGE, "Operations", "Keep lessons reliable, measurable, and calm.")
+    return (ICON_NOTE, "Reference", "Use this section as a quick teaching lookup.")
+
+
 def append_chapter_prelude_page(
     story: list[object],
     styles: dict[str, ParagraphStyle],
@@ -1650,9 +1796,36 @@ def append_chapter_prelude_page(
             "You will work in small steps, collect evidence, and explain what your outputs show."
         )
     story_seed = build_chapter_prelude_summary(heading_text, intro_text, learn_items)
+    icon_path, track_label, track_hint = chapter_prelude_visual_meta(heading_text)
+
+    track_icon: object
+    if icon_path and icon_path.exists():
+        track_icon = Image(str(icon_path), width=9 * mm, height=9 * mm, hAlign="LEFT")
+    else:
+        track_icon = Paragraph("•", styles["chapter_prelude_section"])
+
+    track_text = Paragraph(
+        f"<b>{inline_markup(track_label)}</b><br/>{inline_markup(track_hint)}",
+        styles["chapter_prelude_story"],
+    )
+    track_table = Table([[track_icon, track_text]], colWidths=[12 * mm, width - (12 * mm)], hAlign="LEFT")
+    track_table.setStyle(
+        TableStyle(
+            [
+                ("BACKGROUND", (0, 0), (-1, -1), colors.HexColor("#e2e8f0")),
+                ("BOX", (0, 0), (-1, -1), 0.6, colors.HexColor("#94a3b8")),
+                ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+                ("LEFTPADDING", (0, 0), (-1, -1), 7),
+                ("RIGHTPADDING", (0, 0), (-1, -1), 7),
+                ("TOPPADDING", (0, 0), (-1, -1), 5),
+                ("BOTTOMPADDING", (0, 0), (-1, -1), 5),
+            ]
+        )
+    )
 
     card_rows: list[list[object]] = []
-    card_rows.append([Paragraph("In this chapter . . .", styles["chapter_prelude_kicker"])])
+    card_rows.append([track_table])
+    card_rows.append([Paragraph("Chapter Overview", styles["chapter_prelude_kicker"])])
     card_rows.append([Paragraph(inline_markup(story_seed), styles["chapter_prelude_story"])])
     if learn_items:
         card_rows.append([Paragraph("What you will walk away with", styles["chapter_prelude_section"])])
@@ -1705,6 +1878,8 @@ def build_body_story(
     intro_char_count = 0
     chapter_objectives: list[str] = []
     in_learning_objectives = False
+    figure_counter = 0
+    pending_figure_number: int | None = None
 
     def flush_paragraph() -> None:
         nonlocal intro_char_count
@@ -1816,8 +1991,11 @@ def build_body_story(
         for term in ordered_terms:
             pages = entries.get(term, [])
             if pages:
-                primary = str(pages[0])
-                full = str(pages[0]) if pages[0] == pages[-1] else f"{pages[0]}-{pages[-1]}"
+                primary_page = KEYWORD_PRIMARY_PAGE_OVERRIDES.get(term, pages[0])
+                primary = str(primary_page)
+                full_start = KEYWORD_FULL_RANGE_START_OVERRIDES.get(term, pages[0])
+                full_end = pages[-1]
+                full = str(full_start) if full_start == full_end else f"{full_start}-{full_end}"
                 page_list = f"Primary: {primary} | Full: {full}"
             else:
                 page_list = "not found"
@@ -1871,6 +2049,8 @@ def build_body_story(
             flush_paragraph()
             flush_table()
             alt_text, rel_path = image_info
+            figure_counter += 1
+            pending_figure_number = figure_counter
             image_path = (ROOT / rel_path).resolve() if not Path(rel_path).is_absolute() else Path(rel_path)
             if image_path.exists():
                 with PILImage.open(image_path) as img_meta:
@@ -1885,7 +2065,15 @@ def build_body_story(
                     target_w *= scale
                 fig = Image(str(image_path), width=target_w, height=target_h, hAlign="CENTER")
                 story.append(fig)
-                story.append(Paragraph(inline_markup(f"Alt text: {alt_text}"), styles["figure_alt"]))
+                alt_label = alt_text
+                if pending_figure_number is not None:
+                    alt_label = re.sub(
+                        r"^Figure\s+\d+",
+                        f"Figure {pending_figure_number}",
+                        alt_label,
+                        flags=re.IGNORECASE,
+                    )
+                story.append(Paragraph(inline_markup(f"Alt text: {alt_label}"), styles["figure_alt"]))
             else:
                 story.append(Paragraph(inline_markup(f"Note: missing figure file: {rel_path}"), styles["note_box"]))
             continue
@@ -1893,6 +2081,17 @@ def build_body_story(
         if stripped.lower().startswith("caption:"):
             flush_paragraph()
             caption_text = stripped.split(":", 1)[1].strip()
+            if pending_figure_number is not None:
+                if re.match(r"^Figure\s+\d+\.", caption_text, flags=re.IGNORECASE):
+                    caption_text = re.sub(
+                        r"^Figure\s+\d+\.",
+                        f"Figure {pending_figure_number}.",
+                        caption_text,
+                        flags=re.IGNORECASE,
+                    )
+                else:
+                    caption_text = f"Figure {pending_figure_number}. {caption_text}"
+            pending_figure_number = None
             story.append(Paragraph(inline_markup(caption_text), styles["figure_caption"]))
             continue
 
@@ -2095,7 +2294,7 @@ def append_about_author_front_page(
     for paragraph in paragraphs:
         if paragraph.lower().startswith("lightbulb takeaway:"):
             takeaway = paragraph.split(":", 1)[1].strip()
-            story.append(Paragraph(inline_markup(takeaway), styles["takeaway_box"]))
+            story.append(Paragraph(inline_markup(f"Teaching intent: {takeaway}"), styles["body"]))
             story.append(Spacer(1, 4 * mm))
             continue
         story.append(Paragraph(inline_markup(paragraph), styles["body"]))
@@ -2284,6 +2483,12 @@ def render_book(out_pdf: Path) -> None:
         story.append(Paragraph("Curious today, Confident tomorrow.", styles["book_subtitle"]))
         story.append(Spacer(1, 18 * mm))
         story.append(Paragraph("Printed in digital format for classroom distribution.", styles["copyright"]))
+        story.append(
+            Paragraph(
+                "For classroom and school use, the Disclaimer on the following page applies alongside the licence terms above.",
+                styles["copyright"],
+            )
+        )
         story.append(PageBreak())
 
         append_disclaimer_front_page(story, styles, disclaimer_paragraphs)

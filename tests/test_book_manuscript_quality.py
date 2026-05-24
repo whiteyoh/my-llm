@@ -119,6 +119,131 @@ def test_book_includes_apa_references_section() -> None:
     assert "## References (APA 7th Edition)" in text
 
 
+def test_chapter_next_steps_include_collaboration() -> None:
+    text = BOOK_MD.read_text(encoding="utf-8")
+    chapter_blocks = re.split(r"\n# Chapter \d+: ", text)[1:]
+    collaboration_tokens = (
+        "peer",
+        "colleague",
+        "partner",
+        "group",
+        "classmate",
+        "teacher",
+        "swap",
+        "pair",
+        "pairs",
+        "together",
+    )
+
+    missing_collab: list[str] = []
+    for block in chapter_blocks:
+        title = block.splitlines()[0].strip()
+        action_match = re.search(r"## Action 3: Do This Next\n(.*?)(\n## |\n---|\Z)", block, flags=re.S)
+        assert action_match is not None, f"Missing Action 3 in chapter: {title}"
+        bullets = [ln.strip()[2:].strip().lower() for ln in action_match.group(1).splitlines() if ln.strip().startswith("- ")]
+        assert len(bullets) >= 2, f"Action 3 needs at least two bullets in chapter: {title}"
+        has_collab = any(any(token in bullet for token in collaboration_tokens) for bullet in bullets)
+        if not has_collab:
+            missing_collab.append(title)
+
+    assert not missing_collab, f"Action 3 missing collaborative task in: {missing_collab}"
+
+
+def test_book_avoids_repeated_intro_template_phrasing() -> None:
+    text = BOOK_MD.read_text(encoding="utf-8")
+    banned_phrases = (
+        "You are aiming for practical understanding, not just completion.",
+        "This chapter takes you through a clear sequence:",
+    )
+    for phrase in banned_phrases:
+        assert phrase not in text
+
+
+def test_reflection_questions_align_with_taught_content() -> None:
+    text = BOOK_MD.read_text(encoding="utf-8")
+    chapter_blocks = re.split(r"\n# Chapter \d+: ", text)[1:]
+
+    stop_words = {
+        "the",
+        "a",
+        "an",
+        "and",
+        "or",
+        "but",
+        "if",
+        "then",
+        "with",
+        "without",
+        "for",
+        "of",
+        "to",
+        "in",
+        "on",
+        "by",
+        "from",
+        "is",
+        "are",
+        "was",
+        "were",
+        "be",
+        "been",
+        "being",
+        "this",
+        "that",
+        "these",
+        "those",
+        "your",
+        "you",
+        "we",
+        "they",
+        "it",
+        "as",
+        "at",
+        "not",
+        "do",
+        "does",
+        "did",
+        "can",
+        "could",
+        "should",
+        "would",
+        "will",
+        "may",
+        "might",
+        "which",
+        "what",
+        "where",
+        "when",
+        "how",
+        "why",
+    }
+
+    def _keywords(value: str) -> list[str]:
+        tokens = re.findall(r"[A-Za-z][A-Za-z0-9\-']+", value.lower())
+        return [token for token in tokens if len(token) > 3 and token not in stop_words]
+
+    failures: list[str] = []
+    for block in chapter_blocks:
+        chapter_title = block.splitlines()[0].strip()
+        reflect_match = re.search(
+            r"## Action 2: Reflect\n(.*?)(\n## Action 3: Do This Next|\n---|\Z)",
+            block,
+            flags=re.S,
+        )
+        assert reflect_match is not None, f"Missing reflection section in chapter: {chapter_title}"
+        reflect_questions = [line.strip()[2:].strip() for line in reflect_match.group(1).splitlines() if line.strip().startswith("- ")]
+        assert len(reflect_questions) == 3, f"Expected 3 reflection questions in chapter: {chapter_title}"
+
+        taught_content = block.split("## Action 2: Reflect", 1)[0]
+        taught_terms = set(_keywords(taught_content))
+        for question in reflect_questions:
+            question_terms = _keywords(question)
+            if not any(term in taught_terms for term in question_terms):
+                failures.append(f"{chapter_title}: {question}")
+
+    assert not failures, "Reflection question not aligned to taught content:\n" + "\n".join(failures)
+
+
 def test_book_code_snippets_follow_manual_style_rules() -> None:
     lines = _lines()
     code_blocks: list[tuple[int, int, str]] = []

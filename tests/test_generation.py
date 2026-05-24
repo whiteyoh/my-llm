@@ -64,6 +64,23 @@ def test_generate_tokens_returns_prompt_plus_new_tokens() -> None:
     assert len(out_ids) == len(prompt_ids) + max_new_tokens
 
 
+def test_generate_tokens_rejects_empty_prompt() -> None:
+    model = _tiny_model()
+    tok = ByteTokenizer()
+    with pytest.raises(ValueError, match="prompt must not be empty"):
+        generate_tokens(
+            model,
+            "",
+            tok,
+            seq_len=8,
+            max_new_tokens=5,
+            temperature=1.0,
+            top_k=0,
+            top_p=1.0,
+            device=torch.device("cpu"),
+        )
+
+
 def test_resolve_device_cpu() -> None:
     assert resolve_device("cpu").type == "cpu"
 

@@ -39,6 +39,26 @@ def test_generate_cli_missing_checkpoint_is_friendly() -> None:
     assert "Traceback" not in result.stderr
 
 
+def test_generate_cli_rejects_empty_prompt() -> None:
+    cmd = [
+        sys.executable,
+        "src/generate.py",
+        "--checkpoint",
+        "runs/missing/best.pt",
+        "--prompt",
+        "   ",
+        "--max_new_tokens",
+        "5",
+        "--device",
+        "cpu",
+    ]
+    result = subprocess.run(cmd, check=False, capture_output=True, text=True)
+
+    assert result.returncode == 2
+    assert "prompt must not be empty" in result.stderr
+    assert "Traceback" not in result.stderr
+
+
 def test_train_cli_rejects_too_short_training_text(tmp_path: Path) -> None:
     input_file = tmp_path / "too_short.txt"
     input_file.write_text("123456789", encoding="utf-8")

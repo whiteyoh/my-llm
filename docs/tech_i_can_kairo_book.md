@@ -64,7 +64,7 @@ routine, honest observations, and a willingness to test one small change at a
 time. Every chapter is designed to help learners move from "I ran it" to "I
 can explain it."
 
-Use this chapter to build a repeatable habit: explain why this book exists, approach it with confidence, and understand what kind of learning journey to expect. That sequence will help you connect hands-on steps to clear reasoning.
+Use this book to build a repeatable habit: explain why it exists, approach it with confidence, and understand what kind of learning journey to expect. That sequence will help you connect hands-on steps to clear reasoning.
 
 This method also aligns with inquiry-based teaching: learners act, observe, and
 reflect before making broader claims. You can map the cycle in this book to
@@ -139,7 +139,8 @@ The structure is deliberate: orientation first, practical work second, then
 evidence-led reflection. That sequence is what turns command use into real
 understanding, especially for beginners.
 
-This chapter takes you through a clear sequence: move through the book efficiently, collect evidence while you learn, and choose a pacing mode. As you work, collect one concrete example for each step so your final explanation is easy to defend.
+Use this section as your route map. You will choose a pace, keep simple evidence
+notes, and build a study routine you can sustain across the full book.
 
 ## Choose a Pacing Path
 
@@ -156,6 +157,14 @@ Note: Kairo is a tiny, local, byte-level teaching model. Some patterns in this
 book, such as metric ranges, temperature effects, and failure modes, are
 specific to this setup and may look different in larger subword models trained
 on internet-scale datasets.
+
+## Accessibility and Teaching Tips
+
+- Read code blocks aloud in short chunks, then pause for paraphrase.
+- Pair every command with one plain-language purpose before running it.
+- Use captions and alt text as discussion prompts, not decoration.
+- Offer two response options after each activity: spoken explanation or written claim-evidence note.
+- Keep one "slow lane" and one "fast lane" option in each live session so mixed-confidence groups can stay together.
 
 ---
 
@@ -300,16 +309,15 @@ Lightbulb Takeaway: Honest limitations make better learning outcomes.
 
 This chapter prevents setup issues before they interrupt learning.
 
-This chapter takes you through a clear sequence: required versus optional
-components, which extras unlock classroom features, and how to verify readiness.
-As you work, collect one concrete example for each step so your final
-explanation is easy to defend.
+You will sort required tools from optional extras, choose the right install
+profile for your context, and confirm that your machine is ready before the
+first model run.
 
 ## What you are going to use
 
 - Python 3.11+
 - terminal access
-- local repository copy (`https://github.com/whiteyoh/kiaro`)
+- local repository copy (`https://github.com/whiteyoh/my-llm`)
 
 ## What you will learn in this chapter
 
@@ -369,7 +377,9 @@ Lightbulb Takeaway: A clean start removes most beginner friction.
 
 Now you turn this project into a working local AI lab.
 
-You are aiming for practical understanding, not just completion. You will install safely, strengthen your approach to verify readiness, and conclude by learning to spot setup problems early in plain language.
+This chapter moves you from preparation to action. You will install the project
+safely, verify the environment with quick checks, and learn early warning signs
+that prevent setup issues from growing during class.
 
 ## What you are going to use
 
@@ -458,7 +468,8 @@ Lightbulb Takeaway: Verification is not extra work. It is what makes your next c
 This chapter is your first complete model cycle: baseline, evaluation, retrain,
 comparison.
 
-This chapter takes you through a clear sequence: run a complete experiment, compare before/after behavior fairly, and explain why training data changes style. As you work, collect one concrete example for each step so your final explanation is easy to defend.
+You will run one full baseline-to-retrain cycle, compare outputs under fixed
+conditions, and explain what changed with direct evidence from text and metrics.
 
 ## What you are going to use
 
@@ -564,7 +575,10 @@ Lightbulb Takeaway: Fair comparison means one major change at a time.
 
 Now you move from running commands to interpreting evidence.
 
-This chapter takes you through a clear sequence: assess style shifts, read metrics responsibly, and avoid overclaiming. As you work, collect one concrete example for each step so your final explanation is easy to defend.
+You will learn to read outputs and metrics together, so your conclusions stay
+clear, cautious, and evidence-led.
+By the end, you should be able to defend one claim with both textual examples
+and metric context, without drifting into overclaiming.
 
 ## What you are going to use
 
@@ -681,6 +695,12 @@ Answer: Captain Rowan is the pilot of the starship Aurora.
 
 Definition: Grounding means constraining answers to supplied context.
 
+Note: Fallback behaviour is what happens when context is absent or too weak
+to anchor a response. In practice, Kairo may return a generic phrase, repeat
+part of the question, or produce lower-confidence output. This is expected
+behaviour, not a failure. Recognising fallback output is itself a classroom
+evidence point: it shows learners what grounding prevents.
+
 Lightbulb Takeaway: Context is your anchor when model confidence and correctness do not match.
 
 ## Action 1: What You Learned
@@ -775,7 +795,7 @@ Lightbulb Takeaway: Visual evidence helps learners connect abstract ideas to obs
 ## Action 3: Do This Next
 
 - Enter three short prompts with different punctuation and compare token splits.
-- Capture one screenshot each for tokens, probabilities, and attention, then annotate them.
+- Compare annotated screenshots with a peer and discuss one insight and one limit for each view (tokens, probabilities, attention).
 
 ---
 
@@ -785,7 +805,13 @@ Lightbulb Takeaway: Visual evidence helps learners connect abstract ideas to obs
 
 Now you shift from learner mode to facilitator mode.
 
-You are aiming for practical understanding, not just completion. You will run a 45-minute session, strengthen your approach to guide evidence discussion, and conclude by learning to connect tasks to outcomes in plain language.
+You will plan and run a complete 45-minute lesson with clear timing, strong
+evidence prompts, and a debrief that connects classroom activity to learning
+outcomes.
+
+This chapter is about classroom choreography: what happens first, what must stay
+fixed, and where discussion should slow down so learners can reason from real
+outputs rather than quick guesses.
 
 ## What you are going to use
 
@@ -813,6 +839,9 @@ You are aiming for practical understanding, not just completion. You will run a 
 "What changed, and what evidence supports that?"
 "What stayed the same because architecture stayed the same?"
 ```
+
+![Lesson delivery map showing the five classroom phases from warm-up to debrief, with evidence prompts at each stage.](docs/assets/figure-lesson-delivery-map.jpg)
+Caption: Figure 3. A full lesson arc is easier to run when each phase has one clear evidence goal.
 
 ## Why This Matters
 
@@ -852,6 +881,10 @@ Every real workshop includes bumps. This chapter keeps progress moving.
 By the end of this chapter, you should be able to diagnose common issues,
 recover quickly, and keep learner confidence high.
 
+In live teaching, the quality of troubleshooting often decides whether learners
+feel capable or overwhelmed. This chapter gives you a simple triage mindset:
+name the failure clearly, test one small fix, and verify with a minimal rerun.
+
 ## What you are going to use
 
 - error messages
@@ -884,6 +917,10 @@ Note: Most issues are path, environment, or expectation mismatches.
 Note: Calm error language means naming the issue and next step clearly, for
 example: "The checkpoint path is missing; we will rerun training and verify."
 
+Note: A reliable triage order is reproduce -> isolate -> fix -> rerun -> record.
+If you skip the isolate step, you can apply a fix that appears to work once but
+fails again in the next session.
+
 Lightbulb Takeaway: Troubleshooting is not a detour. It is part of mastery.
 
 ## Action 1: What You Learned
@@ -911,7 +948,12 @@ Lightbulb Takeaway: Troubleshooting is not a detour. It is part of mastery.
 
 This chapter helps you communicate results responsibly.
 
-You are aiming for practical understanding, not just completion. You will avoid overclaims, strengthen your approach to express uncertainty clearly, and conclude by learning to model critical thinking in plain language.
+You will practice language that is honest and precise: avoid overclaiming,
+signal uncertainty clearly, and model critical thinking in front of learners.
+
+You are not just choosing words here. You are setting classroom norms for how
+evidence is interpreted. Learners copy the language they hear from you, so your
+phrasing should separate observed output from assumptions about understanding.
 
 ## What you are going to use
 
@@ -944,6 +986,10 @@ Lightbulb Takeaway: Honest framing increases trust and learning quality.
 
 Note: Overclaim phrases to avoid include "the model understands" and "the model
 knows." Prefer "the output suggests" plus a cited line.
+
+Note: A useful claim ladder is: observed line -> interpretation -> confidence
+statement -> limitation. This keeps discussion honest without shutting down
+curiosity.
 
 If the model generates unexpected, offensive, or distressing output, pause the
 session immediately. Record the prompt and exact output, remove the content from
@@ -1272,7 +1318,12 @@ will also be unclear.
 
 Prompt design controls the fairness of your experiment.
 
-You are aiming for practical understanding, not just completion. You will keep prompts comparable, strengthen your approach to how prompt wording changes output, and conclude by learning to separate prompt effects from data effects in plain language.
+You will design fair prompt comparisons so you can tell whether changes came
+from prompt wording or from training data.
+
+Many comparison errors come from silent prompt drift rather than model behavior.
+This chapter helps you lock prompt wording deliberately so your conclusions stay
+defensible when you present them to others.
 
 ## What you are going to use
 
@@ -1317,6 +1368,10 @@ Same prompt, different style cues:
 
 Definition: Controlled prompting means keeping prompt wording constant while
 changing only the condition being tested.
+
+Note: Your prompt tracking table should include prompt ID, exact wording,
+checkpoint name, generation settings, and one-line output summary. Without these
+fields, reproducibility usually breaks.
 
 Lightbulb Takeaway: Fixed prompts create fair evidence.
 
@@ -1456,7 +1511,7 @@ Epoch 3: train_loss=3.76 | val_loss=4.10
 ```
 
 ![Training chart with two lines where training loss falls steadily while validation loss flattens and then rises.](docs/assets/figure-training-curve.jpg)
-Caption: Figure 3. A widening train/validation gap is a practical signal to inspect for overfitting.
+Caption: Figure 4. A widening train/validation gap is a practical signal to inspect for overfitting.
 
 ## Why This Matters
 
@@ -1577,7 +1632,10 @@ Lightbulb Takeaway: Strong evaluation always combines numbers and language.
 
 This chapter helps you identify common reliability patterns.
 
-This chapter takes you through a clear sequence: where tiny models are stable, where tiny models drift, and how settings influence reliability. As you work, collect one concrete example for each step so your final explanation is easy to defend.
+You will test where tiny-model outputs stay stable, where they drift, and how
+generation settings influence that reliability profile.
+You will finish with a practical default setting profile for classroom demos and
+a short method for explaining why that profile is safer for beginners.
 
 ## What you are going to use
 
@@ -1649,7 +1707,10 @@ Lightbulb Takeaway: Settings can trade creativity for stability.
 
 This chapter operationalizes safety for classroom demonstrations.
 
-You are aiming for practical understanding, not just completion. You will prevent unsafe overclaiming, strengthen your approach to model responsible critique, and conclude by learning to frame uncertainty constructively in plain language.
+You will convert safety principles into repeatable classroom moves: set claim
+boundaries, question outputs responsibly, and frame uncertainty constructively.
+You will also practice the exact language you can use when an output is
+surprising, so discussion stays calm, accurate, and constructive.
 
 ## What you are going to use
 
@@ -1715,7 +1776,8 @@ Lightbulb Takeaway: Responsible framing is a teaching skill, not a disclaimer.
 
 Now you treat QA mode as a system, not just a command.
 
-This chapter takes you through a clear sequence: understand what makes QA training data effective, how context quality shapes answer quality, and how fallback behavior supports reliability. As you work, collect one concrete example for each step so your final explanation is easy to defend.
+You will treat QA as a designed system: improve corpus quality, strengthen
+context quality, and use fallback behaviour to keep answers dependable.
 
 ## What you are going to use
 
@@ -1747,6 +1809,13 @@ Context-poor question -> generic or drifting answer
 
 Definition: QA system quality depends on both model behavior and context design.
 
+Note: When context and question do not align well, the model may fall back to
+generic or less-specific output. This is the fallback behaviour referenced in
+the learning objectives. A useful classroom comparison is to run the same
+question with strong context and with no context, then observe where output
+drifts. The difference is the clearest demonstration of why context quality
+matters.
+
 Lightbulb Takeaway: Better context produces better answers more reliably than
 random parameter tweaking.
 
@@ -1775,7 +1844,8 @@ random parameter tweaking.
 
 This lab is a full baseline run with checkpoint handling and evidence logging.
 
-This chapter takes you through a clear sequence: execute a clean baseline lab, capture reproducible observations, and store outputs for later comparison. As you work, collect one concrete example for each step so your final explanation is easy to defend.
+In this lab, you will execute a clean baseline run, capture reproducible notes,
+and store outputs in a form you can reuse for later comparisons.
 
 ## What you are going to use
 
@@ -2016,7 +2086,7 @@ Context missing -> broader, less anchored phrasing.
 ```
 
 ![Grounded QA flow showing question input, context evidence, and constrained answer output.](docs/assets/figure-qa-grounding.jpg)
-Caption: Figure 4. Grounded QA works best when context contains direct, concise evidence for the question.
+Caption: Figure 5. Grounded QA works best when context contains direct, concise evidence for the question.
 
 ## Why This Matters
 
@@ -2125,6 +2195,10 @@ This chapter provides concrete ways to assess learning outcomes.
 By the end of this chapter, you should be able to assess process and explanation
 quality, grade evidence use fairly, and provide actionable feedback.
 
+Strong assessment in this course does not reward speed alone. It rewards how
+well learners justify claims from outputs, metrics, and method choices. That is
+why the rubric emphasizes reasoning quality, not only command completion.
+
 ## What you are going to use
 
 - student lab notes
@@ -2159,6 +2233,27 @@ workflow details.
 Note: The rubric categories used here are method quality, evidence quality, and
 explanation clarity. Use all three when comparing submissions.
 
+### Rubric descriptors
+
+#### Method quality
+
+- Strong: Prompt was fixed across runs; only one variable changed; commands are recorded in the correct sequence.
+- Developing: Some controls were held but at least one was inconsistent; command sequence partially recorded.
+
+#### Evidence quality
+
+- Strong: Claim is supported by a specific output line or metric value; evidence is directly quoted or referenced.
+- Developing: Claim is present but supported by general description rather than a specific output line or number.
+
+#### Explanation clarity
+
+- Strong: Explanation connects the evidence to the cause (e.g. "style shifted because the dataset changed, not the architecture").
+- Developing: Explanation names what changed but does not connect it to the experimental design.
+
+Note: Feedback is most actionable when it names one strength, one gap, and one
+specific next experiment step. Generic praise or generic criticism rarely
+improves the next lab.
+
 Lightbulb Takeaway: Grade thinking quality, not just command execution.
 
 ## Action 1: What You Learned
@@ -2186,7 +2281,8 @@ Lightbulb Takeaway: Grade thinking quality, not just command execution.
 
 This chapter prepares you for live delivery in front of students or reviewers.
 
-This chapter takes you through a clear sequence: prepare a smooth live session, handle surprises calmly, and keep outcomes teachable. As you work, collect one concrete example for each step so your final explanation is easy to defend.
+You will prepare for live delivery with a primary demo path, a fallback path,
+and transition language that keeps teaching value high even when issues appear.
 
 ## What you are going to use
 
@@ -2316,7 +2412,8 @@ Lightbulb Takeaway: Progress comes from asking better questions, not bigger mode
 This chapter gives you a structured way to test how prompt design affects model
 behavior under fixed training conditions.
 
-You are aiming for practical understanding, not just completion. You will learn how framing changes outputs, strengthen your approach to build prompt families, and conclude by learning to compare outputs systematically in plain language.
+You will run a structured prompt-framing experiment, build prompt families, and
+compare outputs in a systematic way learners can understand.
 
 ## What you are going to use
 
@@ -2484,7 +2581,12 @@ Lightbulb Takeaway: Responsible AI education includes responsible data stories.
 
 This chapter gives complete talk tracks you can use in live teaching.
 
-You are aiming for practical understanding, not just completion. You will explain concepts in beginner language, strengthen your approach to move smoothly between technical steps, and conclude by learning to maintain engagement in plain language.
+You will use classroom-ready talk tracks to explain technical steps in plain
+English, keep transitions smooth, and sustain learner attention.
+
+Treat these scripts as scaffolds, not rigid scripts to perform word-for-word.
+The goal is consistency of reasoning language so every learner hears the same
+evidence standards across baseline, retrain, QA, and reflection stages.
 
 ## What you are going to use
 
@@ -2519,6 +2621,10 @@ steps.
 
 Note: Scripted transitions are the short bridge lines between phases
 (prediction -> run -> compare -> debrief) that keep pacing stable.
+
+Note: Before a live session, mark three "must-say" lines in your chosen script:
+one line for fairness controls, one for uncertainty framing, and one for claim
+plus evidence closure.
 
 Lightbulb Takeaway: Clear language is a technical tool.
 
@@ -2696,7 +2802,12 @@ Lightbulb Takeaway: Output becomes learning when learners explain it in their ow
 
 This chapter helps learners build and present a complete final project.
 
-You are aiming for practical understanding, not just completion. You will scope a capstone well, strengthen your approach to present findings professionally, and conclude by learning to communicate limits honestly in plain language.
+You will design a credible capstone scope, present results with professional
+structure, and communicate limits honestly alongside strengths.
+
+The capstone should show method maturity, not just interesting outputs. A strong
+project makes controls explicit, explains evidence quality, and states limits in
+the same level of detail as findings.
 
 ## What you are going to use
 
@@ -2733,6 +2844,10 @@ Definition: Capstone is a culminating project demonstrating method mastery.
 
 Definition: Evidence chain means linking commands, outputs, metrics, and one
 limitation statement into a single justified claim.
+
+Note: Capstone scoring improves when learners rehearse a two-minute method
+summary before final delivery. This makes controls and variable choices easier
+for reviewers to follow.
 
 Lightbulb Takeaway: A strong capstone explains both what changed and what remains uncertain.
 
@@ -2784,7 +2899,11 @@ Lightbulb Takeaway: A strong capstone explains both what changed and what remain
 
 This chapter turns the full book into a practical multi-week teaching schedule.
 
-You are aiming for practical understanding, not just completion. You will spread learning across multiple sessions, strengthen your approach to track progress week by week, and conclude by learning to integrate practice and reflection in plain language.
+You will convert the book into a realistic multi-week plan, track progress with
+weekly artifacts, and balance practice with reflection across the term.
+
+The aim is not to "fit everything in." The aim is to pace learning so each week
+finishes with one visible result learners can explain in plain language.
 
 ## What you are going to use
 
@@ -2813,6 +2932,9 @@ Week 2: retrain + comparison
 Week 3: QA mode + grounding
 Week 4: capstone presentation
 ```
+
+![Weekly implementation map showing four linked weeks: setup, retrain, QA grounding, and capstone presentation.](docs/assets/figure-weekly-implementation-map.jpg)
+Caption: Figure 6. Weekly pacing works best when each week ends with one artifact and one explanation.
 
 ## Why This Matters
 
@@ -2926,9 +3048,9 @@ Lightbulb Takeaway: Long-term learning works best when each week produces a smal
 This chapter provides practical answers to the questions teachers and students
 ask most often.
 
-In this chapter, you will answer common conceptual questions, handle confusion
-points quickly, and keep explanations grounded and consistent. Keep your notes
-evidence-based so you can explain not only what happened, but why it happened.
+You will use these FAQs to handle recurring confusion quickly while keeping
+explanations consistent across sessions. Each answer is designed to connect a
+common claim to observable evidence and safer interpretation language.
 
 ## What you are going to use
 
@@ -2965,6 +3087,10 @@ Note: A practical pairing example is Q4 (low perplexity still wrong) with Q7
 
 Note: In a live debrief, pairing one metrics FAQ with one evidence-language FAQ
 usually produces clearer discussion than using either in isolation.
+
+Note: If a question is not covered here, answer in the same pattern: short
+definition, one evidence anchor, one limit statement, and one suggested next
+check.
 
 Lightbulb Takeaway: Good answers are short, honest, and evidence-linked.
 
@@ -3045,7 +3171,11 @@ limitation statement.
 
 This chapter gives compact reference cards for live teaching moments.
 
-This chapter takes you through a clear sequence: respond quickly during lessons, keep language concise under pressure, and maintain flow during demos. As you work, collect one concrete example for each step so your final explanation is easy to defend.
+You will build quick-reference cards that help you respond fast in live lessons,
+keep language concise under pressure, and preserve lesson flow.
+
+These cards are operational tools. They reduce cognitive load during delivery so
+you can spend attention on learner reasoning, not command recall.
 
 ## What you are going to use
 
@@ -3073,6 +3203,12 @@ Goal: produce first checkpoint and one output sample.
 ```
 
 ## Why This Matters
+
+Definition: A quick-reference card is a pre-validated command or explanation
+unit that can be used without rewriting language under time pressure.
+
+Note: Keep cards physically grouped by lesson phase (setup, run, compare,
+debrief). Phase grouping lowers decision time when a session becomes busy.
 
 Lightbulb Takeaway: Fast reference tools reduce teaching cognitive load.
 
@@ -3166,7 +3302,8 @@ statements, not general opinions.
 This chapter helps you move from workshop experiments to repeatable operational
 delivery in schools or clubs.
 
-You are aiming for practical understanding, not just completion. You will prepare a stable classroom deployment, strengthen your approach to avoid common operational pitfalls, and conclude by learning to recover quickly when issues appear in plain language.
+You will prepare a stable classroom deployment with preflight checks, fallback
+steps, and clear recovery routines for common runtime issues.
 
 ## What you are going to use
 
@@ -3274,7 +3411,12 @@ kairo-generate --checkpoint runs/card_baseline/best.pt --prompt "System check pr
 
 This chapter helps you make Kairo lessons inclusive for diverse learners.
 
-This chapter takes you through a clear sequence: support mixed experience levels, design equitable participation, and reduce cognitive overload. As you work, collect one concrete example for each step so your final explanation is easy to defend.
+You will design lessons that work for mixed-experience groups by assigning clear
+roles, reducing cognitive overload, and widening participation options.
+
+Inclusion here is practical and measurable. More learners should be able to
+contribute evidence, explain a result, and complete reflection tasks without
+being blocked by one mode of participation.
 
 ## What you are going to use
 
@@ -3318,6 +3460,9 @@ owner so it becomes part of your next delivery plan.
 
 Note: Match assessment format to learner needs: written for detail, verbal for
 confidence building, visual for comparison-heavy thinking.
+
+Note: Build accessibility into planning, not rescue. Set role options, format
+options, and sentence scaffolds before class starts so support is predictable.
 
 Lightbulb Takeaway: Inclusion improves technical quality because more perspectives examine the evidence.
 
@@ -3367,9 +3512,12 @@ Lightbulb Takeaway: Inclusion improves technical quality because more perspectiv
 
 This chapter helps you evolve the curriculum over multiple cohorts.
 
-In this chapter, you will improve lesson quality each cycle, prioritize
-high-value changes, and track impact over time. Keep your notes evidence-based
-so you can explain not only what happened, but why it happened.
+You will improve lesson quality each cycle, prioritize high-value changes, and
+track impact over time with clear evidence. The goal is disciplined iteration:
+small changes, explicit metrics, and honest review of what did or did not work.
+
+You are building a steady improvement habit here. One measured change per cycle
+is more reliable than many untracked adjustments made all at once.
 
 ## What you are going to use
 
@@ -3400,12 +3548,19 @@ Change: added fixed-prompt worksheet.
 Result: stronger evidence quality in reflections.
 ```
 
+![Continuous improvement cycle showing collect, prioritize, test, measure, and adjust as a repeating loop.](docs/assets/figure-improvement-cycle.jpg)
+Caption: Figure 7. Improvement becomes reliable when each cycle closes with a measured result.
+
 ## Why This Matters
 
 Definition: Retrospective means structured review of what worked, what failed,
 and what to improve next.
 
 Note: Small iterative improvements compound quickly over a term.
+
+Note: Decide your reset rule in advance. For example: if two consecutive cycles
+show no movement in evidence quality and confidence, redesign the workflow
+rather than applying another small patch.
 
 Lightbulb Takeaway: Treat teaching quality like model quality—measure, adjust, repeat.
 
@@ -3451,9 +3606,12 @@ Lightbulb Takeaway: Treat teaching quality like model quality—measure, adjust,
 This chapter is a complete meaning guide for technical terms and command
 parameters used across the whole book.
 
-You are aiming for practical understanding, not just completion. You will
-understand what each key concept means, understand what each command parameter
-controls, and explain workflow language clearly in plain language.
+You will use this glossary to secure your vocabulary, connect terms to their
+chapter examples, and decode command parameters before reruns.
+
+Treat this chapter as your interpretation safety net. When a result feels
+confusing, come here first, confirm term meaning, then return to the chapter
+example with clearer language.
 
 ## What you are going to use
 
@@ -3479,6 +3637,9 @@ controls, and explain workflow language clearly in plain language.
 --epochs 1: one pass through training data
 --device cpu: use CPU instead of GPU
 ```
+
+![Glossary lookup map showing how a term moves from definition to command usage and classroom explanation.](docs/assets/figure-glossary-lookup-map.jpg)
+Caption: Figure 8. The glossary is most useful when each term is tied to a command and a teaching use-case.
 
 ## Why This Matters
 
@@ -3631,7 +3792,7 @@ grounded QA with clear notes and minimal troubleshooting.
 - Touretzky, D. S., Gardner-McCune, C., Martin, F., & Seehorn, D. (2019). Envisioning AI for K-12: What should every child know about AI? *Proceedings of the AAAI Conference on Artificial Intelligence, 33*(1), 9795-9799. https://doi.org/10.1609/aaai.v33i01.33019795
 - Vaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A. N., Kaiser, L., & Polosukhin, I. (2017). Attention is all you need. arXiv. https://arxiv.org/abs/1706.03762
 
-## Sources and Further Reading
+## Web Resources
 
 - AI4K12 Initiative. (n.d.). *Five big ideas in AI*. https://ai4k12.org
 - MIT RAISE. (n.d.). *Day of AI curriculum resources*. https://raise.mit.edu/dayofai
@@ -3648,6 +3809,9 @@ This chapter gives you a fast lookup list of important terms and where they
 appear in the book.
 
 Use this chapter to build a repeatable habit: locate core concepts quickly, revise efficiently before teaching or presenting, and connect terms back to practical examples. That sequence will help you connect hands-on steps to clear reasoning.
+
+Use it like a route map, not a final destination. The goal is to find the right
+chapter fast, then revisit the full explanation and evidence in context.
 
 ## What you are going to use
 
@@ -3672,6 +3836,9 @@ Use this chapter to build a repeatable habit: locate core concepts quickly, revi
 ```text
 Use the generated index below for literal page numbers from this exact build.
 ```
+
+![Index lookup workflow showing term selection, page lookup, chapter revisit, and practical application in lesson planning.](docs/assets/figure-index-lookup-flow.jpg)
+Caption: Figure 9. A strong index workflow starts with the term, then returns to the chapter where it is taught.
 
 ## Why This Matters
 

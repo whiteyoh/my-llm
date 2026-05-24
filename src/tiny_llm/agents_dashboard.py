@@ -45,6 +45,20 @@ STATUS_ICONS = {
 }
 
 
+def _enable_auto_refresh(interval_ms: int = 2000) -> str:
+    auto_refresh_fn = getattr(st, "autorefresh", None)
+    if callable(auto_refresh_fn):
+        auto_refresh_fn(interval=interval_ms, key="agents-dashboard-autorefresh-2s")
+        return "native"
+
+    seconds = max(1.0, interval_ms / 1000.0)
+    st.markdown(
+        f"<meta http-equiv='refresh' content='{seconds:.1f}'>",
+        unsafe_allow_html=True,
+    )
+    return "meta"
+
+
 def _inject_style() -> None:
     st.markdown(
         """
@@ -117,10 +131,7 @@ def _lane_header(status: str, count: int) -> str:
 def main() -> None:
     st.set_page_config(page_title="Kairo Agent Ops", layout="wide")
     _inject_style()
-
-    auto_refresh_fn = getattr(st, "autorefresh", None)
-    if callable(auto_refresh_fn):
-        auto_refresh_fn(interval=2000, key="agents-dashboard-autorefresh-2s")
+    _enable_auto_refresh(interval_ms=2000)
 
     st.markdown(
         "<div class='wrap'><div class='title'>Agent Ops</div><div class='sub'>live / 2s</div></div>",

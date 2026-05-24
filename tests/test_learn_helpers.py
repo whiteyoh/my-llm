@@ -38,6 +38,12 @@ def test_custom_banned_terms_enforced() -> None:
         generate_learning_output(state, "forbidden", max_new_tokens=2, temperature=1.0, top_k=5, safe_cfg=SafetyConfig(enabled=True, banned_terms=("forbidden",)))
 
 
+def test_generate_learning_output_rejects_empty_prompt() -> None:
+    state = _state()
+    with pytest.raises(ValueError, match="Prompt must not be empty"):
+        generate_learning_output(state, "   ", max_new_tokens=2, temperature=1.0, top_k=5, safe_cfg=SafetyConfig(enabled=False))
+
+
 def test_attention_labels_use_display_when_present() -> None:
     labels = build_attention_labels([{"display": "h"}, {"display": "<space>"}, {}])
     assert labels == ["0: h", "1: <space>", "2"]

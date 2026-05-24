@@ -106,6 +106,8 @@ def create_model_status(state: dict[str, Any] | None) -> dict[str, Any]:
 
 def generate_learning_output(state: dict[str, Any], prompt: str, *, max_new_tokens: int, temperature: float, top_k: int, safe_cfg: SafetyConfig) -> dict[str, str]:
     validate_sampling_args(max_new_tokens, temperature, top_k, 1.0)
+    if not prompt.strip():
+        raise ValueError("Prompt must not be empty.")
     if safe_cfg.enabled and not is_prompt_allowed(prompt, banned_terms=safe_cfg.banned_terms):
         raise ValueError("Prompt blocked by Classroom Safe Mode. Try a safer prompt.")
     ids = generate_tokens(state["model"], prompt, state["tokenizer"], seq_len=state["cfg"]["seq_len"], max_new_tokens=max_new_tokens, temperature=temperature, top_k=top_k, top_p=1.0, device=torch.device("cpu"))

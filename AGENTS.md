@@ -150,6 +150,13 @@ Use only these statuses:
 - school-demo-release-gatekeeper.md
 </examples>
 
+<required-agents>
+- qa-evaluation-engineer.md
+- packaging-install-readiness.md
+- classroom-docs-printables-maintainer.md
+- school-demo-release-gatekeeper.md
+</required-agents>
+
 ---
 
 ## Required Worker Format

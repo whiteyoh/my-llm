@@ -77,6 +77,8 @@ def generate_tokens(
     device: torch.device,
 ) -> list[int]:
     tokens = tokenizer.encode(prompt)
+    if not tokens:
+        raise ValueError("prompt must not be empty")
     x = torch.tensor(tokens, dtype=torch.long, device=device).unsqueeze(0)
     for _ in range(max_new_tokens):
         x_cond = x[:, -seq_len:]

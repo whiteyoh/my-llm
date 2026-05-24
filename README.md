@@ -17,7 +17,7 @@ train a tiny transformer, compare outputs before and after changing the training
 data, and inspect token probabilities and attention so LLMs feel understandable
 rather than magical.
 
-Repository: [whiteyoh/kiaro](https://github.com/whiteyoh/kiaro)
+Repository: [whiteyoh/my-llm](https://github.com/whiteyoh/my-llm)
 
 ---
 

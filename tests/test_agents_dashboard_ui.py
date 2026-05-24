@@ -75,6 +75,7 @@ def test_dashboard_renders_running_and_missing_agent_signals(monkeypatch) -> Non
     monkeypatch.setattr(dashboard, "st", fake_streamlit)
 
     dashboard.main()
+    assert any("http-equiv='refresh'" in value for value in fake_streamlit.markdowns)
     assert any("qa-evaluation-engineer" in value for value in fake_streamlit.markdowns)
     assert any("missing: release-manager" in value for value in fake_streamlit.markdowns)
     assert any("pulse" in value for value in fake_streamlit.markdowns)

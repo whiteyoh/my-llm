@@ -33,7 +33,7 @@ def test_agent_state_status_counts_and_updates() -> None:
     assert counts["running"] == 1
 
 
-def test_expected_agent_files_parse_examples_block() -> None:
+def test_expected_agent_files_parse_required_agents_block() -> None:
     files = expected_agent_files()
     assert "qa-evaluation-engineer.md" in files
 
