@@ -6,6 +6,54 @@
 
 ---
 
+# About the Author
+
+Lightbulb Takeaway: The teaching intent is simple: clear steps, honest
+evidence, and confidence through practice.
+
+I'm Paul McMurray, a software engineer, problem-solver, and lifelong learner
+from the North East of England.
+
+My work has taken me deep into the world of technology, reliability,
+automation, and complex systems, but the part I enjoy most is making difficult
+things easier to understand. Whether I'm building tools, improving systems,
+writing guidance, or helping others find a clearer way forward, I'm drawn to
+practical ideas that make a real difference.
+
+Outside of work, I'm a dad, a music lover, and someone who believes in staying
+curious. I enjoy soul, funk, and disco, long walks, good food, and finding new
+ways to teach my son how the world works - from computers and games to
+kindness, resilience, and asking good questions.
+
+This book is personal to me because it reflects how I think: take something
+complicated, break it down, make it useful, and leave people with something
+they can actually do.
+
+I don't pretend to have all the answers, but I've learned that progress often
+starts with asking better questions, being honest about what you don't know,
+and being willing to keep going. That spirit is what I've tried to bring into
+these pages.
+
+---
+
+# Disclaimer
+
+This book is an educational guide for classroom and self-study use. It is not
+legal, safeguarding, or professional policy advice.
+
+Kairo is a small local teaching model. Outputs can be incorrect, incomplete,
+biased, or unexpected. Always review outputs critically and use teacher
+supervision for classroom activity.
+
+Before delivery, confirm your school or organisation IT rules, data policy, and
+age-appropriate usage standards. Do not use personal or sensitive student data
+in prompts, datasets, or saved logs.
+
+All examples are provided as learning demonstrations. You remain responsible
+for local compliance and safe use.
+
+---
+
 # Preface
 
 Welcome to *Tech I Can: Kairo*. This book was written to make AI practical,
@@ -113,7 +161,7 @@ on internet-scale datasets.
 
 # Chapter 1: Welcome to Tech I Can
 
-## Intro into this chapter
+## About this chapter
 
 You are about to learn AI by doing. This chapter sets the tone so you know what
 you are building and why each step matters.
@@ -182,7 +230,7 @@ Lightbulb Takeaway: You are not here to memorize commands. You are here to build
 
 # Chapter 2: What Kairo Is (and Is Not)
 
-## Intro into this chapter
+## About this chapter
 
 Before running code, you need realistic expectations.
 
@@ -248,7 +296,7 @@ Lightbulb Takeaway: Honest limitations make better learning outcomes.
 
 # Chapter 3: Before You Start
 
-## Intro into this chapter
+## About this chapter
 
 This chapter prevents setup issues before they interrupt learning.
 
@@ -317,7 +365,7 @@ Lightbulb Takeaway: A clean start removes most beginner friction.
 
 # Chapter 4: Install and Verify
 
-## Intro into this chapter
+## About this chapter
 
 Now you turn this project into a working local AI lab.
 
@@ -405,7 +453,7 @@ Lightbulb Takeaway: Verification is not extra work. It is what makes your next c
 
 # Chapter 5: Run Kairo End-to-End
 
-## Intro into this chapter
+## About this chapter
 
 This chapter is your first complete model cycle: baseline, evaluation, retrain,
 comparison.
@@ -512,7 +560,7 @@ Lightbulb Takeaway: Fair comparison means one major change at a time.
 
 # Chapter 6: How to Read Results
 
-## Intro into this chapter
+## About this chapter
 
 Now you move from running commands to interpreting evidence.
 
@@ -578,7 +626,7 @@ Lightbulb Takeaway: Fluent output can still be wrong. Always separate style from
 
 # Chapter 7: Question-Answer Mode
 
-## Intro into this chapter
+## About this chapter
 
 This chapter changes behavior from open text generation to QA-style responses.
 
@@ -656,7 +704,7 @@ Lightbulb Takeaway: Context is your anchor when model confidence and correctness
 
 # Chapter 8: Learn Mode
 
-## Intro into this chapter
+## About this chapter
 
 This chapter opens the model internals in a visual way.
 
@@ -733,7 +781,7 @@ Lightbulb Takeaway: Visual evidence helps learners connect abstract ideas to obs
 
 # Chapter 9: Classroom Delivery Plan
 
-## Intro into this chapter
+## About this chapter
 
 Now you shift from learner mode to facilitator mode.
 
@@ -797,7 +845,7 @@ Lightbulb Takeaway: The debrief is where understanding deepens.
 
 # Chapter 10: Troubleshooting
 
-## Intro into this chapter
+## About this chapter
 
 Every real workshop includes bumps. This chapter keeps progress moving.
 
@@ -859,7 +907,7 @@ Lightbulb Takeaway: Troubleshooting is not a detour. It is part of mastery.
 
 # Chapter 11: Safety and Honest Framing
 
-## Intro into this chapter
+## About this chapter
 
 This chapter helps you communicate results responsibly.
 
@@ -923,7 +971,7 @@ Then continue with a safer prompt and context pair.
 
 # Chapter 12: Build Your Own Mini Projects
 
-## Intro into this chapter
+## About this chapter
 
 This is where guided practice becomes independent experimentation.
 
@@ -987,7 +1035,7 @@ supporting metric trend).
 
 # Chapter 13: Full Command Reference
 
-## Intro into this chapter
+## About this chapter
 
 This chapter is your quick command toolkit for live use.
 
@@ -1087,7 +1135,7 @@ Lightbulb Takeaway: Commands are tools for questions, not goals by themselves.
 
 # Chapter 14: Reflection Checkpoint
 
-## Intro into this chapter
+## About this chapter
 
 This chapter is a checkpoint where you pause, review evidence, and prepare for
 the deeper technical chapters ahead.
@@ -1150,7 +1198,7 @@ Curious today, Confident tomorrow.
 
 # Chapter 15: Dataset Design for Better Training
 
-## Intro into this chapter
+## About this chapter
 
 You now move from using existing sample files to designing your own datasets
 with intent.
@@ -1220,7 +1268,7 @@ will also be unclear.
 
 # Chapter 16: Prompt Design for Fair Comparisons
 
-## Intro into this chapter
+## About this chapter
 
 Prompt design controls the fairness of your experiment.
 
@@ -1293,7 +1341,7 @@ Lightbulb Takeaway: Fixed prompts create fair evidence.
 
 # Chapter 17: Tokenization Deep Dive
 
-## Intro into this chapter
+## About this chapter
 
 This chapter explains how raw text becomes model-readable tokens.
 
@@ -1355,7 +1403,7 @@ Lightbulb Takeaway: Tokens are the model's actual reading units.
 
 # Chapter 18: Training Dynamics and Curves
 
-## Intro into this chapter
+## About this chapter
 
 You now learn how to read training behavior over time.
 
@@ -1447,7 +1495,7 @@ Lightbulb Takeaway: Better training loss alone is not the full story.
 
 # Chapter 19: Evaluation Beyond One Number
 
-## Intro into this chapter
+## About this chapter
 
 This chapter expands evaluation from single metrics to richer interpretation.
 
@@ -1525,7 +1573,7 @@ Lightbulb Takeaway: Strong evaluation always combines numbers and language.
 
 # Chapter 20: Reliability Patterns in Tiny Models
 
-## Intro into this chapter
+## About this chapter
 
 This chapter helps you identify common reliability patterns.
 
@@ -1597,7 +1645,7 @@ Lightbulb Takeaway: Settings can trade creativity for stability.
 
 # Chapter 21: Classroom Safety Workflow
 
-## Intro into this chapter
+## About this chapter
 
 This chapter operationalizes safety for classroom demonstrations.
 
@@ -1663,7 +1711,7 @@ Lightbulb Takeaway: Responsible framing is a teaching skill, not a disclaimer.
 
 # Chapter 22: QA System Design Principles
 
-## Intro into this chapter
+## About this chapter
 
 Now you treat QA mode as a system, not just a command.
 
@@ -1723,7 +1771,7 @@ random parameter tweaking.
 
 # Chapter 23: Guided Lab 1 (Baseline Build)
 
-## Intro into this chapter
+## About this chapter
 
 This lab is a full baseline run with checkpoint handling and evidence logging.
 
@@ -1817,7 +1865,7 @@ Lightbulb Takeaway: Reproducibility is a core classroom skill.
 
 # Chapter 24: Guided Lab 2 (Retrain Contrast)
 
-## Intro into this chapter
+## About this chapter
 
 This lab demonstrates clear style transfer through retraining.
 
@@ -1906,7 +1954,7 @@ Lightbulb Takeaway: Same model structure, different data, different behavior.
 
 # Chapter 25: Guided Lab 3 (QA Grounding)
 
-## Intro into this chapter
+## About this chapter
 
 This lab turns the model into a basic context-grounded QA experience.
 
@@ -2000,7 +2048,7 @@ Lightbulb Takeaway: Good context design is the strongest lever in classroom QA.
 
 # Chapter 26: Guided Lab 4 (Learn Mode Evidence Walkthrough)
 
-## Intro into this chapter
+## About this chapter
 
 This lab helps students connect model internals to observable output behavior.
 
@@ -2070,7 +2118,7 @@ Lightbulb Takeaway: Visual evidence helps learners ask better questions.
 
 # Chapter 27: Classroom Assessment and Feedback
 
-## Intro into this chapter
+## About this chapter
 
 This chapter provides concrete ways to assess learning outcomes.
 
@@ -2134,7 +2182,7 @@ Lightbulb Takeaway: Grade thinking quality, not just command execution.
 
 # Chapter 28: Presentation-Day Playbook
 
-## Intro into this chapter
+## About this chapter
 
 This chapter prepares you for live delivery in front of students or reviewers.
 
@@ -2199,7 +2247,7 @@ Lightbulb Takeaway: Great presentations are prepared for both success and hiccup
 
 # Chapter 29: Extension Pathways
 
-## Intro into this chapter
+## About this chapter
 
 This chapter helps you keep growing after the core curriculum.
 
@@ -2263,12 +2311,12 @@ Lightbulb Takeaway: Progress comes from asking better questions, not bigger mode
 
 # Chapter 30: Advanced Prompt Engineering Lab
 
-## Intro into this chapter
+## About this chapter
 
 This chapter gives you a structured way to test how prompt design affects model
 behavior under fixed training conditions.
 
-You are aiming for practical understanding, not just completion. You will how framing changes outputs, strengthen your approach to build prompt families, and conclude by learning to compare outputs systematically in plain language.
+You are aiming for practical understanding, not just completion. You will learn how framing changes outputs, strengthen your approach to build prompt families, and conclude by learning to compare outputs systematically in plain language.
 
 ## What you are going to use
 
@@ -2345,7 +2393,7 @@ Lightbulb Takeaway: Prompt design is part of experimental design.
 
 # Chapter 31: Data Ethics and Attribution
 
-## Intro into this chapter
+## About this chapter
 
 As projects scale, source data quality and attribution become critical.
 
@@ -2432,7 +2480,7 @@ Lightbulb Takeaway: Responsible AI education includes responsible data stories.
 
 # Chapter 32: Full Classroom Script Pack
 
-## Intro into this chapter
+## About this chapter
 
 This chapter gives complete talk tracks you can use in live teaching.
 
@@ -2540,7 +2588,7 @@ Lightbulb Takeaway: Clear language is a technical tool.
 
 # Chapter 33: Student Workbook Section
 
-## Intro into this chapter
+## About this chapter
 
 This chapter provides workbook-style pages that can be used directly in class.
 
@@ -2644,7 +2692,7 @@ Lightbulb Takeaway: Output becomes learning when learners explain it in their ow
 
 # Chapter 34: Capstone Project Handbook
 
-## Intro into this chapter
+## About this chapter
 
 This chapter helps learners build and present a complete final project.
 
@@ -2732,7 +2780,7 @@ Lightbulb Takeaway: A strong capstone explains both what changed and what remain
 
 # Chapter 35: Implementation Workbook (Week-by-Week)
 
-## Intro into this chapter
+## About this chapter
 
 This chapter turns the full book into a practical multi-week teaching schedule.
 
@@ -2873,7 +2921,7 @@ Lightbulb Takeaway: Long-term learning works best when each week produces a smal
 
 # Chapter 36: Frequently Asked Questions (Classroom Edition)
 
-## Intro into this chapter
+## About this chapter
 
 This chapter provides practical answers to the questions teachers and students
 ask most often.
@@ -2993,7 +3041,7 @@ limitation statement.
 
 # Chapter 37: Teacher Quick-Reference Cards
 
-## Intro into this chapter
+## About this chapter
 
 This chapter gives compact reference cards for live teaching moments.
 
@@ -3113,7 +3161,7 @@ statements, not general opinions.
 
 # Chapter 38: Deployment and Operations Checklist
 
-## Intro into this chapter
+## About this chapter
 
 This chapter helps you move from workshop experiments to repeatable operational
 delivery in schools or clubs.
@@ -3222,7 +3270,7 @@ kairo-generate --checkpoint runs/card_baseline/best.pt --prompt "System check pr
 
 # Chapter 39: Accessibility and Inclusive Teaching Patterns
 
-## Intro into this chapter
+## About this chapter
 
 This chapter helps you make Kairo lessons inclusive for diverse learners.
 
@@ -3315,7 +3363,7 @@ Lightbulb Takeaway: Inclusion improves technical quality because more perspectiv
 
 # Chapter 40: Continuous Improvement Plan
 
-## Intro into this chapter
+## About this chapter
 
 This chapter helps you evolve the curriculum over multiple cohorts.
 
@@ -3398,7 +3446,7 @@ Lightbulb Takeaway: Treat teaching quality like model quality—measure, adjust,
 
 # Chapter 41: Glossary (Terms and Parameters)
 
-## Intro into this chapter
+## About this chapter
 
 This chapter is a complete meaning guide for technical terms and command
 parameters used across the whole book.
@@ -3449,7 +3497,7 @@ chapter versus how you use it now with a concrete example.
 - **Dataset**: Source text used for training or evaluation (see Chapters 5 and 15).
 - **Evidence**: Specific output, metric, or observation used to support a claim (see Chapters 1 and 6).
 - **Epoch**: One full pass through the training data.
-- **Grounding**: Anchoring output to supplied context (see Chapters 7 and 21).
+- **Grounding**: Anchoring output to supplied context (see Chapters 7 and 25).
 - **Inference**: Running a trained model to generate output.
 - **Loss**: Numerical error signal used in training/evaluation (see Chapters 6 and 18).
 - **Model architecture**: Structural design (layers, heads, model width).
@@ -3507,7 +3555,7 @@ chapter versus how you use it now with a concrete example.
 
 # Chapter 42: Conclusion
 
-## Intro into this chapter
+## About this chapter
 
 You have now completed a full beginner-to-practice AI journey. This conclusion
 helps you anchor what matters most so your confidence lasts beyond this book.
@@ -3572,12 +3620,15 @@ grounded QA with clear notes and minimal troubleshooting.
 
 ## References (APA 7th Edition)
 
+- Hmelo-Silver, C. E. (2004). Problem-based learning: What and how do students learn? *Educational Psychology Review, 16*(3), 235-266. https://doi.org/10.1023/B:EDPR.0000034022.16470.f3
+- Kolb, D. A. (1984). *Experiential learning: Experience as the source of learning and development*. Prentice Hall.
+
+### Further Reading
+
 - Bender, E. M., Gebru, T., McMillan-Major, A., & Shmitchell, S. (2021). On the dangers of stochastic parrots: Can language models be too big? *Proceedings of the 2021 ACM Conference on Fairness, Accountability, and Transparency*, 610-623. https://doi.org/10.1145/3442188.3445922
 - Brown, T. B., Mann, B., Ryder, N., Subbiah, M., Kaplan, J. D., Dhariwal, P., Neelakantan, A., Shyam, P., Sastry, G., Askell, A., Agarwal, S., Herbert-Voss, A., Krueger, G., Henighan, T., Child, R., Ramesh, A., Ziegler, D. M., Wu, J., Winter, C., ... Amodei, D. (2020). Language models are few-shot learners. *Advances in Neural Information Processing Systems, 33*, 1877-1901. https://proceedings.neurips.cc/paper/2020/hash/1457c0d6bfcb4967418bfb8ac142f64a-Abstract.html
 - OpenAI. (2023). *GPT-4 technical report*. arXiv. https://arxiv.org/abs/2303.08774
 - Touretzky, D. S., Gardner-McCune, C., Martin, F., & Seehorn, D. (2019). Envisioning AI for K-12: What should every child know about AI? *Proceedings of the AAAI Conference on Artificial Intelligence, 33*(1), 9795-9799. https://doi.org/10.1609/aaai.v33i01.33019795
-- Hmelo-Silver, C. E. (2004). Problem-based learning: What and how do students learn? *Educational Psychology Review, 16*(3), 235-266. https://doi.org/10.1023/B:EDPR.0000034022.16470.f3
-- Kolb, D. A. (1984). *Experiential learning: Experience as the source of learning and development*. Prentice Hall.
 - Vaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A. N., Kaiser, L., & Polosukhin, I. (2017). Attention is all you need. arXiv. https://arxiv.org/abs/1706.03762
 
 ## Sources and Further Reading
@@ -3589,80 +3640,9 @@ grounded QA with clear notes and minimal troubleshooting.
 
 ---
 
-# Chapter 43: About the Author
+# Chapter 43: Key Words Index
 
-## Intro into this chapter
-
-This chapter introduces the author and the teaching intent behind the *Tech I
-Can* series.
-
-In this chapter, you will learn who wrote this guide, explain why the content is
-structured for classrooms, and understand what values informed the book design.
-Keep your notes evidence-based so you can explain not only what happened, but
-why it happened.
-
-## What you are going to use
-
-- a short author profile
-- the educational mission of this book
-- guidance on how to use the material in schools
-
-## What you will learn in this chapter
-
-- who wrote this guide
-- why the content is structured for classrooms
-- what values informed the book design
-
-## The work, clearly laid out
-
-1. read the author profile
-2. connect the mission to your own classroom goals
-3. decide how to adapt the material for your learners
-
-## Examples of what you might see
-
-```text
-Focus: practical AI literacy
-Method: explain -> run -> observe -> reflect
-Audience: beginners, teachers, and curious learners
-```
-
-## Why This Matters
-
-Lightbulb Takeaway: The best technical teaching makes people feel capable, not
-intimidated.
-
-Paul McMurray is the founder of Tech I Can, based in North Shields, and his
-focus is practical AI literacy for schools. He works to make technical ideas
-teachable through clear steps that students can run, observe, and explain.
-His teaching philosophy is evidence-first and beginner-friendly: test one
-change at a time, show what happened, and say honestly what is still uncertain.
-Across the Tech I Can series, his classroom mission is to help teachers and
-learners build confidence without hype, so AI becomes a tool for thoughtful
-learning, not a mystery.
-
-## Action 1: What You Learned
-
-- You learned why the author frames AI learning as practical, evidence-based classroom work.
-- You learned how the book's teaching sequence builds confidence by moving from explanation to action and reflection.
-- You learned how to adapt the same method to your own learners while keeping clarity and honesty at the center.
-
-## Action 2: Reflect
-
-- Which part of the teaching philosophy in this chapter most matches how you want to teach?
-- Which part would you adjust for your own class age group or confidence level?
-- How will you keep lessons practical and evidence-based when students ask for faster, less structured demos?
-
-## Action 3: Do This Next
-
-- Write a short teaching intent statement for your next Kairo session using the values from this chapter.
-- Compare teaching intent statements with a peer and note one phrasing choice that makes the classroom goal clearer.
-
----
-
-# Chapter 44: Key Words Index
-
-## Intro into this chapter
+## About this chapter
 
 This chapter gives you a fast lookup list of important terms and where they
 appear in the book.

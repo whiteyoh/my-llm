@@ -29,6 +29,7 @@ try:
         KeepTogether,
         NextPageTemplate,
         PageBreak,
+        PageBreakIfNotEmpty,
         PageTemplate,
         Paragraph,
         Preformatted,
@@ -80,6 +81,42 @@ BOOK_META_CREATION_DATE = "2026-05-01T00:00:00+00:00"
 TARGET_PDF_SIZE_BYTES = 650 * 1024
 MIN_INTRO_WORDS = 28
 DISPLAY_FONT_CANDIDATES: list[tuple[str, str]] = []
+REQUIRED_INDEX_TERMS: list[str] = [
+    "Attention",
+    "Batch size (--batch_size)",
+    "Capstone",
+    "Checkpoint",
+    "Context",
+    "Corpus",
+    "Dataset",
+    "Epoch (--epochs)",
+    "Evidence",
+    "Grounding",
+    "Inference",
+    "Loss",
+    "Model architecture",
+    "Next-token prediction",
+    "Overfitting",
+    "Perplexity",
+    "Prompt (--prompt)",
+    "Provenance",
+    "Reliability",
+    "Retraining",
+    "Rubric",
+    "Style transfer",
+    "Temperature (--temperature)",
+    "Token",
+    "Top-k (--top_k)",
+    "Validation",
+]
+TERM_SEARCH_ALIASES: dict[str, list[str]] = {
+    "Batch size (--batch_size)": ["batch size", "--batch_size"],
+    "Epoch (--epochs)": ["epoch", "--epochs"],
+    "Prompt (--prompt)": ["prompt", "--prompt"],
+    "Temperature (--temperature)": ["temperature", "--temperature"],
+    "Top-k (--top_k)": ["top-k", "top k", "--top_k"],
+}
+KEY_WORDS_INDEX_HEADING_RE = re.compile(r"^#\s+Chapter\s+\d+:\s+Key Words Index\s*$", re.IGNORECASE)
 
 
 def _build_mod_date() -> str:
@@ -90,10 +127,17 @@ def apply_accessibility_catalog_tags(pdf_path: Path) -> None:
     reader = PdfReader(str(pdf_path))
     writer = PdfWriter()
     writer.clone_document_from_reader(reader)
+    for page in writer.pages:
+        page_obj = getattr(page, "get_object", lambda: page)()
+        page_obj.update({NameObject("/Tabs"): NameObject("/S")})
     writer._root_object.update(  # type: ignore[attr-defined]
         {
             NameObject("/MarkInfo"): DictionaryObject({NameObject("/Marked"): BooleanObject(True)}),
             NameObject("/Lang"): TextStringObject("en-GB"),
+            NameObject("/PageMode"): NameObject("/UseOutlines"),
+            NameObject("/ViewerPreferences"): DictionaryObject(
+                {NameObject("/DisplayDocTitle"): BooleanObject(True)}
+            ),
         }
     )
     tagged_path = pdf_path.with_name(f"{pdf_path.stem}.tagged{pdf_path.suffix}")
@@ -360,7 +404,7 @@ class BookDocTemplate(BaseDocTemplate):
         if chapter_marker:
             self.current_running_chapter = chapter_marker
         chapter_number = getattr(flowable, "_chapter_number", None)
-        if chapter_number:
+        if chapter_number is not None:
             self.current_chapter_number = chapter_number
         chapter_accent = getattr(flowable, "_chapter_accent", None)
         if chapter_accent:
@@ -478,7 +522,7 @@ def validate_book_structure(lines: list[str]) -> None:
     text = "\n".join(lines)
     if "# Chapter 41: Glossary (Terms and Parameters)" not in text:
         raise SystemExit("Book markdown is missing the glossary chapter heading.")
-    if "# Chapter 44: Key Words Index" not in text:
+    if not any(KEY_WORDS_INDEX_HEADING_RE.match(line.strip()) for line in lines):
         raise SystemExit("Book markdown is missing the key words index chapter heading.")
     if "## References (APA 7th Edition)" not in text:
         raise SystemExit("Book markdown is missing the APA references section.")
@@ -545,7 +589,10 @@ def validate_book_structure(lines: list[str]) -> None:
     glossary_index = next((i for i, line in enumerate(lines) if line.startswith("# Chapter 41: Glossary")), -1)
     if glossary_index < 0:
         raise SystemExit("Could not find glossary chapter for parameter validation.")
-    keyword_index_start = next((i for i, line in enumerate(lines) if line.startswith("# Chapter 44: Key Words Index")), -1)
+    keyword_index_start = next(
+        (i for i, line in enumerate(lines) if KEY_WORDS_INDEX_HEADING_RE.match(line.strip())),
+        -1,
+    )
     glossary_slice_end = keyword_index_start if keyword_index_start > glossary_index else len(lines)
     glossary_text = "\n".join(lines[glossary_index:glossary_slice_end])
     all_params = set(re.findall(r"--[a-zA-Z0-9_]+", text))
@@ -620,7 +667,7 @@ def validate_book_structure(lines: list[str]) -> None:
             intro_words = 0
             continue
         if stripped.startswith("## "):
-            in_intro = stripped[3:].strip().lower() == "intro into this chapter"
+            in_intro = stripped[3:].strip().lower() == "about this chapter"
             continue
         if not in_intro or not stripped or stripped.startswith("![") or stripped.startswith("Caption:"):
             continue
@@ -642,7 +689,7 @@ def extract_keyword_terms(lines: list[str]) -> list[str]:
         if stripped.startswith("# Chapter 41: Glossary"):
             in_glossary = True
             continue
-        if in_glossary and stripped.startswith("# Chapter 44: Key Words Index"):
+        if in_glossary and KEY_WORDS_INDEX_HEADING_RE.match(stripped):
             break
         if not in_glossary or not stripped.startswith("- **"):
             continue
@@ -650,8 +697,13 @@ def extract_keyword_terms(lines: list[str]) -> list[str]:
         if not match:
             continue
         term = match.group(1).strip()
+        if term.startswith("--"):
+            continue
         if term and term not in terms:
             terms.append(term)
+    for required in REQUIRED_INDEX_TERMS:
+        if required not in terms:
+            terms.append(required)
     return terms
 
 
@@ -664,20 +716,61 @@ def find_heading_page(reader: PdfReader, heading: str) -> int | None:
     return None
 
 
+def find_heading_page_last(reader: PdfReader, heading: str) -> int | None:
+    needle = heading.lower()
+    found = None
+    for idx, page in enumerate(reader.pages, start=1):
+        text = (page.extract_text() or "").lower()
+        if needle in text:
+            found = idx
+    return found
+
+
 def build_keyword_page_map(pdf_path: Path, terms: list[str]) -> dict[str, list[int]]:
     reader = PdfReader(str(pdf_path))
-    index_page = find_heading_page(reader, "Chapter 44: Key Words Index")
+    index_page = find_heading_page_last(reader, "Key Words Index")
     max_page = (index_page - 1) if index_page else len(reader.pages)
-    page_text: list[str] = []
-    for page_no in range(1, max_page + 1):
-        page = reader.pages[page_no - 1]
-        page_text.append((page.extract_text() or "").lower())
+
+    def _first_body_page() -> int:
+        for idx in range(1, max_page + 1):
+            text = (reader.pages[idx - 1].extract_text() or "")
+            low = text.lower()
+            if "chapter 1: welcome to tech i can" in low and "you are about to learn ai by doing" in low:
+                return idx
+        return 1
+
+    def _is_substantive_body_page(raw_text: str) -> bool:
+        low = raw_text.lower()
+        if not low.strip():
+            return False
+        if "in this chapter . . ." in low and "what you will walk away with" in low:
+            return False
+        return True
+
+    first_body_page = _first_body_page()
+    page_text: list[tuple[int, str]] = []
+    for page_no in range(first_body_page, max_page + 1):
+        raw = reader.pages[page_no - 1].extract_text() or ""
+        if not _is_substantive_body_page(raw):
+            continue
+        page_text.append((page_no, raw.lower()))
+
+    def _patterns_for_term(term: str) -> list[str]:
+        alias_terms = TERM_SEARCH_ALIASES.get(term, [term])
+        patterns: list[str] = []
+        for alias in alias_terms:
+            if alias.startswith("--"):
+                patterns.append(rf"(?<!\w){re.escape(alias)}(?!\w)")
+            else:
+                token = re.escape(alias.lower()).replace(r"\ ", r"\s+")
+                patterns.append(rf"(?<!\w){token}(?!\w)")
+        return patterns
 
     page_map: dict[str, list[int]] = defaultdict(list)
     for term in terms:
-        needle = term.lower()
-        for page_no, text in enumerate(page_text, start=1):
-            if needle in text:
+        patterns = _patterns_for_term(term)
+        for page_no, text in page_text:
+            if any(re.search(pattern, text, flags=re.IGNORECASE) for pattern in patterns):
                 page_map[term].append(page_no)
     return dict(page_map)
 
@@ -1151,7 +1244,7 @@ def build_styles(fonts: dict[str, str]) -> dict[str, ParagraphStyle]:
             fontName=fonts["body"],
             fontSize=11.0,
             leading=16.4,
-            alignment=4,
+            alignment=0,
             textColor=colors.HexColor("#111827"),
             leftIndent=2,
             rightIndent=2,
@@ -1241,12 +1334,12 @@ def build_styles(fonts: dict[str, str]) -> dict[str, ParagraphStyle]:
             "IndexEntry",
             parent=base["BodyText"],
             fontName=fonts["body"],
-            fontSize=10.8,
-            leading=15,
+            fontSize=10.2,
+            leading=13.8,
             leftIndent=16,
             bulletIndent=4,
             textColor=colors.HexColor("#0f172a"),
-            spaceAfter=3,
+            spaceAfter=1,
             **flow_control,
         ),
         "cell": ParagraphStyle(
@@ -1300,7 +1393,7 @@ def build_styles(fonts: dict[str, str]) -> dict[str, ParagraphStyle]:
             fontName=fonts["body"],
             fontSize=11.0,
             leading=16.2,
-            alignment=4,
+            alignment=0,
             textColor=colors.HexColor("#0f172a"),
             spaceAfter=10,
             **flow_control,
@@ -1476,7 +1569,7 @@ def extract_chapter_preludes(lines: list[str]) -> dict[str, dict[str, object]]:
         if stripped.startswith("## "):
             section = stripped[3:].strip().lower()
             continue
-        if section == "intro into this chapter":
+        if section == "about this chapter":
             if stripped and not stripped.startswith("![") and not stripped.startswith("Caption:"):
                 intro_lines.append(stripped)
             continue
@@ -1487,64 +1580,57 @@ def extract_chapter_preludes(lines: list[str]) -> dict[str, dict[str, object]]:
     return chapter_data
 
 
-def extract_about_author_summary(lines: list[str]) -> str:
-    chapter = ""
-    section = ""
+def extract_front_matter_paragraphs(lines: list[str], heading: str) -> list[str]:
+    target = f"# {heading}".strip().lower()
+    in_section = False
+    current_lines: list[str] = []
     paragraphs: list[str] = []
-    skip_lightbulb = False
+
+    def flush() -> None:
+        if current_lines:
+            paragraphs.append(" ".join(current_lines).strip())
+            current_lines.clear()
+
     for raw in lines:
         stripped = raw.strip()
         if stripped.startswith("# "):
-            chapter = stripped[2:].strip()
-            section = ""
-            skip_lightbulb = False
+            if in_section:
+                flush()
+                break
+            in_section = stripped.lower() == target
             continue
-        if chapter != "Chapter 43: About the Author":
+        if not in_section:
             continue
-        if stripped.startswith("## "):
-            section = stripped[3:].strip()
-            skip_lightbulb = False
+        if stripped == "---":
             continue
-        if section == "Why This Matters":
-            if stripped.startswith("Lightbulb Takeaway:"):
-                skip_lightbulb = True
-                continue
-            if skip_lightbulb and not stripped:
-                skip_lightbulb = False
-                continue
-            if skip_lightbulb:
-                continue
-        if section == "Why This Matters" and stripped:
-            paragraphs.append(stripped)
-        if section.startswith("Action 1: What You Learned"):
-            break
-    summary = " ".join(paragraphs).strip()
-    if summary:
-        return summary
-    return (
-        "Paul McMurray is the founder of Tech I Can. He focuses on practical AI literacy for schools, "
-        "using a beginner-friendly, evidence-first teaching style that helps learners run, observe, and explain."
-    )
+        if not stripped:
+            flush()
+            continue
+        current_lines.append(stripped)
+
+    flush()
+    return [item for item in paragraphs if item]
 
 
 def build_chapter_prelude_summary(heading_text: str, intro_text: str, learn_items: list[str]) -> str:
     title = re.sub(r"^Chapter\s+\d+:\s*", "", heading_text, flags=re.IGNORECASE).strip()
     topic = title if title else "this chapter"
     points = [item.strip().rstrip(".") for item in learn_items if item.strip()]
+    topic_clause = f"'{topic}'" if topic and topic.lower() != "this chapter" else "this chapter"
     if len(points) >= 3:
         return (
-            f"This chapter is about {topic.lower()}. "
-            f"You will explore {points[0]}, then {points[1]}, and finally {points[2]}."
+            f"This chapter focuses on {topic_clause}. "
+            f"You will examine {points[0]}, {points[1]}, and {points[2]}."
         )
     if len(points) == 2:
-        return f"This chapter is about {topic.lower()}. You will explore {points[0]}, then {points[1]}."
+        return f"This chapter focuses on {topic_clause}. You will examine {points[0]} and {points[1]}."
     if len(points) == 1:
-        return f"This chapter is about {topic.lower()}. You will explore {points[0]}."
+        return f"This chapter focuses on {topic_clause}. You will examine {points[0]}."
 
     sentences = [chunk.strip() for chunk in re.split(r"(?<=[.!?])\s+", intro_text) if chunk.strip()]
     if sentences:
-        return f"This chapter is about {topic.lower()}. {sentences[0]}"
-    return f"This chapter is about {topic.lower()}. You will work through the topic in clear, practical steps."
+        return f"This chapter focuses on {topic_clause}. {sentences[0]}"
+    return f"This chapter focuses on {topic_clause}. You will work through the topic in clear, practical steps."
 
 
 def append_chapter_prelude_page(
@@ -1597,6 +1683,7 @@ def build_body_story(
     styles: dict[str, ParagraphStyle],
     width: float,
     keyword_page_map: dict[str, list[int]] | None = None,
+    keyword_terms: list[str] | None = None,
     chapter_preludes: dict[str, dict[str, object]] | None = None,
 ) -> list[object]:
     lines = merge_callout_continuations(lines)
@@ -1703,6 +1790,7 @@ def build_body_story(
 
     def append_keyword_index() -> None:
         entries = keyword_page_map or {}
+        ordered_terms = sorted(set(keyword_terms or entries.keys()), key=lambda item: item.lower())
         if not entries:
             story.append(
                 Paragraph(
@@ -1725,11 +1813,11 @@ def build_body_story(
                 styles["imprint"],
             )
         )
-        for term in sorted(entries, key=lambda item: item.lower()):
-            pages = entries[term]
+        for term in ordered_terms:
+            pages = entries.get(term, [])
             if pages:
-                primary = ", ".join(str(page) for page in pick_primary_pages(pages))
-                full = format_page_ranges(pages, max_ranges=8)
+                primary = str(pages[0])
+                full = str(pages[0]) if pages[0] == pages[-1] else f"{pages[0]}-{pages[-1]}"
                 page_list = f"Primary: {primary} | Full: {full}"
             else:
                 page_list = "not found"
@@ -1841,7 +1929,7 @@ def build_body_story(
             append_recap_extensions()
             heading_text = stripped[2:]
             if not first_heading:
-                story.append(PageBreak())
+                story.append(PageBreakIfNotEmpty())
             if heading_text.startswith("Chapter ") and chapter_preludes is not None:
                 append_chapter_prelude_page(story, styles, heading_text, chapter_preludes, width)
             first_heading = False
@@ -1860,6 +1948,8 @@ def build_body_story(
             chapter_no_match = re.match(r"^Chapter\s+(\d+):", heading_text, flags=re.IGNORECASE)
             if chapter_no_match:
                 para._chapter_number = chapter_no_match.group(1)  # type: ignore[attr-defined]
+            else:
+                para._chapter_number = ""  # type: ignore[attr-defined]
             para._chapter_accent = chapter_accent  # type: ignore[attr-defined]
             story.append(para)
             append_chapter_band(story, width, chapter_accent)
@@ -1869,7 +1959,7 @@ def build_body_story(
             append_intro_bridge_if_needed()
             section_text = stripped[3:]
             section_lower = section_text.lower()
-            in_intro_section = section_lower.startswith("intro into this chapter")
+            in_intro_section = section_lower.startswith("about this chapter")
             if not in_intro_section:
                 intro_char_count = 0
             in_learning_objectives = section_lower.startswith("what you will learn in this chapter")
@@ -1994,22 +2084,41 @@ def draw_front_matter_page(canvas, doc) -> None:  # type: ignore[no-untyped-def]
 def append_about_author_front_page(
     story: list[object],
     styles: dict[str, ParagraphStyle],
-    about_author_summary: str,
+    about_author_paragraphs: list[str],
 ) -> None:
     story.append(Paragraph("About the Author", styles["toc_title"]))
-    story.append(
-        Paragraph(
-            "This short page helps learners understand who wrote this book and why its method is classroom-focused.",
-            styles["body"],
-        )
-    )
-    story.append(Paragraph(inline_markup(about_author_summary), styles["body"]))
-    story.append(
-        Paragraph(
-            "Lightbulb Takeaway: The teaching intent is simple: clear steps, honest evidence, and confidence through practice.",
-            styles["takeaway_box"],
-        )
-    )
+    story.append(Spacer(1, 10 * mm))
+    paragraphs = about_author_paragraphs or [
+        "Lightbulb Takeaway: The teaching intent is simple: clear steps, honest evidence, and confidence through practice.",
+        "Paul McMurray is the founder of Tech I Can, based in North Shields. He focuses on practical AI literacy for schools using clear, beginner-friendly steps that help learners run, observe, compare, and explain model behaviour with confidence.",
+    ]
+    for paragraph in paragraphs:
+        if paragraph.lower().startswith("lightbulb takeaway:"):
+            takeaway = paragraph.split(":", 1)[1].strip()
+            story.append(Paragraph(inline_markup(takeaway), styles["takeaway_box"]))
+            story.append(Spacer(1, 4 * mm))
+            continue
+        story.append(Paragraph(inline_markup(paragraph), styles["body"]))
+        story.append(Spacer(1, 2.2 * mm))
+    story.append(PageBreak())
+
+
+def append_disclaimer_front_page(
+    story: list[object],
+    styles: dict[str, ParagraphStyle],
+    disclaimer_paragraphs: list[str],
+) -> None:
+    story.append(Paragraph("Disclaimer", styles["toc_title"]))
+    story.append(Spacer(1, 8 * mm))
+    paragraphs = disclaimer_paragraphs or [
+        "This book is an educational guide for classroom and self-study use. It is not legal, safeguarding, or professional policy advice.",
+        "Kairo is a small local teaching model. Outputs can be incorrect, incomplete, biased, or unexpected. Always review outputs critically and use teacher supervision for classroom activity.",
+        "Before delivery, confirm your school or organisation IT rules, data policy, and age-appropriate usage standards. Do not use personal or sensitive student data in prompts, datasets, or saved logs.",
+        "All examples are provided as learning demonstrations. You remain responsible for local compliance and safe use.",
+    ]
+    for paragraph in paragraphs:
+        story.append(Paragraph(inline_markup(paragraph), styles["body"]))
+        story.append(Spacer(1, 2.2 * mm))
     story.append(PageBreak())
 
 
@@ -2069,7 +2178,8 @@ def render_book(out_pdf: Path) -> None:
     fonts = register_display_fonts()
     styles = build_styles(fonts)
     chapter_preludes = extract_chapter_preludes(lines)
-    about_author_summary = extract_about_author_summary(lines)
+    about_author_paragraphs = extract_front_matter_paragraphs(lines, "About the Author")
+    disclaimer_paragraphs = extract_front_matter_paragraphs(lines, "Disclaimer")
     page_w, page_h = A4
 
     def make_doc() -> BookDocTemplate:
@@ -2148,17 +2258,17 @@ def render_book(out_pdf: Path) -> None:
         story.append(Paragraph("Copyright", styles["toc_title"]))
         story.append(
             Paragraph(
-                "Copyright © 2026 Tech I Can. All rights reserved. "
-                "No part of this publication may be reproduced or transmitted "
-                "without written permission from the publisher, except for brief quotations "
-                "used in educational review.",
+                "Copyright © 2026 Paul McMurray. "
+                "This project is distributed under the MIT License. "
+                "Permission is granted to use, copy, modify, merge, publish, distribute, sublicense, and sell copies, "
+                "subject to inclusion of the copyright and license notice.",
                 styles["copyright"],
             )
         )
         story.append(
             Paragraph(
                 "Published by Tech I Can, for practical AI literacy in schools and workshops. "
-                "This classroom edition is designed for guided learning with reproducible exercises.",
+                "See the repository LICENSE file for full terms and warranty disclaimer.",
                 styles["copyright"],
             )
         )
@@ -2176,7 +2286,8 @@ def render_book(out_pdf: Path) -> None:
         story.append(Paragraph("Printed in digital format for classroom distribution.", styles["copyright"]))
         story.append(PageBreak())
 
-        append_about_author_front_page(story, styles, about_author_summary)
+        append_disclaimer_front_page(story, styles, disclaimer_paragraphs)
+        append_about_author_front_page(story, styles, about_author_paragraphs)
         append_icon_legend_page(story, styles, body_width)
 
         story.append(Paragraph("Contents", styles["toc_title"]))
@@ -2188,14 +2299,15 @@ def render_book(out_pdf: Path) -> None:
         story.append(PageBreak())
 
         story.extend(
-            build_body_story(
-                lines,
-                styles,
-                body_width,
-                keyword_page_map=keyword_map,
-                chapter_preludes=chapter_preludes,
+                build_body_story(
+                    lines,
+                    styles,
+                    body_width,
+                    keyword_page_map=keyword_map,
+                    keyword_terms=keyword_terms,
+                    chapter_preludes=chapter_preludes,
+                )
             )
-        )
         return story
 
     # Pass 1: render manuscript and gather keyword page map.

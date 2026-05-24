@@ -53,9 +53,10 @@ def test_book_render_contains_required_front_and_back_matter(tmp_path: Path) -> 
 
     for required in (
         "Preface",
+        "Disclaimer",
+        "About the Author",
         "Chapter 42: Conclusion",
-        "Chapter 43: About the Author",
-        "Chapter 44: Key Words Index",
+        "Chapter 43: Key Words Index",
         "Dedicated to all of the budding techies of the future.",
         "The world is ready for your brilliance.",
         "Curious today, Confident tomorrow.",
@@ -81,3 +82,45 @@ def test_book_render_stays_under_size_budget(tmp_path: Path) -> None:
 def test_book_pipeline_avoids_utcnow_deprecation_path() -> None:
     source = Path("tools/pdf/generate_tech_i_can_book.py").read_text(encoding="utf-8")
     assert "datetime.utcnow(" not in source
+
+
+def test_book_pdf_includes_accessibility_viewer_hints(tmp_path: Path) -> None:
+    try:
+        module = _load_book_module()
+    except SystemExit:
+        pytest.skip('book PDF dependencies not installed; run: pip install -e ".[dev,pdf]"')
+
+    out_pdf = tmp_path / "book.pdf"
+    module.render_book(out_pdf)
+    reader = module.PdfReader(str(out_pdf))
+
+    root = reader.trailer["/Root"]
+    assert root["/Lang"] == "en-GB"
+    assert bool(root["/MarkInfo"]["/Marked"]) is True
+    assert bool(root["/ViewerPreferences"]["/DisplayDocTitle"]) is True
+    assert root["/PageMode"] == "/UseOutlines"
+
+    first_page = reader.pages[0]
+    assert first_page.get("/Tabs") == "/S"
+
+
+def test_book_pdf_has_no_unexpected_sparse_pages(tmp_path: Path) -> None:
+    try:
+        module = _load_book_module()
+    except SystemExit:
+        pytest.skip('book PDF dependencies not installed; run: pip install -e ".[dev,pdf]"')
+
+    out_pdf = tmp_path / "book.pdf"
+    module.render_book(out_pdf)
+    reader = module.PdfReader(str(out_pdf))
+
+    sparse_pages: list[int] = []
+    for idx, page in enumerate(reader.pages, start=1):
+        text_len = len((page.extract_text() or "").strip())
+        if idx == 1:
+            # Cover page can be image-only.
+            continue
+        if text_len < 40:
+            sparse_pages.append(idx)
+
+    assert not sparse_pages, f"Unexpected near-empty page(s): {sparse_pages}"

@@ -21,7 +21,7 @@ def test_book_has_required_chapter_learning_structure() -> None:
         if "# Chapter " not in text:
             continue
         for required in (
-            "## Intro into this chapter",
+            "## About this chapter",
             "## What you are going to use",
             "## What you will learn in this chapter",
             "## The work, clearly laid out",
@@ -101,7 +101,7 @@ def test_book_intro_sections_have_minimum_depth() -> None:
             intro_words = 0
             continue
         if stripped.startswith("## "):
-            in_intro = stripped[3:].strip().lower() == "intro into this chapter"
+            in_intro = stripped[3:].strip().lower() == "about this chapter"
             continue
         if not in_intro or not stripped or stripped.startswith("![") or stripped.startswith("Caption:"):
             continue
