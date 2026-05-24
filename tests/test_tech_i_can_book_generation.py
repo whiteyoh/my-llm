@@ -59,6 +59,8 @@ def test_book_render_contains_required_front_and_back_matter(tmp_path: Path) -> 
         "Dedicated to all of the budding techies of the future.",
         "The world is ready for your brilliance.",
         "Curious today, Confident tomorrow.",
+        "Snippet Type: Bash",
+        "Snippet Type: Text Output",
     ):
         assert required in text, f"Missing expected book content: {required}"
 

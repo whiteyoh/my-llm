@@ -153,23 +153,27 @@ Run -> Observe -> Compare -> Explain -> Improve
 ![Learning loop diagram showing five connected steps: Run, Observe, Compare, Explain, Improve.](docs/assets/figure-learning-loop.jpg)
 Caption: Figure 1. The evidence loop used throughout the book. Keep your notes aligned to each step.
 
-## Some explanation
+## Why This Matters
+
+Definition: In this book, `Run` means execute one step, `Observe` means capture
+what happened, `Compare` means check what changed, `Explain` means link claims
+to evidence, and `Improve` means choose one better next move.
 
 Lightbulb Takeaway: You are not here to memorize commands. You are here to build an explanation habit.
 
-## After you interact: What you learned
+## Action 1: What You Learned
 
 - You learned the five-step learning loop: run, observe, compare, explain, improve.
 - You learned that this book rewards evidence, not guessing.
 - You learned how to keep a simple record of what changed and why.
 
-## Reflection Questions
+## Action 2: Reflect
 
-- Which step of the five-step loop felt easiest, and which felt hardest?
-- What would count as strong evidence in this book?
-- How will you capture your observations so you can compare them later?
+- Which step in Run -> Observe -> Compare -> Explain -> Improve gave you the clearest evidence in your notes?
+- What exact note would you use to prove a claim in this chapter without guessing?
+- Which note fields will you keep every time: command, output, change, explanation, and why?
 
-## What to Try Next in This Chapter
+## Action 3: Do This Next
 
 - Write one sentence for each step of the five-step loop using your own words.
 - Create a one-page notes template with: command, output, change, explanation, then compare template choices with a peer.
@@ -211,27 +215,31 @@ Strong: clear style change after retraining
 Limit: occasional repetitive text
 ```
 
-## Some explanation
+## Why This Matters
 
 Definition: Tiny model means a model intentionally small enough to train quickly and inspect locally.
 
 Note: Smaller models can fail more visibly, which is useful when teaching.
 
+Note: In this chapter, a "limit" means a case where Kairo is not meant to act
+like a production assistant, such as long-form factual reliability or broad
+open-domain knowledge.
+
 Lightbulb Takeaway: Honest limitations make better learning outcomes.
 
-## After you interact: What you learned
+## Action 1: What You Learned
 
 - You learned what Kairo is built to do: show model behavior clearly in a small, teachable setup.
 - You learned what Kairo is not built to do: act like a production-grade assistant.
 - You learned why visible model limits are useful for real AI literacy.
 
-## Reflection Questions
+## Action 2: Reflect
 
 - Which Kairo strength is most useful for your classroom and why?
 - Which limit could confuse beginners if it is not explained early?
 - How would you explain "small model, clear behavior" to a new learner?
 
-## What to Try Next in This Chapter
+## Action 3: Do This Next
 
 - Write two claims: one accurate claim about Kairo, one overclaim. Then correct the overclaim.
 - Make a short "what this project can and cannot do" slide for learners, then compare it with a partner and agree one sentence to keep exactly the same in both versions.
@@ -274,7 +282,7 @@ Required: Python 3.11+
 Optional extras: learn, pdf, dev
 ```
 
-## Some explanation
+## Why This Matters
 
 Note: Setup quality directly affects the quality of your first model run.
 
@@ -283,21 +291,24 @@ local folder where you can install packages and run training commands. In school
 settings, ask your IT technician to confirm these permissions before the lesson
 week starts.
 
+Definition: A non-negotiable requirement is something that must work before any
+training command can succeed (Python version, terminal access, and repo files).
+
 Lightbulb Takeaway: A clean start removes most beginner friction.
 
-## After you interact: What you learned
+## Action 1: What You Learned
 
 - You learned the difference between required tools and optional extras.
 - You learned how early setup checks prevent later training failures.
 - You learned which extras support classroom delivery and printable materials.
 
-## Reflection Questions
+## Action 2: Reflect
 
 - Which requirement is non-negotiable before running any chapter commands?
 - Which optional extra is most important for your current teaching goal?
 - What is the first sign that your environment setup is incomplete?
 
-## What to Try Next in This Chapter
+## Action 3: Do This Next
 
 - Run a final preflight checklist and tick each item off by hand.
 - Ask a peer to review your setup list and see if anything is missing.
@@ -364,25 +375,28 @@ All checks passed!
 122 passed in 42.53s
 ```
 
-## Some explanation
+## Why This Matters
 
 Definition: Virtual environment (`.venv`) is a local Python space that keeps project dependencies isolated.
 
+Note: If one check fails, the recovery order is: read the first error line,
+fix the exact cause, then rerun only that check before running the full set.
+
 Lightbulb Takeaway: Verification is not extra work. It is what makes your next chapters trustworthy.
 
-## After you interact: What you learned
+## Action 1: What You Learned
 
 - You learned how to isolate project dependencies with a virtual environment.
 - You learned how to install core and optional features in a controlled order.
 - You learned how lint, compile, and test checks confirm that the project is healthy.
 
-## Reflection Questions
+## Action 2: Reflect
 
 - Why is a virtual environment safer than using global Python packages?
 - Which verification command gives you the fastest signal when something is wrong?
 - If one check fails, what is your next troubleshooting move?
 
-## What to Try Next in This Chapter
+## Action 3: Do This Next
 
 - Deactivate and reactivate the environment, then rerun the three health checks and compare the output.
 - Ask a peer to run the same checks on their machine and compare whether any results differ.
@@ -461,9 +475,15 @@ Baseline output: calm space narrative voice.
 Retrained output: pirate vocabulary, exclamations, dialogue rhythm.
 ```
 
-## Some explanation
+## Why This Matters
 
 Note: Keep prompt and architecture fixed when comparing datasets.
+
+Note: In this experiment, the main variable is the dataset. Prompt, model
+settings, and architecture stay fixed so your comparison remains fair.
+
+Note: Record both output evidence and metrics (`loss`, `perplexity`) so your
+conclusion uses two evidence types.
 
 Note: With the chapter settings (`--epochs 1`, compact model, CPU), training
 typically takes about 2-5 minutes on a standard laptop. Slower machines may take
@@ -471,19 +491,19 @@ longer, so plan one small timing buffer in class.
 
 Lightbulb Takeaway: Fair comparison means one major change at a time.
 
-## After you interact: What you learned
+## Action 1: What You Learned
 
 - You learned how to run a complete baseline -> evaluate -> retrain -> compare cycle.
 - You learned why keeping prompt and model settings fixed makes comparisons fair.
 - You learned how dataset changes can shift vocabulary, tone, and rhythm.
 
-## Reflection Questions
+## Action 2: Reflect
 
 - Which single variable changed between your baseline and retrained runs?
 - What output evidence shows a style shift most clearly?
 - Which metric did you record, and how did it support your conclusion?
 
-## What to Try Next in This Chapter
+## Action 3: Do This Next
 
 - Repeat the full cycle with a new fixed prompt and compare both result sets.
 - Pair with a peer and compare one extra generation per checkpoint to see whether both of you reached the same style-shift conclusion.
@@ -524,7 +544,7 @@ Normal model: calmer narrative voice.
 Pirate model: pirate terms and dramatic punctuation.
 ```
 
-## Some explanation
+## Why This Matters
 
 Definition: Perplexity is a measure of uncertainty; lower usually means better
 dataset fit, not better universal truth.
@@ -532,21 +552,24 @@ dataset fit, not better universal truth.
 Note: Perplexity can also fall when a model memorizes short, frequent patterns
 in small datasets. That is why you always inspect outputs alongside metrics.
 
+Definition: "Confident-sounding but wrong" means fluent language with weak or
+unsupported meaning. Treat fluency as style evidence, not truth evidence.
+
 Lightbulb Takeaway: Fluent output can still be wrong. Always separate style from reliability.
 
-## After you interact: What you learned
+## Action 1: What You Learned
 
 - You learned to separate writing style changes from factual reliability.
 - You learned how to read loss and perplexity as signals, not absolute truth.
 - You learned how to make claims that are supported by visible output evidence.
 
-## Reflection Questions
+## Action 2: Reflect
 
 - Which part of the output comparison is strongest evidence of style change?
 - What can a lower perplexity score tell you, and what can it not tell you?
 - Where could a confident-sounding output still be wrong?
 
-## What to Try Next in This Chapter
+## Action 3: Do This Next
 
 - Score two outputs with a simple rubric: tone, clarity, repetition, relevance.
 - Swap rubric scores with a partner, then co-write one careful conclusion and one overclaim before revising the overclaim together.
@@ -606,25 +629,25 @@ kairo-qa --checkpoint runs/book_qa_demo/best.pt --question "Who pilots the Auror
 Answer: Captain Rowan is the pilot of the starship Aurora.
 ```
 
-## Some explanation
+## Why This Matters
 
 Definition: Grounding means constraining answers to supplied context.
 
 Lightbulb Takeaway: Context is your anchor when model confidence and correctness do not match.
 
-## After you interact: What you learned
+## Action 1: What You Learned
 
 - You learned how JSONL question-answer data becomes trainable text.
 - You learned how grounding (answering from provided context) improves answer stability.
 - You learned why fallback behavior matters when context is missing or weak.
 
-## Reflection Questions
+## Action 2: Reflect
 
 - Which part of your context sentence most improved answer precision?
 - What output signs tell you the model answered beyond the provided context?
 - Which fallback response should appear when context does not contain the answer?
 
-## What to Try Next in This Chapter
+## Action 3: Do This Next
 
 - Ask the same question with and without context, then compare answer reliability.
 - Create one ambiguous question, swap it with a peer, and both rewrite it so grounding is easier; then compare the rewritten versions.
@@ -680,25 +703,28 @@ Local URL: http://localhost:8501
 ![Learn Mode visual concept showing token stream, probability focus, and attention map relationship.](docs/assets/figure-learn-mode.jpg)
 Caption: Figure 2. Learn Mode is most useful when each visual is linked to a specific claim in your notes.
 
-## Some explanation
+## Why This Matters
 
 Note: Attention maps are interpretability aids, not proof of reasoning.
 
+Note: Token view shows the model's reading units, while plain output only shows
+the final text. Use both together when explaining behavior.
+
 Lightbulb Takeaway: Visual evidence helps learners connect abstract ideas to observable behavior.
 
-## After you interact: What you learned
+## Action 1: What You Learned
 
 - You learned how token views show what the model actually reads.
 - You learned how next-token probabilities shape output choices.
 - You learned how attention visuals can help discussion, but do not prove reasoning.
 
-## Reflection Questions
+## Action 2: Reflect
 
 - What did the token view reveal that plain text output did not?
 - How did changing probability settings affect output variety?
 - What is one useful insight from an attention view, and one thing it cannot prove?
 
-## What to Try Next in This Chapter
+## Action 3: Do This Next
 
 - Enter three short prompts with different punctuation and compare token splits.
 - Capture one screenshot each for tokens, probabilities, and attention, then annotate them.
@@ -740,23 +766,29 @@ You are aiming for practical understanding, not just completion. You will run a 
 "What stayed the same because architecture stayed the same?"
 ```
 
-## Some explanation
+## Why This Matters
+
+Note: The usual timing slip points are setup delays, long generation retries,
+and open-ended debriefs. Plan a "shorten first" option for each.
+
+Note: A useful facilitation prompt is: "What exact output line supports your
+claim?" This moves learners from opinion language to evidence language.
 
 Lightbulb Takeaway: The debrief is where understanding deepens.
 
-## After you interact: What you learned
+## Action 1: What You Learned
 
 - You learned how to sequence a 45-minute lesson from prediction to debrief.
 - You learned how to keep discussion anchored to outputs instead of opinions.
 - You learned where to spend time in class so learners finish with a clear conclusion.
 
-## Reflection Questions
+## Action 2: Reflect
 
 - Which part of your lesson needs the most facilitation: prediction, comparison, or debrief?
 - What prompt will you use to move learners from "I think" to "I can show"?
 - Where might timing slip, and what step will you shorten first?
 
-## What to Try Next in This Chapter
+## Action 3: Do This Next
 
 - Draft a minute-by-minute plan for one full classroom run.
 - Rehearse the plan with a colleague and compare where each of you expects learner confusion.
@@ -797,25 +829,28 @@ Error: checkpoint not found at runs/demo/best.pt
 Tip: verify training completed and path is correct.
 ```
 
-## Some explanation
+## Why This Matters
 
 Note: Most issues are path, environment, or expectation mismatches.
 
+Note: Calm error language means naming the issue and next step clearly, for
+example: "The checkpoint path is missing; we will rerun training and verify."
+
 Lightbulb Takeaway: Troubleshooting is not a detour. It is part of mastery.
 
-## After you interact: What you learned
+## Action 1: What You Learned
 
 - You learned how to sort failures into path, environment, or expectation issues.
 - You learned how to run a minimal rerun that confirms whether a fix worked.
 - You learned how to keep learner focus when errors appear during live delivery.
 
-## Reflection Questions
+## Action 2: Reflect
 
 - Which error type do you expect most often in your setup, and why?
 - What is your fastest check when a checkpoint file cannot be found?
 - How will you explain an error to learners without raising anxiety?
 
-## What to Try Next in This Chapter
+## Action 3: Do This Next
 
 - Create a quick "first five checks" card for your own machine.
 - Pair with a peer: swap one real error message each and compare your fix paths.
@@ -855,28 +890,31 @@ Good claim: "Style shifted after pirate retraining."
 Weak claim: "The model now understands pirates."
 ```
 
-## Some explanation
+## Why This Matters
 
 Lightbulb Takeaway: Honest framing increases trust and learning quality.
+
+Note: Overclaim phrases to avoid include "the model understands" and "the model
+knows." Prefer "the output suggests" plus a cited line.
 
 If the model generates unexpected, offensive, or distressing output, pause the
 session immediately. Record the prompt and exact output, remove the content from
 display, and frame the moment as evidence of model limits and data influence.
 Then continue with a safer prompt and context pair.
 
-## After you interact: What you learned
+## Action 1: What You Learned
 
 - You learned how to rewrite weak claims into evidence-based statements.
 - You learned how to separate observed behavior from assumptions about understanding.
 - You learned how careful language improves trust in classroom AI discussions.
 
-## Reflection Questions
+## Action 2: Reflect
 
 - Which phrase in your own teaching could accidentally overclaim model ability?
 - What evidence must be present before you call a result "reliable"?
 - How will you model uncertainty when outputs are mixed?
 
-## What to Try Next in This Chapter
+## Action 3: Do This Next
 
 - Rewrite three model claims from your notes using safer, evidence-based wording.
 - Compare rewritten claims with a colleague and agree on one shared claim checklist.
@@ -920,23 +958,27 @@ Prompt: "The team opened the hatch"
 Result: clear shift in tone and rhythm
 ```
 
-## Some explanation
+## Why This Matters
 
 Lightbulb Takeaway: Controlled experiments teach faster than complex mixed changes.
 
-## After you interact: What you learned
+Note: A fair mini project keeps one variable changing at a time and sets
+success criteria before running (for example: visible style shift plus one
+supporting metric trend).
+
+## Action 1: What You Learned
 
 - You learned how to hold architecture and prompts fixed while testing dataset effects.
 - You learned how to compare outputs and metrics as one argument, not separate notes.
 - You learned how to turn an idea into a small experiment with defendable conclusions.
 
-## Reflection Questions
+## Action 2: Reflect
 
 - Which variable must stay fixed in your project so the comparison remains fair?
 - What evidence will you use if output style and metric signals disagree?
 - How will you decide whether your mini project succeeded?
 
-## What to Try Next in This Chapter
+## Action 3: Do This Next
 
 - Design one mini project with a clear objective, fixed prompt set, and evidence rubric.
 - Exchange project designs with a partner and compare fairness risks before running.
@@ -1020,23 +1062,23 @@ python tools/pdf/generate_tech_i_can_book.py
 Generated docs/printable/Tech_I_Can_Kairo_Book.pdf
 ```
 
-## Some explanation
+## Why This Matters
 
 Lightbulb Takeaway: Commands are tools for questions, not goals by themselves.
 
-## After you interact: What you learned
+## Action 1: What You Learned
 
 - You learned how each command maps to a specific stage of the workflow.
 - You learned how to avoid random command use by chaining commands with intent.
 - You learned which utility commands support teaching, QA, and printable outputs.
 
-## Reflection Questions
+## Action 2: Reflect
 
 - Which three commands form your minimum end-to-end teaching workflow?
 - Which command is easiest to misuse without context, and how will you guard against that?
 - When should you run utility tools instead of core model commands?
 
-## What to Try Next in This Chapter
+## Action 3: Do This Next
 
 - Build your own one-page command cheat sheet grouped by workflow stage.
 - Compare your cheat sheet with a peer and merge into one classroom version.
@@ -1078,23 +1120,26 @@ progress clearly to others.
 Run -> Observe -> Compare -> Explain -> Improve
 ```
 
-## Some explanation
+## Why This Matters
 
 Lightbulb Takeaway: Confidence is built by repeated clear cycles, not one big perfect run.
 
-## After you interact: What you learned
+Note: A realistic one-week project usually means one objective, one dataset
+change, and one fixed prompt set you can rerun and explain.
+
+## Action 1: What You Learned
 
 - You learned how to carry the run-observe-compare-explain-improve method into new topics.
 - You learned how to choose a next project that is small enough to finish and evaluate.
 - You learned how to keep momentum by reviewing saved evidence rather than relying on memory.
 
-## Reflection Questions
+## Action 2: Reflect
 
 - Which part of the method will you keep exactly the same in your next project?
 - What is one realistic project you can complete in one week?
 - What evidence format will help you review progress after a month?
 
-## What to Try Next in This Chapter
+## Action 3: Do This Next
 
 - Write a one-week continuation plan with one concrete model experiment.
 - Share plans with a peer and compare risk, scope, and evidence quality.
@@ -1141,29 +1186,32 @@ Dataset B: dramatic dialogue
 Result: visible vocabulary and rhythm shift
 ```
 
-## Some explanation
+## Why This Matters
 
 Definition: Dataset curation means choosing and shaping source text so training
 behavior is purposeful.
 
 Note: The best learning datasets are clean, focused, and interpretable.
 
+Note: A simple accept/reject rule can be: keep lines that match your objective,
+remove lines that mix unrelated tone, audience, or task type.
+
 Lightbulb Takeaway: If your dataset objective is unclear, your output analysis
 will also be unclear.
 
-## After you interact: What you learned
+## Action 1: What You Learned
 
 - You learned how to align dataset content with a single teaching objective.
 - You learned how noisy or mixed text weakens output interpretation.
 - You learned how clean corpus boundaries make before/after comparisons clearer.
 
-## Reflection Questions
+## Action 2: Reflect
 
 - Which lines in your source text support your objective, and which should be removed?
 - How would mixed tone in one dataset distort your experiment?
 - What simple rule will you use to accept or reject new source text?
 
-## What to Try Next in This Chapter
+## Action 3: Do This Next
 
 - Curate a 200-400 line sample dataset focused on one voice or task.
 - Swap datasets with a peer and compare whether each one has a clear objective.
@@ -1217,26 +1265,26 @@ Same prompt, different style cues:
 - retrained: pirate slang and emphatic punctuation
 ```
 
-## Some explanation
+## Why This Matters
 
 Definition: Controlled prompting means keeping prompt wording constant while
 changing only the condition being tested.
 
 Lightbulb Takeaway: Fixed prompts create fair evidence.
 
-## After you interact: What you learned
+## Action 1: What You Learned
 
 - You learned how fixed prompts prevent accidental drift between model comparisons.
 - You learned how small wording shifts can change output style and confidence.
 - You learned how prompt tracking protects fairness when sharing results.
 
-## Reflection Questions
+## Action 2: Reflect
 
 - Which prompt words are most likely to bias model tone in your tests?
 - How would you prove that a change came from data, not prompt phrasing?
 - What should your prompt tracking table include to support reproducibility?
 
-## What to Try Next in This Chapter
+## Action 3: Do This Next
 
 - Build a five-prompt comparison set with clear intent labels for each prompt.
 - Run the same prompt set with a peer and compare where your interpretations differ.
@@ -1277,7 +1325,7 @@ Input: "Hello, class!"
 Token pattern: H e l l o , [space] c l a s s !
 ```
 
-## Some explanation
+## Why This Matters
 
 Definition: Byte-level tokenization represents text as byte units rather than
 word pieces.
@@ -1286,19 +1334,19 @@ Note: Tiny shifts in punctuation can change token sequence and model behavior.
 
 Lightbulb Takeaway: Tokens are the model's actual reading units.
 
-## After you interact: What you learned
+## Action 1: What You Learned
 
 - You learned how byte-level tokenization breaks text into units the model can process.
 - You learned how punctuation and spacing choices alter token boundaries and sequence length.
 - You learned how token patterns influence the style and stability of generated output.
 
-## Reflection Questions
+## Action 2: Reflect
 
 - Which sample sentence produced more tokens than you expected, and why?
 - How did punctuation change token boundaries in your Learn Mode tests?
 - Which tokenization pattern best explains one output behavior you observed?
 
-## What to Try Next in This Chapter
+## Action 3: Do This Next
 
 - Build a small table of five sentences with their token counts and boundary notes.
 - Swap your table with a partner and compare one sentence where your token interpretation differed.
@@ -1362,7 +1410,7 @@ Epoch 3: train_loss=3.76 | val_loss=4.10
 ![Training chart with two lines where training loss falls steadily while validation loss flattens and then rises.](docs/assets/figure-training-curve.jpg)
 Caption: Figure 3. A widening train/validation gap is a practical signal to inspect for overfitting.
 
-## Some explanation
+## Why This Matters
 
 Definition: Overfitting is when training performance keeps improving while
 generalization quality stalls or worsens.
@@ -1378,19 +1426,19 @@ background load.
 
 Lightbulb Takeaway: Better training loss alone is not the full story.
 
-## After you interact: What you learned
+## Action 1: What You Learned
 
 - You learned how to read train and validation loss together instead of focusing on one line.
 - You learned how to spot early overfitting by watching validation stall while training keeps improving.
 - You learned how to use short and longer runs (`runs/curve_short` and `runs/curve_long`) to make stop-or-continue decisions.
 
-## Reflection Questions
+## Action 2: Reflect
 
 - At what point did validation stop improving in your longer run logs?
 - Which curve pattern would make you stop training and inspect settings?
 - What tradeoff did you notice between fewer epochs and output quality?
 
-## What to Try Next in This Chapter
+## Action 3: Do This Next
 
 - Run a two-epoch version of the same experiment and compare its curve shape with one and three epochs.
 - Compare your curve notes with a peer and agree on one shared "stop training" rule.
@@ -1443,9 +1491,12 @@ Baseline: lower repetition, softer tone.
 Retrained: stronger theme markers, occasional looping phrases.
 ```
 
-## Some explanation
+## Why This Matters
 
 Note: Metrics answer "how predictable," not "how meaningful."
+
+Definition: In this chapter, quality dimensions are coherence, repetition, and
+relevance; you score each one separately before writing conclusions.
 
 Note: Lower perplexity can come from memorized repetition in small corpora, not
 just stronger generalization. Pair metric changes with output inspection before
@@ -1453,19 +1504,19 @@ making claims.
 
 Lightbulb Takeaway: Strong evaluation always combines numbers and language.
 
-## After you interact: What you learned
+## Action 1: What You Learned
 
 - You learned how to combine `kairo-evaluate` metrics with direct text evidence from generated outputs.
 - You learned how to score coherence, repetition, and relevance as separate quality dimensions.
 - You learned how to write balanced evaluation statements when metrics and output quality do not fully agree.
 
-## Reflection Questions
+## Action 2: Reflect
 
 - Which quality dimension changed most between baseline and retrained outputs?
 - Which metric helped your conclusion, and where did text evidence matter more?
 - How did you handle a case where a strong metric still produced weak language quality?
 
-## What to Try Next in This Chapter
+## Action 3: Do This Next
 
 - Create a one-page scoring sheet and evaluate two new prompts with the same rubric.
 - Exchange scoring sheets with a partner and compare where your judgments diverged.
@@ -1518,26 +1569,26 @@ temperature=0.9 -> more variation and occasional odd phrases
 temperature=0.6 -> more consistent but less expressive phrasing
 ```
 
-## Some explanation
+## Why This Matters
 
 Definition: Reliability here means consistency and groundedness across repeated
 runs under similar conditions.
 
 Lightbulb Takeaway: Settings can trade creativity for stability.
 
-## After you interact: What you learned
+## Action 1: What You Learned
 
 - You learned how repeated prompt trials reveal whether a checkpoint is consistent or drifting.
 - You learned how lowering temperature improved stability while reducing expressive variation.
 - You learned how to select generation settings that are clearer and safer for classroom demonstrations.
 
-## Reflection Questions
+## Action 2: Reflect
 
 - What reliability difference did you observe between `temperature=0.9` and `temperature=0.6`?
 - Which output traits became more stable when randomness was reduced?
 - What setting choice would you use for a beginner-facing live demo, and why?
 
-## What to Try Next in This Chapter
+## Action 3: Do This Next
 
 - Run the same prompt five times at one additional temperature and log variation patterns.
 - Compare your reliability logs with a peer and agree on a default classroom setting profile.
@@ -1578,7 +1629,7 @@ You are aiming for practical understanding, not just completion. You will preven
 "Let's find supporting evidence before we accept this claim."
 ```
 
-## Some explanation
+## Why This Matters
 
 Note: Safety in this context includes epistemic safety: avoiding false certainty.
 
@@ -1586,21 +1637,24 @@ If an output is surprising or concerning, stop and reset the flow: capture the
 prompt/output pair, name why it is unsafe or unreliable, and relaunch with a
 safer prompt plus explicit context so students can compare the difference.
 
+Note: Learner responses that need careful facilitation include strong claims
+without evidence, overconfidence from fluent output, and frustration after drift.
+
 Lightbulb Takeaway: Responsible framing is a teaching skill, not a disclaimer.
 
-## After you interact: What you learned
+## Action 1: What You Learned
 
 - You learned how to embed safety language into each stage of a live classroom workflow.
 - You learned how to model critical questioning without dismissing learner curiosity.
 - You learned how to frame uncertain outputs in ways that keep discussion calm and evidence-based.
 
-## Reflection Questions
+## Action 2: Reflect
 
 - Which classroom sentence best signals uncertainty without shutting discussion down?
 - Where in your lesson flow should you add a deliberate safety check?
 - Which type of learner response needs the most careful facilitation during AI output review?
 
-## What to Try Next in This Chapter
+## Action 3: Do This Next
 
 - Write a short safety script with three lines you will use during live output review.
 - Rehearse the script with a colleague and compare tone, clarity, and learner impact.
@@ -1641,26 +1695,26 @@ Context-rich question -> specific answer
 Context-poor question -> generic or drifting answer
 ```
 
-## Some explanation
+## Why This Matters
 
 Definition: QA system quality depends on both model behavior and context design.
 
 Lightbulb Takeaway: Better context produces better answers more reliably than
 random parameter tweaking.
 
-## After you interact: What you learned
+## Action 1: What You Learned
 
 - You learned how QA quality depends on the combined design of corpus, checkpoint, and context.
 - You learned how context-rich prompts produce more specific and trustworthy answers than weak context.
 - You learned how fallback behavior design improves reliability when question context is incomplete.
 
-## Reflection Questions
+## Action 2: Reflect
 
 - Which context quality issue caused the weakest answer in your tests?
 - What corpus design choice most improved QA answer consistency?
 - Which fallback behavior should trigger when context and question do not align?
 
-## What to Try Next in This Chapter
+## Action 3: Do This Next
 
 - Build a context quality checklist and test it against three new QA prompts.
 - Compare checklist results with a peer and refine one shared QA design standard.
@@ -1733,25 +1787,28 @@ loss: 4.0x
 perplexity: mid-50s
 ```
 
-## Some explanation
+## Why This Matters
 
 Note: Baseline labs should be easy to repeat exactly.
 
+Note: Use one note format across the lab: prompt, output excerpt, metric, and
+one-sentence interpretation. This makes Lab 2 comparison clearer.
+
 Lightbulb Takeaway: Reproducibility is a core classroom skill.
 
-## After you interact: What you learned
+## Action 1: What You Learned
 
 - You learned how to run a clean baseline workflow from training to evaluation in `runs/lab1_baseline`.
 - You learned how to document three fixed-prompt generations so later comparisons remain fair.
 - You learned how to capture baseline metrics and notes that prepare a valid retrain contrast in Lab 2.
 
-## Reflection Questions
+## Action 2: Reflect
 
 - Which of your three baseline prompts produced the most repeatable output pattern?
 - What baseline metric will be most useful when you compare against Lab 2 results?
 - Which note format made it easiest to connect output text with evaluation numbers?
 
-## What to Try Next in This Chapter
+## Action 3: Do This Next
 
 - Add one new fixed baseline prompt and record output with the same settings used in this lab.
 - Compare baseline logs with a peer and identify one documentation improvement you both will adopt.
@@ -1818,26 +1875,29 @@ Pirate run uses "matey", "crew", "yo-ho", and dramatic punctuation.
 Sentence rhythm shifts toward dialogue and commands.
 ```
 
-## Some explanation
+## Why This Matters
 
 Definition: Style transfer in this context means shifting generated language
 patterns through changed training data.
 
+Note: Lab 2 keeps the same prompts and settings from Lab 1 so any contrast is
+more likely due to retraining data, not prompt drift.
+
 Lightbulb Takeaway: Same model structure, different data, different behavior.
 
-## After you interact: What you learned
+## Action 1: What You Learned
 
 - You learned how retraining on `pirate_dialogue.txt` changed language style while architecture stayed fixed.
 - You learned how reusing the same three prompts made the baseline versus retrain comparison defensible.
 - You learned how to explain style transfer using concrete evidence in vocabulary, tone, and sentence rhythm.
 
-## Reflection Questions
+## Action 2: Reflect
 
 - Which specific words or punctuation patterns most clearly signaled style transfer?
 - Which prompt showed the strongest contrast between Lab 1 and Lab 2 outputs?
 - How did fixed settings protect your conclusion from accidental bias?
 
-## What to Try Next in This Chapter
+## Action 3: Do This Next
 
 - Write a short contrast summary that cites one output line from each of the three prompts.
 - Exchange summaries with a peer and compare whether both of you chose the same strongest evidence.
@@ -1910,25 +1970,28 @@ Context missing -> broader, less anchored phrasing.
 ![Grounded QA flow showing question input, context evidence, and constrained answer output.](docs/assets/figure-qa-grounding.jpg)
 Caption: Figure 4. Grounded QA works best when context contains direct, concise evidence for the question.
 
-## Some explanation
+## Why This Matters
 
 Note: QA quality improves most through context quality, not purely model size.
 
+Note: Drift clues include answers that ignore key context words, add unsupported
+facts, or switch to generic filler language.
+
 Lightbulb Takeaway: Good context design is the strongest lever in classroom QA.
 
-## After you interact: What you learned
+## Action 1: What You Learned
 
 - You learned how to build and train a QA checkpoint from structured facts using a repeatable lab workflow.
 - You learned how answer quality improved when context lines were specific and directly relevant to the question.
 - You learned how to detect drift by comparing grounded and ungrounded responses across the same question set.
 
-## Reflection Questions
+## Action 2: Reflect
 
 - Which question in your lab produced the clearest grounded answer, and what made the context effective?
 - What output clue showed the model was drifting beyond the provided facts?
 - Which context edit improved a weak answer the most?
 
-## What to Try Next in This Chapter
+## Action 3: Do This Next
 
 - Run five questions with context and five without context, then score groundedness for each answer.
 - Trade question-context pairs with a peer and compare where each of you judged grounding differently.
@@ -1978,7 +2041,7 @@ Top token candidates:
 3) "to"  0.11
 ```
 
-## Some explanation
+## Why This Matters
 
 Definition: Next-token probabilities are candidate likelihoods before sampling.
 
@@ -1986,19 +2049,19 @@ Note: Attention indicates influence patterns, not definitive reasoning intent.
 
 Lightbulb Takeaway: Visual evidence helps learners ask better questions.
 
-## After you interact: What you learned
+## Action 1: What You Learned
 
 - You learned how to connect top-token probabilities to the actual words the model produced next.
 - You learned how to discuss attention views as influence signals without claiming they prove full reasoning.
 - You learned how to guide learners from visual observations to clear, evidence-based interpretations.
 
-## Reflection Questions
+## Action 2: Reflect
 
 - Which probability shift best explained a surprising output choice in your walkthrough?
 - What is one attention pattern you observed, and what is the safest conclusion you can draw from it?
 - Which visual panel helped most when explaining model behavior to learners?
 
-## What to Try Next in This Chapter
+## Action 3: Do This Next
 
 - Capture one Learn Mode example and annotate tokens, probabilities, and attention in a single evidence sheet.
 - Compare your annotated sheet with a peer and discuss one place where your interpretations differ.
@@ -2040,26 +2103,29 @@ Strong response:
 "I kept the prompt fixed and changed only dataset. Output tone shifted from calm narrative to pirate dialogue markers."
 ```
 
-## Some explanation
+## Why This Matters
 
 Definition: Evidence quality means claims are supported by concrete output and
 workflow details.
 
+Note: The rubric categories used here are method quality, evidence quality, and
+explanation clarity. Use all three when comparing submissions.
+
 Lightbulb Takeaway: Grade thinking quality, not just command execution.
 
-## After you interact: What you learned
+## Action 1: What You Learned
 
 - You learned how to assess learner work by weighting evidence quality, method quality, and explanation clarity.
 - You learned how to give feedback that improves reasoning, not just command execution speed.
 - You learned how rubric-based assessment can guide the next experiment step for each learner.
 
-## Reflection Questions
+## Action 2: Reflect
 
 - Which rubric category most clearly distinguished strong and weak submissions?
 - What feedback sentence would help a learner improve evidence use in the next lab?
 - Where did learners show understanding even when their command output was imperfect?
 
-## What to Try Next in This Chapter
+## Action 3: Do This Next
 
 - Score two sample responses using your rubric and write one concrete next-step comment for each.
 - Exchange scoring with a colleague and compare how consistently you applied each rubric criterion.
@@ -2100,25 +2166,31 @@ Plan A: live train + generate
 Plan B: load known-good checkpoint + run comparison prompts
 ```
 
-## Some explanation
+## Why This Matters
 
 Note: A calm fallback plan is a mark of professional readiness.
 
+Note: Pre-generated artifacts can include saved outputs, screenshots, and a
+short backup script order. Use these to keep flow when live runs fail.
+
+Note: If you switch plans, keep learners engaged by asking prediction questions
+before showing the backup artifact.
+
 Lightbulb Takeaway: Great presentations are prepared for both success and hiccups.
 
-## After you interact: What you learned
+## Action 1: What You Learned
 
 - You learned how to prepare a live demo with a primary path and a ready fallback path.
 - You learned how backup checkpoints and scripted transitions reduce disruption when technical issues appear.
 - You learned how to preserve teaching value by keeping comparisons and reflection prompts ready under time pressure.
 
-## Reflection Questions
+## Action 2: Reflect
 
 - Which part of your live sequence is most likely to fail, and what is your fallback move?
 - What pre-generated artifact gives you the biggest recovery advantage during a demo?
 - How will you keep learners engaged if you must switch from Plan A to Plan B?
 
-## What to Try Next in This Chapter
+## Action 3: Do This Next
 
 - Rehearse your full presentation once using only Plan B resources.
 - Run a peer mock session where one person introduces a surprise failure and the other recovers live.
@@ -2163,23 +2235,26 @@ Extension themes:
 - prompt sensitivity by temperature range
 ```
 
-## Some explanation
+## Why This Matters
+
+Definition: Meaningful extension evidence means output changes remain visible
+across repeated runs while key controls stay fixed.
 
 Lightbulb Takeaway: Progress comes from asking better questions, not bigger models.
 
-## After you interact: What you learned
+## Action 1: What You Learned
 
 - You learned how to scope extension projects with one measurable question and clear controls.
 - You learned how to choose extension themes that build directly on your completed lab evidence.
 - You learned how to sustain long-term inquiry by documenting limits as well as positive findings.
 
-## Reflection Questions
+## Action 2: Reflect
 
 - Which extension theme gives you the strongest question for controlled testing?
 - What control variables must remain fixed in your chosen extension project?
 - What evidence will show that your extension result is meaningful rather than incidental?
 
-## What to Try Next in This Chapter
+## Action 3: Do This Next
 
 - Draft a one-page extension proposal with objective, controls, variables, and evidence targets.
 - Review proposals with a peer and compare where each plan risks uncontrolled variables.
@@ -2240,7 +2315,7 @@ Instructional prompt -> numbered or imperative style
 Reflective prompt -> explanatory and opinionated language
 ```
 
-## Some explanation
+## Why This Matters
 
 Definition: Prompt family means a reusable pattern of instruction style.
 
@@ -2249,19 +2324,19 @@ control for them.
 
 Lightbulb Takeaway: Prompt design is part of experimental design.
 
-## After you interact: What you learned
+## Action 1: What You Learned
 
 - You learned how prompt family design changes output behavior even when model and data stay fixed.
 - You learned how to isolate framing effects by varying one prompt or one generation setting at a time.
 - You learned how to report prompt sensitivity with structured comparisons across narrative, instructional, and reflective prompts.
 
-## Reflection Questions
+## Action 2: Reflect
 
 - Which prompt family produced the largest shift in tone or structure, and why?
 - Where did parameter changes matter less than prompt framing in your results?
 - What table format made prompt sensitivity easiest to compare across runs?
 
-## What to Try Next in This Chapter
+## Action 3: Do This Next
 
 - Build a nine-row prompt matrix (three families by three prompts) and run one controlled comparison pass.
 - Exchange matrices with a peer and compare where framing effects were strongest and weakest.
@@ -2308,11 +2383,17 @@ Likely bias: exaggerated speech patterns
 Teaching note: useful for style shift, not factual QA
 ```
 
-## Some explanation
+## Why This Matters
 
 Definition: Provenance means where data came from and how it was prepared.
 
 Note: Good documentation improves trust and reproducibility.
+
+Note: Bias risk examples include one-sided perspective, missing counterexamples,
+or language that stereotypes groups without context.
+
+Note: Review your current dataset for these bias risk signals before presenting
+results to learners.
 
 Lightbulb Takeaway: Responsible AI education includes responsible data stories.
 
@@ -2330,19 +2411,19 @@ Lightbulb Takeaway: Responsible AI education includes responsible data stories.
 - If no author is available, use the organisation name and retrieval date.
 - Keep a short references list with every capstone report or presentation.
 
-## After you interact: What you learned
+## Action 1: What You Learned
 
 - You learned how provenance notes make dataset choices traceable and easier to justify.
 - You learned how to describe bias and representation limits without weakening technical rigor.
 - You learned how ethical attribution improves reproducibility, trust, and classroom discussion quality.
 
-## Reflection Questions
+## Action 2: Reflect
 
 - Which provenance detail is most important when sharing a dataset with learners?
 - What bias risk in your current data should be disclosed before interpretation?
 - How would missing attribution reduce confidence in your findings?
 
-## What to Try Next in This Chapter
+## Action 3: Do This Next
 
 - Create a provenance card for one dataset including source type, objective, and likely bias gaps.
 - Swap provenance cards with a peer and review whether each one is clear enough for classroom use.
@@ -2383,10 +2464,13 @@ Teacher line: "We are going to keep the model architecture the same and change
 only data. That way we can observe one clear cause of change."
 ```
 
-## Some explanation
+## Why This Matters
 
 Definition: Script pack means pre-written classroom language aligned to workflow
 steps.
+
+Note: Scripted transitions are the short bridge lines between phases
+(prediction -> run -> compare -> debrief) that keep pacing stable.
 
 Lightbulb Takeaway: Clear language is a technical tool.
 
@@ -2435,19 +2519,19 @@ Lightbulb Takeaway: Clear language is a technical tool.
 - "What uncertainty remains?"
 - "What would you test next to increase confidence?"
 
-## After you interact: What you learned
+## Action 1: What You Learned
 
 - You learned how scripted transitions keep lesson flow clear between commands, comparison, and debrief.
 - You learned how prewritten lines can translate technical actions into beginner-friendly classroom language.
 - You learned how script prompts can keep student discussion focused on claims and evidence.
 
-## Reflection Questions
+## Action 2: Reflect
 
 - Which script line best moved students from observation to evidence-backed claims?
 - Where in your lesson did scripted transitions improve pacing the most?
 - Which part of your script needs revision to sound more natural in your own voice?
 
-## What to Try Next in This Chapter
+## Action 3: Do This Next
 
 - Adapt one script set to your own classroom style and timing, then rehearse it once out loud.
 - Pair with a colleague, run alternating script sections, and compare which lines produced clearer learner responses.
@@ -2491,7 +2575,7 @@ Evidence: Output includes "matey" and command-style lines.
 Confidence: Medium (style signal strong, factuality not tested).
 ```
 
-## Some explanation
+## Why This Matters
 
 Note: Written reflection increases retention and improves discussion quality.
 
@@ -2539,19 +2623,19 @@ Lightbulb Takeaway: Output becomes learning when learners explain it in their ow
 5. Uncertainty statement:
 6. Next experiment step:
 
-## After you interact: What you learned
+## Action 1: What You Learned
 
 - You learned how each workbook sheet turns model output into evidence you can assess, not just observe.
 - You learned how the claim-evidence and uncertainty prompts push you to justify conclusions from baseline, retrain, and QA runs.
 - You learned how groundedness scoring and metric reflection help you separate style changes from reliability claims.
 
-## Reflection Questions
+## Action 2: Reflect
 
 - Which worksheet gave you the strongest evidence for a real behavior shift, and what made that evidence strong?
 - Where did your confidence score and your written uncertainty statement disagree, and why?
 - In Worksheet D, what specific context edit would most improve your groundedness score?
 
-## What to Try Next in This Chapter
+## Action 3: Do This Next
 
 - Run one new prompt through Worksheets A, B, and E, then write a tighter claim using only one sentence of evidence.
 - Swap completed worksheets with a partner and compare whether you both judged the same output line as the strongest evidence.
@@ -2595,9 +2679,12 @@ Finding: higher metaphor density and shorter clause structure
 Limit: factual reliability not improved by style-focused data
 ```
 
-## Some explanation
+## Why This Matters
 
 Definition: Capstone is a culminating project demonstrating method mastery.
+
+Definition: Evidence chain means linking commands, outputs, metrics, and one
+limitation statement into a single justified claim.
 
 Lightbulb Takeaway: A strong capstone explains both what changed and what remains uncertain.
 
@@ -2624,19 +2711,19 @@ Lightbulb Takeaway: A strong capstone explains both what changed and what remain
 4. Honest limitations (2 pts)
 5. Delivery clarity (2 pts)
 
-## After you interact: What you learned
+## Action 1: What You Learned
 
 - You learned how to frame a capstone question that is specific enough to test with fixed controls.
 - You learned how to connect commands, outputs, and metrics into one coherent claim-evidence story.
 - You learned how to report limits honestly so your project conclusions stay credible.
 
-## Reflection Questions
+## Action 2: Reflect
 
 - Which fixed control in your capstone design protected your conclusion the most?
 - Which part of your evidence chain felt weakest: outputs, metrics, or limitation statement?
 - What is one claim from your capstone that you can support with two different kinds of evidence?
 
-## What to Try Next in This Chapter
+## Action 3: Do This Next
 
 - Draft a second capstone question that changes only one variable from your first plan.
 - Present your one-page capstone template to a peer and compare which rubric category each of you scored highest.
@@ -2679,7 +2766,13 @@ Week 3: QA mode + grounding
 Week 4: capstone presentation
 ```
 
-## Some explanation
+## Why This Matters
+
+Definition: Cognitive load is the amount of mental effort needed in one session.
+If a week combines too many new tasks, split delivery and keep one core goal.
+
+Note: Use weekly deliverables as checkpoints: if a deliverable is weak, move the
+next milestone later and add one reinforcement activity first.
 
 Lightbulb Takeaway: Long-term learning works best when each week produces a small, concrete artifact.
 
@@ -2759,19 +2852,19 @@ Lightbulb Takeaway: Long-term learning works best when each week produces a smal
 
 - capstone delivery and peer review
 
-## After you interact: What you learned
+## Action 1: What You Learned
 
 - You learned how to map chapters into weekly objectives that produce visible progress artifacts.
 - You learned how the four-week and six-week plans change pacing while keeping the same core learning outcomes.
 - You learned how to use deliverables to catch learning gaps early instead of waiting for the final presentation.
 
-## Reflection Questions
+## Action 2: Reflect
 
 - Which week in your chosen plan carries the highest cognitive load, and how will you reduce it?
 - Which deliverable gives the clearest signal that students understood grounded QA?
 - What is one milestone you would move earlier or later after reviewing your class timing?
 
-## What to Try Next in This Chapter
+## Action 3: Do This Next
 
 - Build a custom five-week schedule using the existing objectives and write one success signal for each week.
 - Compare your schedule with another teacher or learner and agree on one shared checkpoint both plans should include.
@@ -2814,7 +2907,16 @@ Q: If loss goes down, does that mean the model is "smart"?
 A: It means better fit to that dataset, not human understanding.
 ```
 
-## Some explanation
+## Why This Matters
+
+Note: FAQ pairing works best when one answer addresses metrics (for example loss
+or perplexity) and the second addresses evidence language in output discussion.
+
+Note: A practical pairing example is Q4 (low perplexity still wrong) with Q7
+(model sounds fluent but does not "understand").
+
+Note: In a live debrief, pairing one metrics FAQ with one evidence-language FAQ
+usually produces clearer discussion than using either in isolation.
 
 Lightbulb Takeaway: Good answers are short, honest, and evidence-linked.
 
@@ -2870,19 +2972,19 @@ others lead evidence review.
 A: Students can state one claim and one supporting output line, plus one
 limitation statement.
 
-## After you interact: What you learned
+## Action 1: What You Learned
 
 - You learned how to answer recurring AI questions with short explanations tied to observed classroom behavior.
 - You learned how to correct common misunderstandings, such as equating low loss with true understanding, without overcomplicating the explanation.
 - You learned how to use FAQ responses to keep discussions evidence-based when students make broad claims.
 
-## Reflection Questions
+## Action 2: Reflect
 
 - Which FAQ answer would most help if a student says, "The model is smart because it sounds fluent"?
 - Which question in this chapter needs a local classroom example from your own runs to land better?
 - Which two FAQ entries are most useful to pair during a live debrief, and why?
 
-## What to Try Next in This Chapter
+## Action 3: Do This Next
 
 - Write one new FAQ and answer based on a confusion point from your last session.
 - In pairs, role-play a student question and teacher response, then compare which wording felt clearer and more accurate.
@@ -2922,7 +3024,7 @@ Card: "Baseline Run"
 Goal: produce first checkpoint and one output sample.
 ```
 
-## Some explanation
+## Why This Matters
 
 Lightbulb Takeaway: Fast reference tools reduce teaching cognitive load.
 
@@ -2981,19 +3083,28 @@ kairo-qa --checkpoint runs/lab3_qa/best.pt --question "Who pilots the Aurora?" -
 - "What remains uncertain?"
 - "What would you test next?"
 
-## After you interact: What you learned
+Note: The most specific reflection prompts ask for one exact output line plus
+one limitation statement.
+
+Note: Use the reflection card prompts during debrief so evidence statements stay
+specific and comparable across groups.
+
+Note: Reflection card prompts are designed to produce specific student evidence
+statements, not general opinions.
+
+## Action 1: What You Learned
 
 - You learned how command cards reduce demo friction by keeping key runs immediately available.
 - You learned how explanation and troubleshooting cards help you recover quickly when outputs or checkpoints do not match expectations.
 - You learned how reflection cards keep student discussion focused on claims, evidence, and next tests during live sessions.
 
-## Reflection Questions
+## Action 2: Reflect
 
 - Which card from Set A would you place first in a lesson, and what transition line would you say before using it?
 - Which troubleshooting card would most likely save time in your current teaching setup?
 - Which reflection card prompt produces the most specific student evidence statements in your group?
 
-## What to Try Next in This Chapter
+## Action 3: Do This Next
 
 - Build a one-page quick-reference sheet by selecting only six cards you will actually use next session.
 - Exchange your selected cards with a peer and compare which card each of you considers essential and why.
@@ -3039,12 +3150,15 @@ Deployment status:
 - fallback script prepared
 ```
 
-## Some explanation
+## Why This Matters
 
 Definition: Operational readiness means the lesson can run reliably for learners
 with predictable outcomes and recoverable failure modes.
 
 Note: Reliability is not just model quality. It is also process quality.
+
+Note: Postflight evidence should include saved outputs, metrics, and one
+improvement note that will change the next session plan.
 
 Lightbulb Takeaway: A good deployment plan saves your teaching time for learning, not debugging.
 
@@ -3087,19 +3201,19 @@ kairo-generate --checkpoint runs/card_baseline/best.pt --prompt "System check pr
 - **Environment mismatch**: re-activate `.venv` and rerun help checks.
 - **Noisy QA answer**: switch to context-first QA examples.
 
-## After you interact: What you learned
+## Action 1: What You Learned
 
 - You learned how preflight checks catch missing tools and checkpoints before learners are waiting.
 - You learned how postflight routines preserve outputs and notes so each class improves the next one.
 - You learned how a failure-mode playbook turns common runtime issues into planned recovery steps.
 
-## Reflection Questions
+## Action 2: Reflect
 
 - Which preflight check in this chapter would most likely prevent a full lesson delay?
 - In your environment, which failure mode is highest risk and what is your first fallback action?
 - Which postflight item gives you the most useful evidence for improving the next session?
 
-## What to Try Next in This Chapter
+## Action 3: Do This Next
 
 - Run a full dry-run using the checklist and record the first point where timing slips.
 - Pair with a colleague to simulate one failure mode and compare your recovery paths for speed and clarity.
@@ -3144,12 +3258,18 @@ Role split:
 - presenter: shares findings
 ```
 
-## Some explanation
+## Why This Matters
 
 Definition: Inclusive design means activities are accessible across prior skill,
 language confidence, and learning preference.
 
 Note: A learner can contribute meaningfully without typing every command.
+
+Note: If an accessibility checklist item needs planning, set a simple date and
+owner so it becomes part of your next delivery plan.
+
+Note: Match assessment format to learner needs: written for detail, verbal for
+confidence building, visual for comparison-heavy thinking.
 
 Lightbulb Takeaway: Inclusion improves technical quality because more perspectives examine the evidence.
 
@@ -3174,19 +3294,19 @@ Lightbulb Takeaway: Inclusion improves technical quality because more perspectiv
 - visual comparison board
 - paired explanation interview
 
-## After you interact: What you learned
+## Action 1: What You Learned
 
 - You learned how role-based participation lets learners contribute meaningfully even when coding confidence differs.
 - You learned how accessibility supports, like clear contrast and sentence starters, reduce cognitive overload during technical tasks.
 - You learned how inclusive assessment formats capture understanding in more than one communication style.
 
-## Reflection Questions
+## Action 2: Reflect
 
 - Which role assignment pattern in this chapter would best support your current group mix?
 - Which accessibility checklist item is easiest to implement immediately, and which needs planning?
 - Which assessment format would reveal understanding for a learner who struggles with written reflection?
 
-## What to Try Next in This Chapter
+## Action 3: Do This Next
 
 - Redesign one existing activity with explicit operator, observer, analyst, and presenter roles.
 - Run the redesigned activity with a partner group and compare whether role clarity improved contribution balance.
@@ -3232,7 +3352,7 @@ Change: added fixed-prompt worksheet.
 Result: stronger evidence quality in reflections.
 ```
 
-## Some explanation
+## Why This Matters
 
 Definition: Retrospective means structured review of what worked, what failed,
 and what to improve next.
@@ -3257,19 +3377,19 @@ Lightbulb Takeaway: Treat teaching quality like model quality—measure, adjust,
 - high impact, medium effort: schedule next cycle
 - low impact, high effort: defer unless required
 
-## After you interact: What you learned
+## Action 1: What You Learned
 
 - You learned how to run a repeatable improvement cycle by linking observed friction to one concrete change.
 - You learned how the prioritization rubric helps you choose high-impact adjustments instead of reacting to every issue at once.
 - You learned how dashboard signals, such as evidence quality and confidence, show whether your changes actually worked.
 
-## Reflection Questions
+## Action 2: Reflect
 
 - Which session metric showed the clearest improvement since you started teaching with Kairo?
 - What one change to your delivery would most reduce repeat troubleshooting in future sessions?
 - How will you decide when your improvement plan needs a full reset rather than a small adjustment?
 
-## What to Try Next in This Chapter
+## Action 3: Do This Next
 
 - Complete one improvement dashboard entry using data from your most recent session.
 - Compare dashboard entries with a peer and agree on one shared high-impact, low-effort change to test next.
@@ -3312,9 +3432,12 @@ controls, and explain workflow language clearly in plain language.
 --device cpu: use CPU instead of GPU
 ```
 
-## Some explanation
+## Why This Matters
 
 Lightbulb Takeaway: Shared vocabulary makes collaboration and teaching easier.
+
+Note: A useful glossary reflection compares how you used a term before this
+chapter versus how you use it now with a concrete example.
 
 ## Core terms
 
@@ -3363,19 +3486,19 @@ Lightbulb Takeaway: Shared vocabulary makes collaboration and teaching easier.
 - **`--context_file`**: Path to context text file for QA grounding.
 - **`--help`**: Shows command usage and available options without running the full action.
 
-## After you interact: What you learned
+## Action 1: What You Learned
 
 - You learned how to decode core AI terms in this book so chapter instructions are easier to follow.
 - You learned how parameter meanings, such as `--epochs` and `--temperature`, map directly to training and generation behavior.
 - You learned how a shared glossary supports clearer explanations when teaching or collaborating.
 
-## Reflection Questions
+## Action 2: Reflect
 
 - Which three glossary terms do you now use differently because their definitions are clearer?
 - Which parameter from this chapter most changed how you interpret a training or generation result?
 - Where in the book would adding a glossary callout help beginners connect concept to command faster?
 
-## What to Try Next in This Chapter
+## Action 3: Do This Next
 
 - Create a personal mini-glossary of ten terms you want to master and write one example for each.
 - Trade mini-glossaries with a peer and compare which definitions felt easiest or hardest to apply in practice.
@@ -3418,7 +3541,7 @@ overwhelm.
 "I can explain why scope, data, and prompt design change model behavior."
 ```
 
-## Some explanation
+## Why This Matters
 
 Lightbulb Takeaway: Real confidence is the ability to explain *why* something
 changed, not just to say that it changed.
@@ -3427,19 +3550,22 @@ You have practiced observation, comparison, and explanation repeatedly. That is
 the core of technical confidence. These habits will transfer to new tools,
 larger models, and more advanced AI systems.
 
-## After you interact: What you learned
+Note: Workflow stability means you can repeat baseline, retrain, evaluate, and
+grounded QA with clear notes and minimal troubleshooting.
+
+## Action 1: What You Learned
 
 - You learned how to summarize your growth by pointing to concrete outputs, comparisons, and reflections from across the book.
 - You learned how baseline training, retraining, evaluation, and QA grounding connect into one complete workflow.
 - You learned how to choose a realistic next project so your confidence continues through practice.
 
-## Reflection Questions
+## Action 2: Reflect
 
 - Which chapter produced the strongest evidence that your reasoning skills improved, and what proves it?
 - Which part of the end-to-end workflow still feels least stable for you in real use?
 - What is your first follow-on project, and which two chapters will you revisit before starting it?
 
-## What to Try Next in This Chapter
+## Action 3: Do This Next
 
 - Write a one-page personal summary that links one skill, one evidence example, and one next-step project.
 - Share your summary with a peer and compare which evidence each of you chose to represent progress.
@@ -3501,32 +3627,33 @@ Method: explain -> run -> observe -> reflect
 Audience: beginners, teachers, and curious learners
 ```
 
-## Some explanation
+## Why This Matters
 
 Lightbulb Takeaway: The best technical teaching makes people feel capable, not
 intimidated.
 
-Paul McMurray is the founder of Tech I Can, and his focus is practical AI
-literacy for schools. He works to make technical ideas teachable through clear
-steps that students can run, observe, and explain. His teaching philosophy is
-evidence-first and beginner-friendly: test one change at a time, show what
-happened, and say honestly what is still uncertain. Across the Tech I Can
-series, his classroom mission is to help teachers and learners build confidence
-without hype, so AI becomes a tool for thoughtful learning, not a mystery.
+Paul McMurray is the founder of Tech I Can, based in North Shields, and his
+focus is practical AI literacy for schools. He works to make technical ideas
+teachable through clear steps that students can run, observe, and explain.
+His teaching philosophy is evidence-first and beginner-friendly: test one
+change at a time, show what happened, and say honestly what is still uncertain.
+Across the Tech I Can series, his classroom mission is to help teachers and
+learners build confidence without hype, so AI becomes a tool for thoughtful
+learning, not a mystery.
 
-## After you interact: What you learned
+## Action 1: What You Learned
 
 - You learned why the author frames AI learning as practical, evidence-based classroom work.
 - You learned how the book's teaching sequence builds confidence by moving from explanation to action and reflection.
 - You learned how to adapt the same method to your own learners while keeping clarity and honesty at the center.
 
-## Reflection Questions
+## Action 2: Reflect
 
 - Which part of the teaching philosophy in this chapter most matches how you want to teach?
 - Which part would you adjust for your own class age group or confidence level?
 - How will you keep lessons practical and evidence-based when students ask for faster, less structured demos?
 
-## What to Try Next in This Chapter
+## Action 3: Do This Next
 
 - Write a short teaching intent statement for your next Kairo session using the values from this chapter.
 - Compare teaching intent statements with a peer and note one phrasing choice that makes the classroom goal clearer.
@@ -3566,9 +3693,12 @@ Use this chapter to build a repeatable habit: locate core concepts quickly, revi
 Use the generated index below for literal page numbers from this exact build.
 ```
 
-## Some explanation
+## Why This Matters
 
 Note: Page references are generated from the final printable layout.
+
+Note: A cross-reference is strongest when it points to the exact chapter example
+that first explains the term in practice.
 
 Lightbulb Takeaway: A strong index turns a good book into a useful working
 tool.
@@ -3577,19 +3707,19 @@ tool.
 
 [[AUTO_KEYWORD_INDEX]]
 
-## After you interact: What you learned
+## Action 1: What You Learned
 
 - You learned how to use the keyword index as a rapid route back to concepts you need before teaching or revision.
 - You learned how index references and glossary entries work together to connect terms to practical chapter examples.
 - You learned how planned index use reduces last-minute searching and improves lesson preparation quality.
 
-## Reflection Questions
+## Action 2: Reflect
 
 - Which indexed term did you locate fastest, and what chapter example made it clear?
 - Which important term still needs a better cross-reference for your own revision workflow?
 - How would you organize three priority terms before a live teaching session?
 
-## What to Try Next in This Chapter
+## Action 3: Do This Next
 
 - Build a "top ten before class" keyword list using the index and note the page for each.
 - With a peer, compare your top-ten lists and identify which missing terms should be added for stronger preparation.

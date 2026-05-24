@@ -218,6 +218,7 @@ extra, the book-generation tests are skipped by design.
 - [Architecture](docs/architecture.md)
 - [How LLMs Work](docs/how_llms_work.md)
 - [Sample Training Text Guide](data/samples/README.md)
+- [Code Snippet Style Guide](docs/code_snippet_style_guide.md)
 
 ### Printable lesson packs
 

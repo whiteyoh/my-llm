@@ -26,10 +26,10 @@ def test_book_has_required_chapter_learning_structure() -> None:
             "## What you will learn in this chapter",
             "## The work, clearly laid out",
             "## Examples of what you might see",
-            "## Some explanation",
-            "## After you interact: What you learned",
-            "## Reflection Questions",
-            "## What to Try Next in This Chapter",
+            "## Why This Matters",
+            "## Action 1: What You Learned",
+            "## Action 2: Reflect",
+            "## Action 3: Do This Next",
         ):
             assert required in text
 
@@ -53,11 +53,11 @@ def test_book_avoids_repeated_boilerplate_in_learning_and_reflection_bullets() -
         if not stripped.startswith("- "):
             continue
         bullet = stripped[2:].strip().lower()
-        if section.startswith("after you interact: what you learned"):
+        if section.startswith("action 1: what you learned"):
             prior = learned_seen.get(bullet)
             assert not prior or prior == chapter
             learned_seen[bullet] = chapter
-        if section.startswith("reflection questions"):
+        if section.startswith("action 2: reflect"):
             prior = reflection_seen.get(bullet)
             assert not prior or prior == chapter
             reflection_seen[bullet] = chapter
@@ -117,3 +117,49 @@ def test_book_intro_sections_have_minimum_depth() -> None:
 def test_book_includes_apa_references_section() -> None:
     text = BOOK_MD.read_text(encoding="utf-8")
     assert "## References (APA 7th Edition)" in text
+
+
+def test_book_code_snippets_follow_manual_style_rules() -> None:
+    lines = _lines()
+    code_blocks: list[tuple[int, int, str]] = []
+    in_code = False
+    start = 0
+    lang = ""
+    for idx, line in enumerate(lines, start=1):
+        if line.startswith("```"):
+            if not in_code:
+                in_code = True
+                start = idx
+                lang = line[3:].strip().lower()
+            else:
+                code_blocks.append((start, idx, lang))
+                in_code = False
+    assert not in_code
+
+    allowed_languages = {"bash", "sh", "text", "python", "yaml", "json", "sql", "toml"}
+    assert all(lang for _start, _end, lang in code_blocks)
+    assert all(lang in allowed_languages for _start, _end, lang in code_blocks)
+
+    shell_prompt_lines: list[int] = []
+    smart_quote_lines: list[int] = []
+    shell_output_markers: list[int] = []
+    for start_line, end_line, block_lang in code_blocks:
+        block_lines = lines[start_line:end_line - 1]
+        for idx, content_line in enumerate(block_lines, start=start_line + 1):
+            stripped = content_line.strip()
+            if any(ch in content_line for ch in "“”‘’"):
+                smart_quote_lines.append(idx)
+            if block_lang in {"bash", "sh"} and stripped.startswith("$"):
+                shell_prompt_lines.append(idx)
+            if block_lang in {"bash", "sh"} and re.match(
+                r"^(Generated|Output|Traceback|ERROR|Warning:|Ghostscript|Book PDF is)\b",
+                stripped,
+            ):
+                shell_output_markers.append(idx)
+        if block_lang in {"bash", "sh"}:
+            context = [lines[i - 1].strip() for i in range(max(1, start_line - 6), start_line)]
+            assert any(item.startswith("Snippet Purpose:") for item in context)
+
+    assert not shell_prompt_lines
+    assert not smart_quote_lines
+    assert not shell_output_markers

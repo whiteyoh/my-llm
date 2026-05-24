@@ -19,6 +19,8 @@ try:
     from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
     from reportlab.lib.units import mm
     from reportlab.pdfbase import pdfdoc
+    from reportlab.pdfbase import pdfmetrics
+    from reportlab.pdfbase.ttfonts import TTFont
     from reportlab.pdfgen.canvas import Canvas
     from reportlab.platypus import (
         BaseDocTemplate,
@@ -53,6 +55,11 @@ FIGURE_LEARNING_LOOP = ASSETS / "figure-learning-loop.jpg"
 FIGURE_LEARN_MODE = ASSETS / "figure-learn-mode.jpg"
 FIGURE_TRAINING_CURVE = ASSETS / "figure-training-curve.jpg"
 FIGURE_QA_GROUNDING = ASSETS / "figure-qa-grounding.jpg"
+ICON_LIGHTBULB = ASSETS / "icon-lightbulb.png"
+ICON_DEFINITION = ASSETS / "icon-definition.png"
+ICON_NOTE = ASSETS / "icon-note.png"
+ICON_SNIPPET_PURPOSE = ASSETS / "icon-snippet-purpose.png"
+ICON_SNIPPET_CHANGE = ASSETS / "icon-snippet-change.png"
 
 BOOK_TITLE = "Tech I Can"
 BOOK_TAGLINE = "Curious today, Confident tomorrow"
@@ -72,6 +79,7 @@ BOOK_META_CREATOR = "Tech I Can Production Pipeline"
 BOOK_META_CREATION_DATE = "2026-05-01T00:00:00+00:00"
 TARGET_PDF_SIZE_BYTES = 650 * 1024
 MIN_INTRO_WORDS = 28
+DISPLAY_FONT_CANDIDATES: list[tuple[str, str]] = []
 
 
 def _build_mod_date() -> str:
@@ -165,7 +173,7 @@ def ensure_support_figure_images() -> None:
         # subtle header band
         draw.rectangle((0, 0, w, 92), fill="#e2e8f0")
         painter(draw, w, h)
-        img.save(path, format="JPEG", quality=78, optimize=True, progressive=True, subsampling=1)
+        img.save(path, format="JPEG", quality=66, optimize=True, progressive=True, subsampling=2)
 
     def _paint_learning_loop(draw: ImageDraw.ImageDraw, w: int, h: int) -> None:
         title = _font(44)
@@ -249,6 +257,57 @@ def ensure_support_figure_images() -> None:
     _save_figure(FIGURE_LEARN_MODE, _paint_learn_mode)
     _save_figure(FIGURE_TRAINING_CURVE, _paint_training_curve)
     _save_figure(FIGURE_QA_GROUNDING, _paint_qa_grounding)
+
+
+def ensure_callout_icons() -> None:
+    ASSETS.mkdir(parents=True, exist_ok=True)
+
+    def _save(path: Path, painter) -> None:
+        size = 80
+        img = PILImage.new("RGBA", (size, size), (255, 255, 255, 0))
+        draw = ImageDraw.Draw(img)
+        draw.ellipse((2, 2, size - 2, size - 2), fill=(249, 250, 251, 255), outline=(15, 23, 42, 255), width=3)
+        painter(draw, size)
+        img.save(path, format="PNG", optimize=True)
+
+    def _lightbulb(draw: ImageDraw.ImageDraw, size: int) -> None:
+        draw.ellipse((22, 16, 58, 48), outline=(2, 6, 23, 255), width=4, fill=(254, 240, 138, 255))
+        draw.rectangle((34, 47, 46, 59), fill=(71, 85, 105, 255))
+        draw.rectangle((31, 59, 49, 66), fill=(100, 116, 139, 255))
+        draw.line((40, 8, 40, 2), fill=(217, 119, 6, 255), width=3)
+        draw.line((18, 20, 12, 15), fill=(217, 119, 6, 255), width=3)
+        draw.line((62, 20, 68, 15), fill=(217, 119, 6, 255), width=3)
+
+    def _definition(draw: ImageDraw.ImageDraw, size: int) -> None:
+        draw.rounded_rectangle((16, 18, 64, 62), radius=5, outline=(30, 64, 175, 255), width=3, fill=(219, 234, 254, 255))
+        draw.line((40, 18, 40, 62), fill=(30, 64, 175, 255), width=2)
+        draw.line((24, 30, 34, 30), fill=(30, 64, 175, 255), width=2)
+        draw.line((24, 38, 34, 38), fill=(30, 64, 175, 255), width=2)
+        draw.line((46, 30, 58, 30), fill=(30, 64, 175, 255), width=2)
+        draw.line((46, 38, 58, 38), fill=(30, 64, 175, 255), width=2)
+
+    def _note(draw: ImageDraw.ImageDraw, size: int) -> None:
+        draw.rounded_rectangle((18, 16, 62, 62), radius=6, outline=(22, 101, 52, 255), width=3, fill=(220, 252, 231, 255))
+        draw.polygon([(46, 16), (62, 16), (62, 32)], fill=(134, 239, 172, 255), outline=(22, 101, 52, 255))
+        draw.line((26, 34, 54, 34), fill=(22, 101, 52, 255), width=2)
+        draw.line((26, 42, 54, 42), fill=(22, 101, 52, 255), width=2)
+        draw.line((26, 50, 47, 50), fill=(22, 101, 52, 255), width=2)
+
+    def _snippet_purpose(draw: ImageDraw.ImageDraw, size: int) -> None:
+        draw.rounded_rectangle((15, 24, 65, 56), radius=5, outline=(30, 64, 175, 255), width=3, fill=(219, 234, 254, 255))
+        draw.text((23, 30), "</>", fill=(30, 64, 175, 255))
+
+    def _snippet_change(draw: ImageDraw.ImageDraw, size: int) -> None:
+        draw.arc((18, 18, 62, 62), start=35, end=215, fill=(124, 58, 237, 255), width=4)
+        draw.arc((18, 18, 62, 62), start=215, end=395, fill=(14, 116, 144, 255), width=4)
+        draw.polygon([(56, 18), (64, 17), (61, 25)], fill=(124, 58, 237, 255))
+        draw.polygon([(24, 62), (16, 63), (19, 55)], fill=(14, 116, 144, 255))
+
+    _save(ICON_LIGHTBULB, _lightbulb)
+    _save(ICON_DEFINITION, _definition)
+    _save(ICON_NOTE, _note)
+    _save(ICON_SNIPPET_PURPOSE, _snippet_purpose)
+    _save(ICON_SNIPPET_CHANGE, _snippet_change)
 
 
 rl_config.invariant = 1
@@ -398,7 +457,7 @@ def ensure_cover_image(path: Path) -> None:
     image.save(
         path,
         format="JPEG",
-        quality=64,
+        quality=56,
         optimize=True,
         progressive=True,
         subsampling=2,
@@ -440,8 +499,32 @@ def validate_book_structure(lines: list[str]) -> None:
     if in_code:
         raise SystemExit("Book markdown has an unclosed fenced code block.")
 
+    allowed_languages = {"bash", "sh", "text", "python", "yaml", "json", "sql", "toml"}
+    unlabeled_blocks = [start for start, _end, lang in code_blocks if not lang]
+    if unlabeled_blocks:
+        raise SystemExit(f"Code block(s) must include a language label at lines: {unlabeled_blocks}")
+    unsupported_blocks = [(start, lang) for start, _end, lang in code_blocks if lang not in allowed_languages]
+    if unsupported_blocks:
+        detail = ", ".join(f"line {line}: '{lang}'" for line, lang in unsupported_blocks[:12])
+        raise SystemExit(f"Unsupported code block language label(s): {detail}")
+
     missing_snippet: list[int] = []
+    shell_output_markers: list[int] = []
+    shell_prompt_lines: list[int] = []
+    smart_quote_lines: list[int] = []
     for start_line, _end, block_lang in code_blocks:
+        block_lines = lines[start_line:_end - 1]
+        for idx, content_line in enumerate(block_lines, start=start_line + 1):
+            stripped_content = content_line.strip()
+            if any(ch in content_line for ch in "“”‘’"):
+                smart_quote_lines.append(idx)
+            if block_lang in {"bash", "sh"} and stripped_content.startswith("$"):
+                shell_prompt_lines.append(idx)
+            if block_lang in {"bash", "sh"} and re.match(
+                r"^(Generated|Output|Traceback|ERROR|Warning:|Ghostscript|Book PDF is)\b",
+                stripped_content,
+            ):
+                shell_output_markers.append(idx)
         if block_lang not in {"bash", "sh"}:
             continue
         context = [lines[i - 1].strip() for i in range(max(1, start_line - 6), start_line)]
@@ -449,6 +532,15 @@ def validate_book_structure(lines: list[str]) -> None:
             missing_snippet.append(start_line)
     if missing_snippet:
         raise SystemExit(f"Missing 'Snippet Purpose:' before bash block lines: {missing_snippet}")
+    if shell_prompt_lines:
+        raise SystemExit(f"Shell snippets must be copy/paste safe: remove '$' prompt at lines: {shell_prompt_lines}")
+    if smart_quote_lines:
+        raise SystemExit(f"Code snippets must not include smart quotes at lines: {smart_quote_lines}")
+    if shell_output_markers:
+        raise SystemExit(
+            "Shell snippets should contain commands only; move expected output into a separate text block. "
+            f"Output-like lines detected at: {shell_output_markers}"
+        )
 
     glossary_index = next((i for i, line in enumerate(lines) if line.startswith("# Chapter 41: Glossary")), -1)
     if glossary_index < 0:
@@ -502,12 +594,12 @@ def validate_book_structure(lines: list[str]) -> None:
         if not stripped.startswith("- "):
             continue
         bullet = stripped[2:].strip().lower()
-        if section.startswith("after you interact: what you learned"):
+        if section.startswith("action 1: what you learned"):
             prior = learned_seen.get(bullet)
             if prior and prior != chapter:
                 raise SystemExit(f"Repeated 'What you learned' bullet in {prior} and {chapter}: {bullet}")
             learned_seen[bullet] = chapter
-        if section.startswith("reflection questions"):
+        if section.startswith("action 2: reflect"):
             prior = reflection_seen.get(bullet)
             if prior and prior != chapter:
                 raise SystemExit(f"Repeated reflection question in {prior} and {chapter}: {bullet}")
@@ -596,7 +688,7 @@ def inline_markup(text: str) -> str:
     text = escape(text)
     text = re.sub(r"`([^`]+)`", r'<font name="Courier">\1</font>', text)
     text = re.sub(r"\*\*([^*]+)\*\*", r"<b>\1</b>", text)
-    text = re.sub(r"\*([^*]+)\*", r"<i>\1</i>", text)
+    text = re.sub(r"\*([^*]+)\*", r"\1", text)
     return text
 
 
@@ -759,6 +851,20 @@ def format_page_ranges(pages: list[int], max_ranges: int | None = None) -> str:
     return f"{joined}, ..." if truncated else joined
 
 
+def code_language_label(lang: str) -> str:
+    label_map = {
+        "bash": "Bash",
+        "sh": "Shell",
+        "python": "Python",
+        "yaml": "YAML",
+        "json": "JSON",
+        "sql": "SQL",
+        "toml": "TOML",
+        "text": "Text Output",
+    }
+    return label_map.get(lang.lower(), lang.upper() if lang else "Code")
+
+
 def callout_icon(label: str) -> str:
     lookup = {
         "lightbulb takeaway": "✦",
@@ -770,7 +876,25 @@ def callout_icon(label: str) -> str:
     return lookup.get(label.lower(), "•")
 
 
-def build_styles() -> dict[str, ParagraphStyle]:
+def callout_icon_path(label: str) -> Path | None:
+    lookup = {
+        "lightbulb takeaway": ICON_LIGHTBULB,
+        "definition": ICON_DEFINITION,
+        "note": ICON_NOTE,
+        "snippet purpose": ICON_SNIPPET_PURPOSE,
+        "snippet change": ICON_SNIPPET_CHANGE,
+    }
+    return lookup.get(label.lower())
+
+
+def callout_icon_markup(label: str) -> str:
+    path = callout_icon_path(label)
+    if path and path.exists():
+        return f'<img src="{escape(str(path))}" width="10" height="10" valign="middle"/>'
+    return escape(callout_icon(label))
+
+
+def build_styles(fonts: dict[str, str]) -> dict[str, ParagraphStyle]:
     base = getSampleStyleSheet()
     flow_control = {
         "allowOrphans": 0,
@@ -792,7 +916,7 @@ def build_styles() -> dict[str, ParagraphStyle]:
         "book_subtitle": ParagraphStyle(
             "BookSubtitle",
             parent=base["BodyText"],
-            fontName="Helvetica",
+            fontName=fonts["body"],
             fontSize=13,
             leading=18,
             alignment=1,
@@ -803,7 +927,7 @@ def build_styles() -> dict[str, ParagraphStyle]:
         "book_tag": ParagraphStyle(
             "BookTag",
             parent=base["BodyText"],
-            fontName="Helvetica-Oblique",
+            fontName=fonts["body"],
             fontSize=12,
             leading=16,
             alignment=1,
@@ -814,7 +938,7 @@ def build_styles() -> dict[str, ParagraphStyle]:
         "book_meta": ParagraphStyle(
             "BookMeta",
             parent=base["BodyText"],
-            fontName="Helvetica",
+            fontName=fonts["body"],
             fontSize=10.5,
             leading=14,
             alignment=1,
@@ -825,9 +949,9 @@ def build_styles() -> dict[str, ParagraphStyle]:
         "running_header": ParagraphStyle(
             "RunningHeader",
             parent=base["BodyText"],
-            fontName="Helvetica",
-            fontSize=8.8,
-            leading=11,
+            fontName=fonts["body"],
+            fontSize=10.0,
+            leading=12.5,
             alignment=0,
             textColor=colors.HexColor("#334155"),
             spaceAfter=0,
@@ -836,9 +960,9 @@ def build_styles() -> dict[str, ParagraphStyle]:
         "dedication": ParagraphStyle(
             "Dedication",
             parent=base["BodyText"],
-            fontName="Times-Italic",
-            fontSize=18,
-            leading=28,
+            fontName=fonts["body"],
+            fontSize=12.0,
+            leading=18.0,
             alignment=1,
             textColor=colors.HexColor("#1e293b"),
             spaceAfter=10,
@@ -847,17 +971,17 @@ def build_styles() -> dict[str, ParagraphStyle]:
         "toc_title": ParagraphStyle(
             "TocTitle",
             parent=base["Heading1"],
-            fontName="Helvetica-Bold",
-            fontSize=24,
-            leading=28,
-            textColor=colors.HexColor("#111827"),
-            spaceAfter=12,
+            fontName=fonts["display"],
+            fontSize=31,
+            leading=34,
+            textColor=colors.HexColor("#0f172a"),
+            spaceAfter=16,
             **flow_control,
         ),
         "toc_item": ParagraphStyle(
             "TocItem",
             parent=base["BodyText"],
-            fontName="Helvetica",
+            fontName=fonts["body"],
             fontSize=11,
             leading=15,
             textColor=colors.HexColor("#1f2937"),
@@ -868,7 +992,7 @@ def build_styles() -> dict[str, ParagraphStyle]:
         "copyright": ParagraphStyle(
             "Copyright",
             parent=base["BodyText"],
-            fontName="Times-Roman",
+            fontName=fonts["body"],
             fontSize=10.5,
             leading=16,
             alignment=4,
@@ -879,7 +1003,7 @@ def build_styles() -> dict[str, ParagraphStyle]:
         "imprint": ParagraphStyle(
             "Imprint",
             parent=base["BodyText"],
-            fontName="Helvetica",
+            fontName=fonts["body"],
             fontSize=10,
             leading=14,
             alignment=0,
@@ -890,9 +1014,9 @@ def build_styles() -> dict[str, ParagraphStyle]:
         "chapter": ParagraphStyle(
             "ChapterTitle",
             parent=base["Heading1"],
-            fontName="Helvetica-Bold",
-            fontSize=22,
-            leading=28,
+            fontName=fonts["chapter"],
+            fontSize=23,
+            leading=29,
             textColor=colors.HexColor("#0f172a"),
             spaceBefore=12,
             spaceAfter=10,
@@ -901,20 +1025,20 @@ def build_styles() -> dict[str, ParagraphStyle]:
         "section": ParagraphStyle(
             "SectionTitle",
             parent=base["Heading2"],
-            fontName="Helvetica-Bold",
-            fontSize=14,
-            leading=18,
+            fontName=fonts["section"],
+            fontSize=14.4,
+            leading=18.2,
             textColor=colors.HexColor("#1f2937"),
-            spaceBefore=8,
-            spaceAfter=5,
+            spaceBefore=10,
+            spaceAfter=6,
             **flow_control,
         ),
         "intro_bridge": ParagraphStyle(
             "IntroBridge",
             parent=base["BodyText"],
-            fontName="Times-Italic",
-            fontSize=11.6,
-            leading=17.2,
+            fontName=fonts["body"],
+            fontSize=11.0,
+            leading=16.2,
             alignment=4,
             textColor=colors.HexColor("#1f2937"),
             backColor=colors.HexColor("#f8fafc"),
@@ -929,7 +1053,7 @@ def build_styles() -> dict[str, ParagraphStyle]:
         "takeaway_box": ParagraphStyle(
             "TakeawayBox",
             parent=base["BodyText"],
-            fontName="Helvetica-Bold",
+            fontName=fonts["section"],
             fontSize=11,
             leading=16,
             textColor=colors.HexColor("#7c2d12"),
@@ -948,7 +1072,7 @@ def build_styles() -> dict[str, ParagraphStyle]:
         "definition_box": ParagraphStyle(
             "DefinitionBox",
             parent=base["BodyText"],
-            fontName="Helvetica-Bold",
+            fontName=fonts["section"],
             fontSize=11,
             leading=16,
             textColor=colors.HexColor("#111827"),
@@ -967,7 +1091,7 @@ def build_styles() -> dict[str, ParagraphStyle]:
         "note_box": ParagraphStyle(
             "NoteBox",
             parent=base["BodyText"],
-            fontName="Helvetica-Bold",
+            fontName=fonts["section"],
             fontSize=11,
             leading=16,
             textColor=colors.HexColor("#0f172a"),
@@ -986,7 +1110,7 @@ def build_styles() -> dict[str, ParagraphStyle]:
         "snippet_box": ParagraphStyle(
             "SnippetBox",
             parent=base["BodyText"],
-            fontName="Helvetica-Bold",
+            fontName=fonts["section"],
             fontSize=11,
             leading=16,
             textColor=colors.HexColor("#1e3a8a"),
@@ -1005,7 +1129,7 @@ def build_styles() -> dict[str, ParagraphStyle]:
         "success_box": ParagraphStyle(
             "SuccessBox",
             parent=base["BodyText"],
-            fontName="Helvetica-Bold",
+            fontName=fonts["section"],
             fontSize=11,
             leading=16,
             textColor=colors.HexColor("#14532d"),
@@ -1024,34 +1148,36 @@ def build_styles() -> dict[str, ParagraphStyle]:
         "body": ParagraphStyle(
             "Body",
             parent=base["BodyText"],
-            fontName="Times-Roman",
-            fontSize=12.1,
-            leading=18.4,
+            fontName=fonts["body"],
+            fontSize=11.0,
+            leading=16.4,
             alignment=4,
             textColor=colors.HexColor("#111827"),
-            spaceAfter=6,
+            leftIndent=2,
+            rightIndent=2,
+            spaceAfter=8,
             **flow_control,
         ),
         "bullet": ParagraphStyle(
             "Bullet",
             parent=base["BodyText"],
-            fontName="Times-Roman",
-            fontSize=11.9,
-            leading=17.7,
-            leftIndent=16,
-            bulletIndent=4,
+            fontName=fonts["body"],
+            fontSize=11.0,
+            leading=16.2,
+            leftIndent=24,
+            bulletIndent=11,
             textColor=colors.HexColor("#111827"),
-            spaceAfter=3,
+            spaceAfter=4,
             **flow_control,
         ),
         "learned_detail": ParagraphStyle(
             "LearnedDetail",
             parent=base["BodyText"],
-            fontName="Times-Roman",
-            fontSize=11.6,
-            leading=17.1,
-            leftIndent=16,
-            bulletIndent=4,
+            fontName=fonts["body"],
+            fontSize=11.0,
+            leading=16.2,
+            leftIndent=24,
+            bulletIndent=11,
             textColor=colors.HexColor("#0f172a"),
             spaceAfter=4,
             **flow_control,
@@ -1059,8 +1185,8 @@ def build_styles() -> dict[str, ParagraphStyle]:
         "code": ParagraphStyle(
             "Code",
             fontName="Courier",
-            fontSize=9.6,
-            leading=13.0,
+            fontSize=10.0,
+            leading=14.0,
             textColor=colors.HexColor("#020617"),
             backColor=colors.HexColor("#f1f5f9"),
             borderColor=colors.HexColor("#94a3b8"),
@@ -1072,12 +1198,27 @@ def build_styles() -> dict[str, ParagraphStyle]:
             spaceAfter=9,
             **flow_control,
         ),
+        "code_label": ParagraphStyle(
+            "CodeLabel",
+            parent=base["BodyText"],
+            fontName=fonts["section"],
+            fontSize=10.0,
+            leading=12.2,
+            textColor=colors.HexColor("#1e3a8a"),
+            backColor=colors.HexColor("#dbeafe"),
+            borderColor=colors.HexColor("#93c5fd"),
+            borderWidth=0.5,
+            borderPadding=4,
+            spaceBefore=6,
+            spaceAfter=2,
+            **flow_control,
+        ),
         "figure_caption": ParagraphStyle(
             "FigureCaption",
             parent=base["BodyText"],
-            fontName="Helvetica-Bold",
-            fontSize=9.6,
-            leading=12.5,
+            fontName=fonts["section"],
+            fontSize=10.0,
+            leading=13.2,
             textColor=colors.HexColor("#334155"),
             alignment=1,
             spaceBefore=2,
@@ -1087,9 +1228,9 @@ def build_styles() -> dict[str, ParagraphStyle]:
         "figure_alt": ParagraphStyle(
             "FigureAlt",
             parent=base["BodyText"],
-            fontName="Helvetica-Oblique",
-            fontSize=8.8,
-            leading=11.8,
+            fontName=fonts["body"],
+            fontSize=10.0,
+            leading=13.2,
             textColor=colors.HexColor("#475569"),
             alignment=1,
             spaceBefore=0,
@@ -1099,7 +1240,7 @@ def build_styles() -> dict[str, ParagraphStyle]:
         "index_entry": ParagraphStyle(
             "IndexEntry",
             parent=base["BodyText"],
-            fontName="Times-Roman",
+            fontName=fonts["body"],
             fontSize=10.8,
             leading=15,
             leftIndent=16,
@@ -1111,35 +1252,121 @@ def build_styles() -> dict[str, ParagraphStyle]:
         "cell": ParagraphStyle(
             "Cell",
             parent=base["BodyText"],
-            fontName="Helvetica",
-            fontSize=8.8,
-            leading=11.2,
+            fontName=fonts["body"],
+            fontSize=10.0,
+            leading=13.2,
             **flow_control,
         ),
         "toc_level_0": ParagraphStyle(
             "TocLevel0",
             parent=base["BodyText"],
-            fontName="Helvetica-Bold",
-            fontSize=11,
-            leading=15,
+            fontName=fonts["body"],
+            fontSize=12.4,
+            leading=15.8,
             textColor=colors.HexColor("#111827"),
-            leftIndent=8,
+            leftIndent=10,
             firstLineIndent=0,
-            spaceBefore=2,
-            spaceAfter=2,
+            spaceBefore=4,
+            spaceAfter=3,
             **flow_control,
         ),
         "toc_level_1": ParagraphStyle(
             "TocLevel1",
             parent=base["BodyText"],
-            fontName="Helvetica",
-            fontSize=10,
-            leading=13,
-            textColor=colors.HexColor("#334155"),
-            leftIndent=20,
+            fontName=fonts["body"],
+            fontSize=11.3,
+            leading=14.8,
+            textColor=colors.HexColor("#1e293b"),
+            leftIndent=30,
             firstLineIndent=0,
-            spaceBefore=1,
-            spaceAfter=1,
+            spaceBefore=2,
+            spaceAfter=2,
+            **flow_control,
+        ),
+        "chapter_prelude_kicker": ParagraphStyle(
+            "ChapterPreludeKicker",
+            parent=base["BodyText"],
+            fontName=fonts["display"],
+            fontSize=34,
+            leading=37,
+            alignment=1,
+            textColor=colors.HexColor("#111827"),
+            spaceAfter=10,
+            **flow_control,
+        ),
+        "chapter_prelude_story": ParagraphStyle(
+            "ChapterPreludeStory",
+            parent=base["BodyText"],
+            fontName=fonts["body"],
+            fontSize=11.0,
+            leading=16.2,
+            alignment=4,
+            textColor=colors.HexColor("#0f172a"),
+            spaceAfter=10,
+            **flow_control,
+        ),
+        "chapter_prelude_section": ParagraphStyle(
+            "ChapterPreludeSection",
+            parent=base["BodyText"],
+            fontName=fonts["section"],
+            fontSize=13.2,
+            leading=16.8,
+            textColor=colors.HexColor("#0f172a"),
+            spaceBefore=3,
+            spaceAfter=4,
+            **flow_control,
+        ),
+        "chapter_prelude_bullet": ParagraphStyle(
+            "ChapterPreludeBullet",
+            parent=base["BodyText"],
+            fontName=fonts["body"],
+            fontSize=11.0,
+            leading=16.2,
+            leftIndent=18,
+            bulletIndent=7,
+            textColor=colors.HexColor("#111827"),
+            spaceAfter=2,
+            **flow_control,
+        ),
+        "chapter_prelude_focus": ParagraphStyle(
+            "ChapterPreludeFocus",
+            parent=base["BodyText"],
+            fontName=fonts["section"],
+            fontSize=10.6,
+            leading=14,
+            textColor=colors.HexColor("#1e3a8a"),
+            spaceBefore=6,
+            **flow_control,
+        ),
+        "icon_legend_label": ParagraphStyle(
+            "IconLegendLabel",
+            parent=base["BodyText"],
+            fontName=fonts["section"],
+            fontSize=12,
+            leading=15,
+            textColor=colors.HexColor("#0f172a"),
+            spaceAfter=2,
+            **flow_control,
+        ),
+        "icon_legend_body": ParagraphStyle(
+            "IconLegendBody",
+            parent=base["BodyText"],
+            fontName=fonts["body"],
+            fontSize=11.0,
+            leading=16.2,
+            textColor=colors.HexColor("#111827"),
+            spaceAfter=2,
+            **flow_control,
+        ),
+        "subsection": ParagraphStyle(
+            "SubsectionTitle",
+            parent=base["Heading3"],
+            fontName=fonts["section"],
+            fontSize=12.0,
+            leading=15.2,
+            textColor=colors.HexColor("#1f2937"),
+            spaceBefore=8,
+            spaceAfter=4,
             **flow_control,
         ),
     }
@@ -1198,12 +1425,171 @@ def append_chapter_band(story: list[object], width: float, accent_hex: str) -> N
 
 
 def chapter_toc_title(chapter_heading: str) -> str:
-    if chapter_heading == "How to Use This Book":
-        return chapter_heading
-    match = re.match(r"^Chapter\s+\d+:\s+(.*)$", chapter_heading, flags=re.IGNORECASE)
-    if match:
-        return match.group(1).strip()
     return chapter_heading.strip()
+
+
+def register_display_fonts() -> dict[str, str]:
+    fonts = {
+        "display": "Helvetica-Bold",
+        "chapter": "Helvetica-Bold",
+        "section": "Helvetica-Bold",
+        "body": "Helvetica",
+    }
+    for font_name, font_path in DISPLAY_FONT_CANDIDATES:
+        if not Path(font_path).exists():
+            continue
+        try:
+            pdfmetrics.registerFont(TTFont(font_name, font_path))
+            fonts["display"] = font_name
+            break
+        except Exception:
+            continue
+    return fonts
+
+
+def extract_chapter_preludes(lines: list[str]) -> dict[str, dict[str, object]]:
+    chapter_data: dict[str, dict[str, object]] = {}
+    chapter_heading = ""
+    section = ""
+    intro_lines: list[str] = []
+    learn_items: list[str] = []
+
+    def commit() -> None:
+        nonlocal intro_lines, learn_items
+        if not chapter_heading:
+            return
+        intro_text = " ".join(line.strip() for line in intro_lines if line.strip())
+        clean_items = [item.strip() for item in learn_items if item.strip()]
+        chapter_data[chapter_heading] = {"intro": intro_text, "learn": clean_items}
+        intro_lines = []
+        learn_items = []
+
+    for raw in lines:
+        stripped = raw.strip()
+        if stripped.startswith("# "):
+            commit()
+            chapter_heading = stripped[2:].strip() if stripped.startswith("# Chapter ") else ""
+            section = ""
+            continue
+        if not chapter_heading:
+            continue
+        if stripped.startswith("## "):
+            section = stripped[3:].strip().lower()
+            continue
+        if section == "intro into this chapter":
+            if stripped and not stripped.startswith("![") and not stripped.startswith("Caption:"):
+                intro_lines.append(stripped)
+            continue
+        if section == "what you will learn in this chapter" and stripped.startswith("- "):
+            learn_items.append(stripped[2:].strip())
+            continue
+    commit()
+    return chapter_data
+
+
+def extract_about_author_summary(lines: list[str]) -> str:
+    chapter = ""
+    section = ""
+    paragraphs: list[str] = []
+    skip_lightbulb = False
+    for raw in lines:
+        stripped = raw.strip()
+        if stripped.startswith("# "):
+            chapter = stripped[2:].strip()
+            section = ""
+            skip_lightbulb = False
+            continue
+        if chapter != "Chapter 43: About the Author":
+            continue
+        if stripped.startswith("## "):
+            section = stripped[3:].strip()
+            skip_lightbulb = False
+            continue
+        if section == "Why This Matters":
+            if stripped.startswith("Lightbulb Takeaway:"):
+                skip_lightbulb = True
+                continue
+            if skip_lightbulb and not stripped:
+                skip_lightbulb = False
+                continue
+            if skip_lightbulb:
+                continue
+        if section == "Why This Matters" and stripped:
+            paragraphs.append(stripped)
+        if section.startswith("Action 1: What You Learned"):
+            break
+    summary = " ".join(paragraphs).strip()
+    if summary:
+        return summary
+    return (
+        "Paul McMurray is the founder of Tech I Can. He focuses on practical AI literacy for schools, "
+        "using a beginner-friendly, evidence-first teaching style that helps learners run, observe, and explain."
+    )
+
+
+def build_chapter_prelude_summary(heading_text: str, intro_text: str, learn_items: list[str]) -> str:
+    title = re.sub(r"^Chapter\s+\d+:\s*", "", heading_text, flags=re.IGNORECASE).strip()
+    topic = title if title else "this chapter"
+    points = [item.strip().rstrip(".") for item in learn_items if item.strip()]
+    if len(points) >= 3:
+        return (
+            f"This chapter is about {topic.lower()}. "
+            f"You will explore {points[0]}, then {points[1]}, and finally {points[2]}."
+        )
+    if len(points) == 2:
+        return f"This chapter is about {topic.lower()}. You will explore {points[0]}, then {points[1]}."
+    if len(points) == 1:
+        return f"This chapter is about {topic.lower()}. You will explore {points[0]}."
+
+    sentences = [chunk.strip() for chunk in re.split(r"(?<=[.!?])\s+", intro_text) if chunk.strip()]
+    if sentences:
+        return f"This chapter is about {topic.lower()}. {sentences[0]}"
+    return f"This chapter is about {topic.lower()}. You will work through the topic in clear, practical steps."
+
+
+def append_chapter_prelude_page(
+    story: list[object],
+    styles: dict[str, ParagraphStyle],
+    heading_text: str,
+    chapter_preludes: dict[str, dict[str, object]],
+    width: float,
+) -> None:
+    prelude = chapter_preludes.get(heading_text, {})
+    intro_text = str(prelude.get("intro", "")).strip()
+    learn_items = [str(item) for item in prelude.get("learn", [])]
+    display_title = chapter_toc_title(heading_text)
+    if not intro_text:
+        intro_text = (
+            "This chapter gives you a guided path through the next skill in your Kairo journey. "
+            "You will work in small steps, collect evidence, and explain what your outputs show."
+        )
+    story_seed = build_chapter_prelude_summary(heading_text, intro_text, learn_items)
+
+    card_rows: list[list[object]] = []
+    card_rows.append([Paragraph("In this chapter . . .", styles["chapter_prelude_kicker"])])
+    card_rows.append([Paragraph(inline_markup(story_seed), styles["chapter_prelude_story"])])
+    if learn_items:
+        card_rows.append([Paragraph("What you will walk away with", styles["chapter_prelude_section"])])
+        for item in learn_items[:4]:
+            card_rows.append([Paragraph(inline_markup(item), styles["chapter_prelude_bullet"], bulletText="•")])
+    card_rows.append([Paragraph(f"Chapter Focus: {inline_markup(display_title)}", styles["chapter_prelude_focus"])])
+
+    card = Table(card_rows, colWidths=[width], hAlign="LEFT")
+    card.setStyle(
+        TableStyle(
+            [
+                ("BACKGROUND", (0, 0), (-1, -1), colors.HexColor("#f8fafc")),
+                ("BOX", (0, 0), (-1, -1), 1.0, colors.HexColor("#0f172a")),
+                ("LEFTPADDING", (0, 0), (-1, -1), 14),
+                ("RIGHTPADDING", (0, 0), (-1, -1), 14),
+                ("TOPPADDING", (0, 0), (-1, -1), 10),
+                ("BOTTOMPADDING", (0, 0), (-1, -1), 10),
+            ]
+        )
+    )
+    story.append(Spacer(1, 18 * mm))
+    story.append(card)
+    story.append(PageBreak())
 
 
 def build_body_story(
@@ -1211,11 +1597,13 @@ def build_body_story(
     styles: dict[str, ParagraphStyle],
     width: float,
     keyword_page_map: dict[str, list[int]] | None = None,
+    chapter_preludes: dict[str, dict[str, object]] | None = None,
 ) -> list[object]:
     lines = merge_callout_continuations(lines)
     story: list[object] = []
     paragraph: list[str] = []
     code: list[str] = []
+    code_lang = ""
     table: list[str] = []
     in_code = False
     # Skip manuscript title preamble; start rendering from the first front-matter section.
@@ -1241,9 +1629,12 @@ def build_body_story(
             paragraph.clear()
 
     def flush_code() -> None:
+        nonlocal code_lang
         if code:
+            story.append(Paragraph(f"Snippet Type: {code_language_label(code_lang)}", styles["code_label"]))
             story.append(Preformatted(wrap_code_lines(code), styles["code"]))
             code.clear()
+            code_lang = ""
 
     def flush_table() -> None:
         if table:
@@ -1261,7 +1652,7 @@ def build_body_story(
 
         chapter_ref = current_chapter_title or "this chapter"
         if not has_custom_reflection:
-            story.append(Paragraph("Reflection Questions", styles["section"]))
+            story.append(Paragraph("Action 2: Reflect", styles["section"]))
             story.append(
                 Paragraph(
                     inline_markup(f"What changed in {chapter_ref}, and which exact output lines prove your claim?"),
@@ -1284,7 +1675,7 @@ def build_body_story(
                 )
             )
         if not has_custom_try_next:
-            story.append(Paragraph("What to Try Next in This Chapter", styles["section"]))
+            story.append(Paragraph("Action 3: Do This Next", styles["section"]))
             story.append(
                 Paragraph(
                     inline_markup("Re-run one command with a small controlled setting change and compare outcomes."),
@@ -1380,8 +1771,10 @@ def build_body_story(
                 "snippet change": "note_box",
             }
             style_key = style_map[label.lower()]
-            icon = callout_icon(label)
-            text = inline_markup(f"{icon}  {label}: {message}" if message else f"{icon}  {label}")
+            icon_html = callout_icon_markup(label)
+            message_html = inline_markup(message) if message else ""
+            label_html = escape(label)
+            text = f"{icon_html}  <b>{label_html}:</b> {message_html}" if message else f"{icon_html}  <b>{label_html}</b>"
             story.append(KeepTogether([Paragraph(text, styles[style_key])]))
             continue
 
@@ -1423,6 +1816,7 @@ def build_body_story(
                 in_code = False
             else:
                 in_code = True
+                code_lang = stripped[3:].strip().lower()
             continue
 
         if stripped == "[[AUTO_KEYWORD_INDEX]]":
@@ -1448,6 +1842,8 @@ def build_body_story(
             heading_text = stripped[2:]
             if not first_heading:
                 story.append(PageBreak())
+            if heading_text.startswith("Chapter ") and chapter_preludes is not None:
+                append_chapter_prelude_page(story, styles, heading_text, chapter_preludes, width)
             first_heading = False
             current_chapter_title = chapter_toc_title(heading_text)
             chapter_accent = chapter_accent_for_heading(heading_text)
@@ -1477,15 +1873,15 @@ def build_body_story(
             if not in_intro_section:
                 intro_char_count = 0
             in_learning_objectives = section_lower.startswith("what you will learn in this chapter")
-            if in_after_learning and section_lower.startswith("reflection questions"):
+            if in_after_learning and section_lower.startswith("action 2: reflect"):
                 has_custom_reflection = True
                 in_after_learning = False
-            elif in_after_learning and section_lower.startswith("what to try next in this chapter"):
+            elif in_after_learning and section_lower.startswith("action 3: do this next"):
                 has_custom_try_next = True
                 in_after_learning = False
             else:
                 append_recap_extensions()
-            if section_text.lower().startswith("after you interact: what you learned"):
+            if section_text.lower().startswith("action 1: what you learned"):
                 in_after_learning = True
                 learned_points = 0
                 has_custom_reflection = False
@@ -1502,7 +1898,7 @@ def build_body_story(
         if stripped.startswith("### "):
             flush_paragraph()
             append_intro_bridge_if_needed()
-            story.append(Paragraph(inline_markup(stripped[4:]), styles["section"]))
+            story.append(Paragraph(inline_markup(stripped[4:]), styles["subsection"]))
             continue
         if stripped.startswith("- "):
             flush_paragraph()
@@ -1563,7 +1959,7 @@ def draw_body_page_overlay(canvas, doc) -> None:  # type: ignore[no-untyped-def]
     chapter_number = str(getattr(doc, "current_chapter_number", ""))
 
     canvas.setFillColor(colors.HexColor("#0f172a"))
-    canvas.setFont("Helvetica-Bold", 9)
+    canvas.setFont("Helvetica-Bold", 10)
     canvas.drawString(doc.leftMargin, page_h - 11.3 * mm, f"{BOOK_TITLE} | {chapter}")
     if chapter_number:
         canvas.setFillColor(tint(accent_hex, 0.78))
@@ -1581,7 +1977,7 @@ def draw_body_page_overlay(canvas, doc) -> None:  # type: ignore[no-untyped-def]
         canvas.setFillColor(accent)
         canvas.rect(progress_left, progress_bottom, progress_width * ratio, 1.2 * mm, stroke=0, fill=1)
     canvas.setFillColor(colors.HexColor("#334155"))
-    canvas.setFont("Helvetica", 8)
+    canvas.setFont("Helvetica", 10)
     canvas.drawCentredString(page_w / 2, 6.2 * mm, f"Page {canvas.getPageNumber()}")
     canvas.restoreState()
 
@@ -1590,19 +1986,90 @@ def draw_front_matter_page(canvas, doc) -> None:  # type: ignore[no-untyped-def]
     canvas.saveState()
     page_w, _ = doc.pagesize
     canvas.setFillColor(colors.HexColor("#475569"))
-    canvas.setFont("Helvetica", 8)
+    canvas.setFont("Helvetica", 10)
     canvas.drawCentredString(page_w / 2, 9 * mm, f"{canvas.getPageNumber()}")
     canvas.restoreState()
+
+
+def append_about_author_front_page(
+    story: list[object],
+    styles: dict[str, ParagraphStyle],
+    about_author_summary: str,
+) -> None:
+    story.append(Paragraph("About the Author", styles["toc_title"]))
+    story.append(
+        Paragraph(
+            "This short page helps learners understand who wrote this book and why its method is classroom-focused.",
+            styles["body"],
+        )
+    )
+    story.append(Paragraph(inline_markup(about_author_summary), styles["body"]))
+    story.append(
+        Paragraph(
+            "Lightbulb Takeaway: The teaching intent is simple: clear steps, honest evidence, and confidence through practice.",
+            styles["takeaway_box"],
+        )
+    )
+    story.append(PageBreak())
+
+
+def append_icon_legend_page(story: list[object], styles: dict[str, ParagraphStyle], width: float) -> None:
+    story.append(Paragraph("Icons Used in This Book", styles["toc_title"]))
+    story.append(
+        Paragraph(
+            "You will see these symbols throughout the chapters. They signal what kind of guidance is being offered.",
+            styles["body"],
+        )
+    )
+    icon_rows: list[list[object]] = []
+    legend_items = [
+        (ICON_LIGHTBULB, "Lightbulb Takeaway", "A practical classroom takeaway you should remember."),
+        (ICON_DEFINITION, "Definition", "A clear meaning for a technical term used in the chapter."),
+        (ICON_NOTE, "Note", "Useful context, guardrails, or teaching detail for this step."),
+        (ICON_SNIPPET_PURPOSE, "Snippet Purpose", "Why this command is being run before you use it."),
+        (ICON_SNIPPET_CHANGE, "Snippet Change", "What changed from a previous command and why it matters."),
+    ]
+    for icon_path, label, meaning in legend_items:
+        icon_cell: object
+        if icon_path.exists():
+            icon_cell = Image(str(icon_path), width=8.3 * mm, height=8.3 * mm, hAlign="LEFT")
+        else:
+            icon_cell = Paragraph("•", styles["section"])
+        icon_rows.append(
+            [
+                icon_cell,
+                Paragraph(label, styles["icon_legend_label"]),
+                Paragraph(meaning, styles["icon_legend_body"]),
+            ]
+        )
+    legend = Table(icon_rows, colWidths=[12 * mm, 48 * mm, width - (60 * mm)], hAlign="LEFT")
+    legend.setStyle(
+        TableStyle(
+            [
+                ("VALIGN", (0, 0), (-1, -1), "TOP"),
+                ("BOTTOMPADDING", (0, 0), (-1, -1), 5),
+                ("LEFTPADDING", (0, 0), (-1, -1), 2),
+                ("RIGHTPADDING", (0, 0), (-1, -1), 4),
+                ("LINEBELOW", (0, 0), (-1, -1), 0.2, colors.HexColor("#cbd5e1")),
+            ]
+        )
+    )
+    story.append(legend)
+    story.append(PageBreak())
 
 
 def render_book(out_pdf: Path) -> None:
     global PAGE_TOTAL_HINT
     ensure_cover_image(COVER_IMAGE)
     ensure_support_figure_images()
+    ensure_callout_icons()
     lines = clean_lines(BOOK_MD.read_text(encoding="utf-8"))
     validate_book_structure(lines)
     keyword_terms = extract_keyword_terms(lines)
-    styles = build_styles()
+    fonts = register_display_fonts()
+    styles = build_styles(fonts)
+    chapter_preludes = extract_chapter_preludes(lines)
+    about_author_summary = extract_about_author_summary(lines)
     page_w, page_h = A4
 
     def make_doc() -> BookDocTemplate:
@@ -1709,14 +2176,26 @@ def render_book(out_pdf: Path) -> None:
         story.append(Paragraph("Printed in digital format for classroom distribution.", styles["copyright"]))
         story.append(PageBreak())
 
+        append_about_author_front_page(story, styles, about_author_summary)
+        append_icon_legend_page(story, styles, body_width)
+
         story.append(Paragraph("Contents", styles["toc_title"]))
         toc = TableOfContents()
         toc.levelStyles = [styles["toc_level_0"], styles["toc_level_1"]]
+        toc.dotsMinLevel = 0
         story.append(toc)
         story.append(NextPageTemplate("body"))
         story.append(PageBreak())
 
-        story.extend(build_body_story(lines, styles, body_width, keyword_page_map=keyword_map))
+        story.extend(
+            build_body_story(
+                lines,
+                styles,
+                body_width,
+                keyword_page_map=keyword_map,
+                chapter_preludes=chapter_preludes,
+            )
+        )
         return story
 
     # Pass 1: render manuscript and gather keyword page map.
