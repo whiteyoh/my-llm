@@ -25,44 +25,36 @@ Software delivery lifecycle only: requirements, planning, architecture, implemen
 ## Runtime Dashboard Model
 
 <runtime-dir>
-.Codex/runtime/
+runs/agent_dashboard/
 </runtime-dir>
 
 <runtime-files>
-- `.Codex/runtime/state.json`
-- `.Codex/runtime/events.jsonl`
+- `runs/agent_dashboard/state.json`
 </runtime-files>
 
 <runtime-policy>
-The orchestrator must keep runtime state current so an external dashboard can show live activity.
+The orchestrator must keep runtime state current in `runs/agent_dashboard/state.json` so the built-in dashboard can show live activity.
 </runtime-policy>
 
 <state-file>
-`.Codex/runtime/state.json` must represent the latest known state.
+`runs/agent_dashboard/state.json` must represent the latest known state.
 </state-file>
-
-<events-file>
-`.Codex/runtime/events.jsonl` must be append-only and record each significant orchestration action.
-</events-file>
 
 <runtime-statuses>
 Use only these statuses:
 
-- scanning
-- planning
-- creating
-- updating
-- delegating
 - idle
+- queued
+- running
 - blocked
-- complete
-- failed
+- completed
 </runtime-statuses>
 
 <runtime-rules>
-- Create `.Codex/runtime/` if it does not exist.
-- Update `state.json` before and after each major action.
-- Append one JSON object per line to `events.jsonl` for each major action.
+- Create `runs/agent_dashboard/` if it does not exist.
+- Update `runs/agent_dashboard/state.json` before and after each major action.
+- Store orchestration logs in the in-file `events` array (not a separate `.jsonl` file).
+- For each significant action, append an event object to `events`.
 - Do not store secrets, credentials, tokens, or private user data in runtime files.
 - Keep runtime files machine-readable.
 - If runtime reporting fails, continue the orchestration task and report the failure.
@@ -72,34 +64,28 @@ Use only these statuses:
 
 ```json
 {
-  "run_id": "string",
-  "current_agent": "orchestrator",
-  "status": "scanning",
-  "message": "Inspecting existing worker agents",
+  "phase": "Discovery",
+  "missing_agents": [],
   "agents_directory": ".Codex/agents/",
-  "runtime_directory": ".Codex/runtime/",
-  "agents": [
-    {
-      "name": "worker-name",
-      "file": ".Codex/agents/worker-name.md",
+  "agents": {
+    "worker-name": {
       "status": "idle",
-      "description": "Short description"
+      "notes": "Short status note",
+      "updated_at": "ISO-8601 timestamp"
     }
-  ],
-  "next_action": "string",
-  "last_updated": "ISO-8601 timestamp"
+  },
+  "events": [
+    {
+      "timestamp": "ISO-8601 timestamp",
+      "agent": "orchestrator",
+      "event": "status->running",
+      "note": "Inspecting .Codex/agents/"
+    }
+  ]
 }
 ```
 
 </state-json-format>
-
-<event-jsonl-format>
-
-```json
-{"timestamp":"ISO-8601 timestamp","run_id":"string","agent":"orchestrator","status":"scanning","message":"Inspecting .Codex/agents/"}
-```
-
-</event-jsonl-format>
 
 ---
 
@@ -119,7 +105,7 @@ Use only these statuses:
 
 <orchestrator-behaviour>
 - Inspect `.Codex/agents/` before planning work.
-- Update `.Codex/runtime/state.json` while inspecting, planning, creating, updating, or delegating.
+- Update `runs/agent_dashboard/state.json` while inspecting, planning, creating, updating, or delegating.
 - Match tasks to existing workers first.
 - Create a new worker only when no existing worker has clear ownership.
 - Delegate by referencing worker files, not ad hoc role text.
@@ -205,9 +191,9 @@ Single sentence describing the worker objective.
 </outputs>
 
 <runtime-reporting>
-- Report status as idle, active, blocked, complete, or failed.
-- Update `.Codex/runtime/state.json` when selected for work.
-- Append significant actions to `.Codex/runtime/events.jsonl`.
+- Report status as idle, queued, running, blocked, or completed.
+- Update `runs/agent_dashboard/state.json` when selected for work.
+- Append significant actions to the `events` array inside `state.json`.
 </runtime-reporting>
 
 <collaboration>

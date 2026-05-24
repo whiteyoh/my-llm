@@ -30,6 +30,7 @@ kairo-qa = "tiny_llm.cli:qa"
 kairo-build-qa-corpus = "tiny_llm.cli:build_qa_corpus"
 kairo-agents-dashboard = "tiny_llm.cli:agents_dashboard"
 kairo-learn = "tiny_llm.cli:learn"
+kairo-orchestrator-log = "tiny_llm.cli:orchestrator_log"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

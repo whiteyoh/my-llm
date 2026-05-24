@@ -8,37 +8,25 @@
 
 # Preface
 
-## Intro into this chapter
-
 Welcome to *Tech I Can: Kairo*. This book was written to make AI practical,
 teachable, and understandable for real classrooms.
 
-## What you are going to use
+You do not need prior AI expertise to use this guide well. You need a clear
+routine, honest observations, and a willingness to test one small change at a
+time. Every chapter is designed to help learners move from "I ran it" to "I
+can explain it."
 
-- a step-by-step learning routine
-- short experiments with visible outcomes
-- reflection prompts that turn actions into understanding
+Use this chapter to build a repeatable habit: explain why this book exists, approach it with confidence, and understand what kind of learning journey to expect. That sequence will help you connect hands-on steps to clear reasoning.
 
-## What you will learn in this chapter
+This method also aligns with inquiry-based teaching: learners act, observe, and
+reflect before making broader claims. You can map the cycle in this book to
+well-known learning models where concrete experience and reflection build deeper
+understanding over time (Kolb, 1984; Hmelo-Silver, 2004).
 
-- why this book exists
-- how to approach it with confidence
-- what kind of learning journey to expect
-
-## The work, clearly laid out
-
-1. understand the purpose of the book
-2. adopt the evidence-first learning mindset
-3. begin with curiosity, not pressure
-
-## Examples of what you might see
-
-```text
-"I do not need to know everything first."
-"I can run one step, observe, and explain what changed."
-```
-
-## Some explanation
+In practical terms, that means this is not a "read once" book. It is a
+run-observe-discuss workbook. The goal is not perfect first attempts. The goal
+is steady reasoning quality that improves each time you test, compare, and
+explain what happened.
 
 Lightbulb Takeaway: Confidence grows when you can explain one real change at a
 time, in your own words.
@@ -47,82 +35,79 @@ This guide is intentionally written for people who are curious but may be new
 to programming or AI. You do not need to be an expert to begin. You only need a
 clear process, honest outputs, and a willingness to test your assumptions.
 
-## After you interact: What you learned
+---
 
-- You learned that this book teaches through small, repeatable evidence cycles.
-- You learned that reflection is part of the workflow, not an extra activity.
-- You learned that confidence grows when you can explain one clear change at a time.
+# Who This Book Is For
 
-## Reflection Questions
+## Who Should Pick Up This Book
 
-- Which part of the evidence-first approach feels most different from how you usually learn?
-- What kind of learning note will help you explain your progress clearly?
-- Where do you expect to need the most support as you begin?
+This page helps you decide quickly whether this book is the right fit for your
+current goals. It is written for people who want practical AI literacy, not
+hype, and who learn best by running real steps and discussing real outputs.
 
-## What to Try Next in This Chapter
+If you are teaching, this book gives you a classroom-ready structure with
+scripts, reflection prompts, and safety language. If you are learning
+independently, it gives you a clear pathway from first setup to confident
+explanation.
 
-- Write a short learner promise that starts with: "In this book, I will test ideas by..."
-- Share that promise with a partner and compare how each of you plans to track evidence.
+## Target Audience
+
+- secondary school teachers and learners
+- FE/college educators introducing AI literacy
+- workshop leaders and STEM clubs
+- curious adult beginners who want practical understanding
+
+## Why This Book
+
+Choose this book if you want to move from "AI sounds interesting" to "I can run
+it, inspect it, and explain it clearly." The structure is practical, repeatable,
+and designed for classrooms where time and confidence both matter.
+
+## Best Fit Check
+
+- You want hands-on AI literacy instead of theory-only reading.
+- You want guided commands with clear explanations and reflection.
+- You want classroom-safe language that avoids overclaiming.
+
+## If This Book Is Not the Best First Step
+
+If you want a deep mathematics-first treatment of transformer internals, start
+with a dedicated academic text. This book is a hands-on classroom and self-study
+guide focused on observable behavior, comparison, and explanation.
+
+Lightbulb Takeaway: This book is for learners and teachers who want practical
+confidence they can demonstrate.
 
 ---
 
 # How to Use This Book
 
-## Intro into this chapter
+## Start Here
 
 This quick-start page explains how to navigate the book so each chapter feels
 manageable and purposeful.
 
-## What you are going to use
+The structure is deliberate: orientation first, practical work second, then
+evidence-led reflection. That sequence is what turns command use into real
+understanding, especially for beginners.
 
-- chapter flow pattern
-- guided labs
-- workbook and capstone sections
+This chapter takes you through a clear sequence: move through the book efficiently, collect evidence while you learn, and choose a pacing mode. As you work, collect one concrete example for each step so your final explanation is easy to defend.
 
-## What you will learn in this chapter
-
-- how to move through the book efficiently
-- how to collect evidence while you learn
-- how to choose a pacing mode
-
-## The work, clearly laid out
+## Choose a Pacing Path
 
 1. choose your pacing path (fast, standard, extended)
-2. run one chapter at a time with notes
-3. save outputs and reflections each session
-4. revisit glossary whenever a term is unclear
-
-## Examples of what you might see
-
-```text
-Fast path (2 sessions): Chapters 4-8, 13, 23-25
-Standard path (4 sessions): Chapters 1-14 plus labs
-Extended path (6+ sessions): full book + capstone
-```
-
-## Some explanation
+2. run one chapter at a time with notes and saved outputs
+3. revisit glossary whenever a term is unclear
 
 Note: Every chapter follows the same structure so learners always know what is
 coming next.
 
 Lightbulb Takeaway: Consistent workflow reduces overwhelm and improves confidence.
 
-## After you interact: What you learned
-
-- You learned how the pacing paths map to real session time and class constraints.
-- You learned how to move through chapters without skipping the evidence steps.
-- You learned how to use the glossary and labs as support tools when a topic feels heavy.
-
-## Reflection Questions
-
-- Which pacing path matches your current schedule, and why?
-- Which chapter group should you treat as essential for your first run?
-- When will you pause to record evidence so you can compare later?
-
-## What to Try Next in This Chapter
-
-- Build a one-page reading plan for your next two sessions.
-- Compare your plan with a peer and agree one shared checkpoint after each session.
+Note: Kairo is a tiny, local, byte-level teaching model. Some patterns in this
+book, such as metric ranges, temperature effects, and failure modes, are
+specific to this setup and may look different in larger subword models trained
+on internet-scale datasets.
 
 ---
 
@@ -132,6 +117,14 @@ Lightbulb Takeaway: Consistent workflow reduces overwhelm and improves confidenc
 
 You are about to learn AI by doing. This chapter sets the tone so you know what
 you are building and why each step matters.
+
+Instead of treating AI as a black box, you will treat it as a system you can
+observe and discuss. The goal is not to memorize terms. The goal is to build a
+repeatable way to reason about model behavior.
+
+By the end of this chapter, you should be able to describe the learning method
+used throughout the book, explain how chapters are structured, and read output
+with confidence.
 
 ## What you are going to use
 
@@ -157,6 +150,9 @@ you are building and why each step matters.
 Run -> Observe -> Compare -> Explain -> Improve
 ```
 
+![Learning loop diagram showing five connected steps: Run, Observe, Compare, Explain, Improve.](docs/assets/figure-learning-loop.jpg)
+Caption: Figure 1. The evidence loop used throughout the book. Keep your notes aligned to each step.
+
 ## Some explanation
 
 Lightbulb Takeaway: You are not here to memorize commands. You are here to build an explanation habit.
@@ -176,7 +172,7 @@ Lightbulb Takeaway: You are not here to memorize commands. You are here to build
 ## What to Try Next in This Chapter
 
 - Write one sentence for each step of the five-step loop using your own words.
-- Create a one-page notes template with: command, output, change, explanation.
+- Create a one-page notes template with: command, output, change, explanation, then compare template choices with a peer.
 
 ---
 
@@ -185,6 +181,10 @@ Lightbulb Takeaway: You are not here to memorize commands. You are here to build
 ## Intro into this chapter
 
 Before running code, you need realistic expectations.
+
+By the end of this chapter, you should be able to explain what Kairo is
+designed for, explain what it is not trying to be, and describe why tiny models
+are useful for learning.
 
 ## What you are going to use
 
@@ -234,7 +234,7 @@ Lightbulb Takeaway: Honest limitations make better learning outcomes.
 ## What to Try Next in This Chapter
 
 - Write two claims: one accurate claim about Kairo, one overclaim. Then correct the overclaim.
-- Make a short "what this project can and cannot do" slide for learners.
+- Make a short "what this project can and cannot do" slide for learners, then compare it with a partner and agree one sentence to keep exactly the same in both versions.
 
 ---
 
@@ -244,11 +244,16 @@ Lightbulb Takeaway: Honest limitations make better learning outcomes.
 
 This chapter prevents setup issues before they interrupt learning.
 
+This chapter takes you through a clear sequence: required versus optional
+components, which extras unlock classroom features, and how to verify readiness.
+As you work, collect one concrete example for each step so your final
+explanation is easy to defend.
+
 ## What you are going to use
 
 - Python 3.11+
 - terminal access
-- local repository copy
+- local repository copy (`https://github.com/whiteyoh/kiaro`)
 
 ## What you will learn in this chapter
 
@@ -272,6 +277,11 @@ Optional extras: learn, pdf, dev
 ## Some explanation
 
 Note: Setup quality directly affects the quality of your first model run.
+
+Note: Minimum environment for this book is Python 3.11+, terminal access, and a
+local folder where you can install packages and run training commands. In school
+settings, ask your IT technician to confirm these permissions before the lesson
+week starts.
 
 Lightbulb Takeaway: A clean start removes most beginner friction.
 
@@ -299,6 +309,8 @@ Lightbulb Takeaway: A clean start removes most beginner friction.
 ## Intro into this chapter
 
 Now you turn this project into a working local AI lab.
+
+You are aiming for practical understanding, not just completion. You will install safely, strengthen your approach to verify readiness, and conclude by learning to spot setup problems early in plain language.
 
 ## What you are going to use
 
@@ -384,6 +396,8 @@ Lightbulb Takeaway: Verification is not extra work. It is what makes your next c
 This chapter is your first complete model cycle: baseline, evaluation, retrain,
 comparison.
 
+This chapter takes you through a clear sequence: run a complete experiment, compare before/after behavior fairly, and explain why training data changes style. As you work, collect one concrete example for each step so your final explanation is easy to defend.
+
 ## What you are going to use
 
 - `data/samples/space_adventure.txt`
@@ -451,6 +465,10 @@ Retrained output: pirate vocabulary, exclamations, dialogue rhythm.
 
 Note: Keep prompt and architecture fixed when comparing datasets.
 
+Note: With the chapter settings (`--epochs 1`, compact model, CPU), training
+typically takes about 2-5 minutes on a standard laptop. Slower machines may take
+longer, so plan one small timing buffer in class.
+
 Lightbulb Takeaway: Fair comparison means one major change at a time.
 
 ## After you interact: What you learned
@@ -468,7 +486,7 @@ Lightbulb Takeaway: Fair comparison means one major change at a time.
 ## What to Try Next in This Chapter
 
 - Repeat the full cycle with a new fixed prompt and compare both result sets.
-- Run one extra generation per checkpoint to check consistency.
+- Pair with a peer and compare one extra generation per checkpoint to see whether both of you reached the same style-shift conclusion.
 
 ---
 
@@ -477,6 +495,8 @@ Lightbulb Takeaway: Fair comparison means one major change at a time.
 ## Intro into this chapter
 
 Now you move from running commands to interpreting evidence.
+
+This chapter takes you through a clear sequence: assess style shifts, read metrics responsibly, and avoid overclaiming. As you work, collect one concrete example for each step so your final explanation is easy to defend.
 
 ## What you are going to use
 
@@ -506,7 +526,11 @@ Pirate model: pirate terms and dramatic punctuation.
 
 ## Some explanation
 
-Definition: Perplexity is a measure of uncertainty; lower usually means better dataset fit, not better universal truth.
+Definition: Perplexity is a measure of uncertainty; lower usually means better
+dataset fit, not better universal truth.
+
+Note: Perplexity can also fall when a model memorizes short, frequent patterns
+in small datasets. That is why you always inspect outputs alongside metrics.
 
 Lightbulb Takeaway: Fluent output can still be wrong. Always separate style from reliability.
 
@@ -525,7 +549,7 @@ Lightbulb Takeaway: Fluent output can still be wrong. Always separate style from
 ## What to Try Next in This Chapter
 
 - Score two outputs with a simple rubric: tone, clarity, repetition, relevance.
-- Write one careful conclusion and one overclaim, then revise the overclaim.
+- Swap rubric scores with a partner, then co-write one careful conclusion and one overclaim before revising the overclaim together.
 
 ---
 
@@ -534,6 +558,8 @@ Lightbulb Takeaway: Fluent output can still be wrong. Always separate style from
 ## Intro into this chapter
 
 This chapter changes behavior from open text generation to QA-style responses.
+
+Use this chapter to build a repeatable habit: how QA corpora are built, how context anchors answers, and how fallback improves classroom reliability. That sequence will help you connect hands-on steps to clear reasoning.
 
 ## What you are going to use
 
@@ -601,7 +627,7 @@ Lightbulb Takeaway: Context is your anchor when model confidence and correctness
 ## What to Try Next in This Chapter
 
 - Ask the same question with and without context, then compare answer reliability.
-- Create one ambiguous question and rewrite it so grounding is easier.
+- Create one ambiguous question, swap it with a peer, and both rewrite it so grounding is easier; then compare the rewritten versions.
 
 ---
 
@@ -610,6 +636,14 @@ Lightbulb Takeaway: Context is your anchor when model confidence and correctness
 ## Intro into this chapter
 
 This chapter opens the model internals in a visual way.
+
+You will not treat model visuals as decoration. You will use them as evidence:
+what tokens were read, which next-token choices were likely, and where the
+attention view can support discussion without overclaiming.
+
+By the end of this chapter, you should be able to explain how tokenization
+appears visually, explain how next-token probabilities guide output, and inspect
+attention patterns carefully.
 
 ## What you are going to use
 
@@ -643,6 +677,9 @@ Launching Kairo Learn Mode...
 Local URL: http://localhost:8501
 ```
 
+![Learn Mode visual concept showing token stream, probability focus, and attention map relationship.](docs/assets/figure-learn-mode.jpg)
+Caption: Figure 2. Learn Mode is most useful when each visual is linked to a specific claim in your notes.
+
 ## Some explanation
 
 Note: Attention maps are interpretability aids, not proof of reasoning.
@@ -673,6 +710,8 @@ Lightbulb Takeaway: Visual evidence helps learners connect abstract ideas to obs
 ## Intro into this chapter
 
 Now you shift from learner mode to facilitator mode.
+
+You are aiming for practical understanding, not just completion. You will run a 45-minute session, strengthen your approach to guide evidence discussion, and conclude by learning to connect tasks to outcomes in plain language.
 
 ## What you are going to use
 
@@ -730,6 +769,9 @@ Lightbulb Takeaway: The debrief is where understanding deepens.
 
 Every real workshop includes bumps. This chapter keeps progress moving.
 
+By the end of this chapter, you should be able to diagnose common issues,
+recover quickly, and keep learner confidence high.
+
 ## What you are going to use
 
 - error messages
@@ -786,6 +828,8 @@ Lightbulb Takeaway: Troubleshooting is not a detour. It is part of mastery.
 
 This chapter helps you communicate results responsibly.
 
+You are aiming for practical understanding, not just completion. You will avoid overclaims, strengthen your approach to express uncertainty clearly, and conclude by learning to model critical thinking in plain language.
+
 ## What you are going to use
 
 - your outputs
@@ -815,6 +859,11 @@ Weak claim: "The model now understands pirates."
 
 Lightbulb Takeaway: Honest framing increases trust and learning quality.
 
+If the model generates unexpected, offensive, or distressing output, pause the
+session immediately. Record the prompt and exact output, remove the content from
+display, and frame the moment as evidence of model limits and data influence.
+Then continue with a safer prompt and context pair.
+
 ## After you interact: What you learned
 
 - You learned how to rewrite weak claims into evidence-based statements.
@@ -839,6 +888,8 @@ Lightbulb Takeaway: Honest framing increases trust and learning quality.
 ## Intro into this chapter
 
 This is where guided practice becomes independent experimentation.
+
+Use this chapter to build a repeatable habit: design controlled experiments, compare outputs rigorously, and write defensible conclusions. That sequence will help you connect hands-on steps to clear reasoning.
 
 ## What you are going to use
 
@@ -897,6 +948,8 @@ Lightbulb Takeaway: Controlled experiments teach faster than complex mixed chang
 ## Intro into this chapter
 
 This chapter is your quick command toolkit for live use.
+
+Use this chapter to build a repeatable habit: where each command fits in workflow, sequence commands correctly, and avoid command overload. That sequence will help you connect hands-on steps to clear reasoning.
 
 ## What you are going to use
 
@@ -997,6 +1050,10 @@ Lightbulb Takeaway: Commands are tools for questions, not goals by themselves.
 This chapter is a checkpoint where you pause, review evidence, and prepare for
 the deeper technical chapters ahead.
 
+By the end of this chapter, you should be able to summarize what you have
+learned so far, carry the method into deeper chapters, and explain your current
+progress clearly to others.
+
 ## What you are going to use
 
 - your saved runs
@@ -1052,6 +1109,8 @@ Curious today, Confident tomorrow.
 
 You now move from using existing sample files to designing your own datasets
 with intent.
+
+Use this chapter to build a repeatable habit: choose data that teaches clearly, avoid mixed-style confusion, and build classroom-friendly corpora. That sequence will help you connect hands-on steps to clear reasoning.
 
 ## What you are going to use
 
@@ -1116,6 +1175,8 @@ will also be unclear.
 ## Intro into this chapter
 
 Prompt design controls the fairness of your experiment.
+
+You are aiming for practical understanding, not just completion. You will keep prompts comparable, strengthen your approach to how prompt wording changes output, and conclude by learning to separate prompt effects from data effects in plain language.
 
 ## What you are going to use
 
@@ -1188,6 +1249,8 @@ Lightbulb Takeaway: Fixed prompts create fair evidence.
 
 This chapter explains how raw text becomes model-readable tokens.
 
+Use this chapter to build a repeatable habit: understand what byte-level tokenization does, explain why spacing and punctuation matter, and how token boundaries influence generation. That sequence will help you connect hands-on steps to clear reasoning.
+
 ## What you are going to use
 
 - Learn Mode token preview
@@ -1248,6 +1311,15 @@ Lightbulb Takeaway: Tokens are the model's actual reading units.
 
 You now learn how to read training behavior over time.
 
+This chapter teaches one of the most important AI literacy habits: never judge
+model quality from one number in isolation. You will compare patterns across
+epochs and decide when to continue, pause, or redesign the experiment.
+
+In this chapter, you will review how loss usually changes per epoch, identify
+what overfitting can look like, and decide when to stop and inspect instead of
+continuing. Keep your notes evidence-based so you can explain not only what
+happened, but why it happened.
+
 ## What you are going to use
 
 - train/validation loss curves
@@ -1287,10 +1359,22 @@ Epoch 2: train_loss=3.95 | val_loss=4.02
 Epoch 3: train_loss=3.76 | val_loss=4.10
 ```
 
+![Training chart with two lines where training loss falls steadily while validation loss flattens and then rises.](docs/assets/figure-training-curve.jpg)
+Caption: Figure 3. A widening train/validation gap is a practical signal to inspect for overfitting.
+
 ## Some explanation
 
 Definition: Overfitting is when training performance keeps improving while
 generalization quality stalls or worsens.
+
+Note: A single validation increase (for example 4.02 to 4.10) can be normal
+variance in tiny datasets. Treat one point as an inspection signal, not an
+automatic stop command. The case is stronger when the train/validation gap keeps
+widening across multiple epochs.
+
+Note: With these CPU-focused chapter settings, short runs are often around 2-5
+minutes and longer runs around 5-12 minutes, depending on laptop speed and
+background load.
 
 Lightbulb Takeaway: Better training loss alone is not the full story.
 
@@ -1318,6 +1402,8 @@ Lightbulb Takeaway: Better training loss alone is not the full story.
 ## Intro into this chapter
 
 This chapter expands evaluation from single metrics to richer interpretation.
+
+Use this chapter to build a repeatable habit: combine metrics with text evidence, assess coherence and stability, and write balanced conclusions. That sequence will help you connect hands-on steps to clear reasoning.
 
 ## What you are going to use
 
@@ -1361,6 +1447,10 @@ Retrained: stronger theme markers, occasional looping phrases.
 
 Note: Metrics answer "how predictable," not "how meaningful."
 
+Note: Lower perplexity can come from memorized repetition in small corpora, not
+just stronger generalization. Pair metric changes with output inspection before
+making claims.
+
 Lightbulb Takeaway: Strong evaluation always combines numbers and language.
 
 ## After you interact: What you learned
@@ -1387,6 +1477,8 @@ Lightbulb Takeaway: Strong evaluation always combines numbers and language.
 ## Intro into this chapter
 
 This chapter helps you identify common reliability patterns.
+
+This chapter takes you through a clear sequence: where tiny models are stable, where tiny models drift, and how settings influence reliability. As you work, collect one concrete example for each step so your final explanation is easy to defend.
 
 ## What you are going to use
 
@@ -1458,6 +1550,8 @@ Lightbulb Takeaway: Settings can trade creativity for stability.
 
 This chapter operationalizes safety for classroom demonstrations.
 
+You are aiming for practical understanding, not just completion. You will prevent unsafe overclaiming, strengthen your approach to model responsible critique, and conclude by learning to frame uncertainty constructively in plain language.
+
 ## What you are going to use
 
 - prompt checklist
@@ -1488,6 +1582,10 @@ This chapter operationalizes safety for classroom demonstrations.
 
 Note: Safety in this context includes epistemic safety: avoiding false certainty.
 
+If an output is surprising or concerning, stop and reset the flow: capture the
+prompt/output pair, name why it is unsafe or unreliable, and relaunch with a
+safer prompt plus explicit context so students can compare the difference.
+
 Lightbulb Takeaway: Responsible framing is a teaching skill, not a disclaimer.
 
 ## After you interact: What you learned
@@ -1514,6 +1612,8 @@ Lightbulb Takeaway: Responsible framing is a teaching skill, not a disclaimer.
 ## Intro into this chapter
 
 Now you treat QA mode as a system, not just a command.
+
+This chapter takes you through a clear sequence: understand what makes QA training data effective, how context quality shapes answer quality, and how fallback behavior supports reliability. As you work, collect one concrete example for each step so your final explanation is easy to defend.
 
 ## What you are going to use
 
@@ -1572,6 +1672,8 @@ random parameter tweaking.
 ## Intro into this chapter
 
 This lab is a full baseline run with checkpoint handling and evidence logging.
+
+This chapter takes you through a clear sequence: execute a clean baseline lab, capture reproducible observations, and store outputs for later comparison. As you work, collect one concrete example for each step so your final explanation is easy to defend.
 
 ## What you are going to use
 
@@ -1662,6 +1764,10 @@ Lightbulb Takeaway: Reproducibility is a core classroom skill.
 
 This lab demonstrates clear style transfer through retraining.
 
+In this chapter, you will observe how retraining shifts style, preserve fair
+comparisons, and document changes with evidence. Keep your notes evidence-based
+so you can explain not only what happened, but why it happened.
+
 ## What you are going to use
 
 - `pirate_dialogue.txt`
@@ -1744,6 +1850,13 @@ Lightbulb Takeaway: Same model structure, different data, different behavior.
 
 This lab turns the model into a basic context-grounded QA experience.
 
+You will see that answer quality depends as much on context quality as on model
+weights. This is a key classroom insight: better prompts and better context
+often improve outcomes faster than bigger model settings.
+
+By the end of this chapter, you should be able to prepare QA data, test grounded
+answers, and detect drift and recovery.
+
 ## What you are going to use
 
 - `qa_space_facts.jsonl`
@@ -1794,6 +1907,9 @@ Context provided -> concise grounded answer.
 Context missing -> broader, less anchored phrasing.
 ```
 
+![Grounded QA flow showing question input, context evidence, and constrained answer output.](docs/assets/figure-qa-grounding.jpg)
+Caption: Figure 4. Grounded QA works best when context contains direct, concise evidence for the question.
+
 ## Some explanation
 
 Note: QA quality improves most through context quality, not purely model size.
@@ -1824,6 +1940,8 @@ Lightbulb Takeaway: Good context design is the strongest lever in classroom QA.
 ## Intro into this chapter
 
 This lab helps students connect model internals to observable output behavior.
+
+In this chapter, you will read probability distributions, then interpret attention cautiously, and finally narrate internals in plain language. Keep your notes evidence-based so you can explain not only what happened, but why it happened.
 
 ## What you are going to use
 
@@ -1893,6 +2011,9 @@ Lightbulb Takeaway: Visual evidence helps learners ask better questions.
 
 This chapter provides concrete ways to assess learning outcomes.
 
+By the end of this chapter, you should be able to assess process and explanation
+quality, grade evidence use fairly, and provide actionable feedback.
+
 ## What you are going to use
 
 - student lab notes
@@ -1951,6 +2072,8 @@ Lightbulb Takeaway: Grade thinking quality, not just command execution.
 
 This chapter prepares you for live delivery in front of students or reviewers.
 
+This chapter takes you through a clear sequence: prepare a smooth live session, handle surprises calmly, and keep outcomes teachable. As you work, collect one concrete example for each step so your final explanation is easy to defend.
+
 ## What you are going to use
 
 - one known-good checkpoint backup
@@ -2007,6 +2130,9 @@ Lightbulb Takeaway: Great presentations are prepared for both success and hiccup
 ## Intro into this chapter
 
 This chapter helps you keep growing after the core curriculum.
+
+By the end of this chapter, you should be able to design advanced follow-up
+projects, compare multiple domains, and turn this into ongoing coursework.
 
 ## What you are going to use
 
@@ -2066,6 +2192,8 @@ Lightbulb Takeaway: Progress comes from asking better questions, not bigger mode
 
 This chapter gives you a structured way to test how prompt design affects model
 behavior under fixed training conditions.
+
+You are aiming for practical understanding, not just completion. You will how framing changes outputs, strengthen your approach to build prompt families, and conclude by learning to compare outputs systematically in plain language.
 
 ## What you are going to use
 
@@ -2146,6 +2274,12 @@ Lightbulb Takeaway: Prompt design is part of experimental design.
 
 As projects scale, source data quality and attribution become critical.
 
+This chapter also sets a publishing-ready discipline for classroom materials.
+That includes source provenance, permission status, and a consistent citation
+style so learners can see responsible technical practice end to end.
+
+In this chapter, you will document source provenance, then explain dataset limitations responsibly, and finally teach ethical data choices. Keep your notes evidence-based so you can explain not only what happened, but why it happened.
+
 ## What you are going to use
 
 - dataset origin notes
@@ -2182,6 +2316,20 @@ Note: Good documentation improves trust and reproducibility.
 
 Lightbulb Takeaway: Responsible AI education includes responsible data stories.
 
+## Copyright and permissions checklist
+
+- Record whether each source is original, licensed, public-domain, or classroom-fair-use.
+- Keep a simple permission note for each non-original text or image.
+- Avoid importing unclear or unverified source material into training data.
+- Add a one-line rights note when sharing worksheets, slides, or exports.
+
+## Citation style for this book and classroom materials
+
+- Use one citation style consistently across your teaching pack (APA 7th is recommended for school settings).
+- Include author, year, title, and source URL when citing online references.
+- If no author is available, use the organisation name and retrieval date.
+- Keep a short references list with every capstone report or presentation.
+
 ## After you interact: What you learned
 
 - You learned how provenance notes make dataset choices traceable and easier to justify.
@@ -2206,6 +2354,8 @@ Lightbulb Takeaway: Responsible AI education includes responsible data stories.
 ## Intro into this chapter
 
 This chapter gives complete talk tracks you can use in live teaching.
+
+You are aiming for practical understanding, not just completion. You will explain concepts in beginner language, strengthen your approach to move smoothly between technical steps, and conclude by learning to maintain engagement in plain language.
 
 ## What you are going to use
 
@@ -2310,6 +2460,10 @@ Lightbulb Takeaway: Clear language is a technical tool.
 
 This chapter provides workbook-style pages that can be used directly in class.
 
+By the end of this chapter, you should be able to convert model runs into
+learning artifacts, strengthen reasoning through writing, and produce assessable
+student evidence.
+
 ## What you are going to use
 
 - guided prompts
@@ -2410,6 +2564,8 @@ Lightbulb Takeaway: Output becomes learning when learners explain it in their ow
 
 This chapter helps learners build and present a complete final project.
 
+You are aiming for practical understanding, not just completion. You will scope a capstone well, strengthen your approach to present findings professionally, and conclude by learning to communicate limits honestly in plain language.
+
 ## What you are going to use
 
 - capstone planning template
@@ -2492,6 +2648,8 @@ Lightbulb Takeaway: A strong capstone explains both what changed and what remain
 ## Intro into this chapter
 
 This chapter turns the full book into a practical multi-week teaching schedule.
+
+You are aiming for practical understanding, not just completion. You will spread learning across multiple sessions, strengthen your approach to track progress week by week, and conclude by learning to integrate practice and reflection in plain language.
 
 ## What you are going to use
 
@@ -2627,6 +2785,10 @@ Lightbulb Takeaway: Long-term learning works best when each week produces a smal
 This chapter provides practical answers to the questions teachers and students
 ask most often.
 
+In this chapter, you will answer common conceptual questions, handle confusion
+points quickly, and keep explanations grounded and consistent. Keep your notes
+evidence-based so you can explain not only what happened, but why it happened.
+
 ## What you are going to use
 
 - FAQ prompts
@@ -2732,6 +2894,8 @@ limitation statement.
 ## Intro into this chapter
 
 This chapter gives compact reference cards for live teaching moments.
+
+This chapter takes you through a clear sequence: respond quickly during lessons, keep language concise under pressure, and maintain flow during demos. As you work, collect one concrete example for each step so your final explanation is easy to defend.
 
 ## What you are going to use
 
@@ -2843,6 +3007,8 @@ kairo-qa --checkpoint runs/lab3_qa/best.pt --question "Who pilots the Aurora?" -
 This chapter helps you move from workshop experiments to repeatable operational
 delivery in schools or clubs.
 
+You are aiming for practical understanding, not just completion. You will prepare a stable classroom deployment, strengthen your approach to avoid common operational pitfalls, and conclude by learning to recover quickly when issues appear in plain language.
+
 ## What you are going to use
 
 - deployment checklist
@@ -2946,6 +3112,8 @@ kairo-generate --checkpoint runs/card_baseline/best.pt --prompt "System check pr
 
 This chapter helps you make Kairo lessons inclusive for diverse learners.
 
+This chapter takes you through a clear sequence: support mixed experience levels, design equitable participation, and reduce cognitive overload. As you work, collect one concrete example for each step so your final explanation is easy to defend.
+
 ## What you are going to use
 
 - differentiated task roles
@@ -3031,6 +3199,10 @@ Lightbulb Takeaway: Inclusion improves technical quality because more perspectiv
 
 This chapter helps you evolve the curriculum over multiple cohorts.
 
+In this chapter, you will improve lesson quality each cycle, prioritize
+high-value changes, and track impact over time. Keep your notes evidence-based
+so you can explain not only what happened, but why it happened.
+
 ## What you are going to use
 
 - retrospective notes
@@ -3111,6 +3283,10 @@ Lightbulb Takeaway: Treat teaching quality like model quality—measure, adjust,
 This chapter is a complete meaning guide for technical terms and command
 parameters used across the whole book.
 
+You are aiming for practical understanding, not just completion. You will
+understand what each key concept means, understand what each command parameter
+controls, and explain workflow language clearly in plain language.
+
 ## What you are going to use
 
 - term definitions
@@ -3142,25 +3318,26 @@ Lightbulb Takeaway: Shared vocabulary makes collaboration and teaching easier.
 
 ## Core terms
 
-- **Attention**: Mechanism that weighs prior tokens when predicting the next token.
+- **Attention**: Mechanism that weighs prior tokens when predicting the next token (see Chapter 8).
 - **Batch**: Group of sequences processed in one training step.
-- **Checkpoint**: Saved model state such as `best.pt`.
-- **Context**: Reference text supplied before generation.
+- **Checkpoint**: Saved model state such as `best.pt` (see Chapters 5 and 13).
+- **Context**: Reference text supplied before generation (see Chapters 7 and 25).
 - **Corpus**: Prepared text collection used for training.
-- **Dataset**: Source text used for training or evaluation.
+- **Dataset**: Source text used for training or evaluation (see Chapters 5 and 15).
+- **Evidence**: Specific output, metric, or observation used to support a claim (see Chapters 1 and 6).
 - **Epoch**: One full pass through the training data.
-- **Grounding**: Anchoring output to supplied context.
+- **Grounding**: Anchoring output to supplied context (see Chapters 7 and 21).
 - **Inference**: Running a trained model to generate output.
-- **Loss**: Numerical error signal used in training/evaluation.
+- **Loss**: Numerical error signal used in training/evaluation (see Chapters 6 and 18).
 - **Model architecture**: Structural design (layers, heads, model width).
 - **Next-token prediction**: Predicting the next token from prior tokens.
-- **Perplexity**: Uncertainty measure derived from loss.
+- **Perplexity**: Uncertainty measure derived from loss (see Chapters 6 and 19).
 - **Prompt**: Input text to start generation.
 - **Provenance**: Record of where source data came from and how it was prepared.
 - **Rubric**: Structured scoring guide for evaluating learner work.
 - **Capstone**: Final synthesis project that demonstrates end-to-end mastery.
-- **Retraining**: Training again on new or changed data.
-- **Token**: Unit of text processed by the model (byte-based in Kairo).
+- **Retraining**: Training again on new or changed data (see Chapters 5 and 24).
+- **Token**: Unit of text processed by the model (byte-based in Kairo; see Chapter 17).
 - **Validation**: Performance check on held-out data.
 
 ## Parameter glossary (entire book)
@@ -3211,6 +3388,10 @@ Lightbulb Takeaway: Shared vocabulary makes collaboration and teaching easier.
 
 You have now completed a full beginner-to-practice AI journey. This conclusion
 helps you anchor what matters most so your confidence lasts beyond this book.
+
+By the end of this chapter, you should be able to identify the core skills you
+now have, carry those skills into future projects, and continue learning without
+overwhelm.
 
 ## What you are going to use
 
@@ -3263,6 +3444,23 @@ larger models, and more advanced AI systems.
 - Write a one-page personal summary that links one skill, one evidence example, and one next-step project.
 - Share your summary with a peer and compare which evidence each of you chose to represent progress.
 
+## References (APA 7th Edition)
+
+- Bender, E. M., Gebru, T., McMillan-Major, A., & Shmitchell, S. (2021). On the dangers of stochastic parrots: Can language models be too big? *Proceedings of the 2021 ACM Conference on Fairness, Accountability, and Transparency*, 610-623. https://doi.org/10.1145/3442188.3445922
+- Brown, T. B., Mann, B., Ryder, N., Subbiah, M., Kaplan, J. D., Dhariwal, P., Neelakantan, A., Shyam, P., Sastry, G., Askell, A., Agarwal, S., Herbert-Voss, A., Krueger, G., Henighan, T., Child, R., Ramesh, A., Ziegler, D. M., Wu, J., Winter, C., ... Amodei, D. (2020). Language models are few-shot learners. *Advances in Neural Information Processing Systems, 33*, 1877-1901. https://proceedings.neurips.cc/paper/2020/hash/1457c0d6bfcb4967418bfb8ac142f64a-Abstract.html
+- OpenAI. (2023). *GPT-4 technical report*. arXiv. https://arxiv.org/abs/2303.08774
+- Touretzky, D. S., Gardner-McCune, C., Martin, F., & Seehorn, D. (2019). Envisioning AI for K-12: What should every child know about AI? *Proceedings of the AAAI Conference on Artificial Intelligence, 33*(1), 9795-9799. https://doi.org/10.1609/aaai.v33i01.33019795
+- Hmelo-Silver, C. E. (2004). Problem-based learning: What and how do students learn? *Educational Psychology Review, 16*(3), 235-266. https://doi.org/10.1023/B:EDPR.0000034022.16470.f3
+- Kolb, D. A. (1984). *Experiential learning: Experience as the source of learning and development*. Prentice Hall.
+- Vaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A. N., Kaiser, L., & Polosukhin, I. (2017). Attention is all you need. arXiv. https://arxiv.org/abs/1706.03762
+
+## Sources and Further Reading
+
+- AI4K12 Initiative. (n.d.). *Five big ideas in AI*. https://ai4k12.org
+- MIT RAISE. (n.d.). *Day of AI curriculum resources*. https://raise.mit.edu/dayofai
+- OpenAI. (n.d.). *OpenAI research index*. https://openai.com/research
+- UNESCO. (2021). *AI and education: Guidance for policy-makers*. https://unesdoc.unesco.org
+
 ---
 
 # Chapter 43: About the Author
@@ -3271,6 +3469,11 @@ larger models, and more advanced AI systems.
 
 This chapter introduces the author and the teaching intent behind the *Tech I
 Can* series.
+
+In this chapter, you will learn who wrote this guide, explain why the content is
+structured for classrooms, and understand what values informed the book design.
+Keep your notes evidence-based so you can explain not only what happened, but
+why it happened.
 
 ## What you are going to use
 
@@ -3337,6 +3540,8 @@ without hype, so AI becomes a tool for thoughtful learning, not a mystery.
 This chapter gives you a fast lookup list of important terms and where they
 appear in the book.
 
+Use this chapter to build a repeatable habit: locate core concepts quickly, revise efficiently before teaching or presenting, and connect terms back to practical examples. That sequence will help you connect hands-on steps to clear reasoning.
+
 ## What you are going to use
 
 - alphabetical term list
@@ -3358,9 +3563,7 @@ appear in the book.
 ## Examples of what you might see
 
 ```text
-Token -> pages 47, 53, 95, 111
-Grounding -> pages 66, 98, 111
-Prompt -> pages 45, 64, 85, 113
+Use the generated index below for literal page numbers from this exact build.
 ```
 
 ## Some explanation

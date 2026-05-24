@@ -17,6 +17,8 @@ train a tiny transformer, compare outputs before and after changing the training
 data, and inspect token probabilities and attention so LLMs feel understandable
 rather than magical.
 
+Repository: [whiteyoh/kiaro](https://github.com/whiteyoh/kiaro)
+
 ---
 
 ## Why Kairo?
@@ -201,6 +203,9 @@ ruff check .
 python -m compileall src tests tools
 pytest -q
 ```
+
+For local parity with CI, install `.[dev,learn,pdf]` first. Without the `pdf`
+extra, the book-generation tests are skipped by design.
 
 ---
 

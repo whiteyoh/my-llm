@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from collections import defaultdict
-from datetime import datetime
+from datetime import UTC, datetime
 from html import escape
 from pathlib import Path
 import re
@@ -48,7 +48,11 @@ ASSETS = DOCS / "assets"
 PRINTABLE = DOCS / "printable"
 BOOK_MD = DOCS / "tech_i_can_kairo_book.md"
 BOOK_PDF = PRINTABLE / "Tech_I_Can_Kairo_Book.pdf"
-COVER_IMAGE = ASSETS / "tech-i-can-cover.png"
+COVER_IMAGE = ASSETS / "tech-i-can-cover.jpg"
+FIGURE_LEARNING_LOOP = ASSETS / "figure-learning-loop.jpg"
+FIGURE_LEARN_MODE = ASSETS / "figure-learn-mode.jpg"
+FIGURE_TRAINING_CURVE = ASSETS / "figure-training-curve.jpg"
+FIGURE_QA_GROUNDING = ASSETS / "figure-qa-grounding.jpg"
 
 BOOK_TITLE = "Tech I Can"
 BOOK_TAGLINE = "Curious today, Confident tomorrow"
@@ -66,10 +70,12 @@ BOOK_META_AUTHOR = "Paul McMurray"
 BOOK_META_SUBJECT = "Beginner guide to Kairo"
 BOOK_META_CREATOR = "Tech I Can Production Pipeline"
 BOOK_META_CREATION_DATE = "2026-05-01T00:00:00+00:00"
+TARGET_PDF_SIZE_BYTES = 650 * 1024
+MIN_INTRO_WORDS = 28
 
 
 def _build_mod_date() -> str:
-    return datetime.utcnow().strftime("D:%Y%m%d%H%M%SZ")
+    return datetime.now(tz=UTC).strftime("D:%Y%m%d%H%M%SZ")
 
 
 def apply_accessibility_catalog_tags(pdf_path: Path) -> None:
@@ -88,11 +94,27 @@ def apply_accessibility_catalog_tags(pdf_path: Path) -> None:
     tagged_path.replace(pdf_path)
 
 
+def _optimise_pdf_with_pypdf(pdf_path: Path) -> bool:
+    optimised_path = pdf_path.with_name(f"{pdf_path.stem}.optimised{pdf_path.suffix}")
+    reader = PdfReader(str(pdf_path))
+    writer = PdfWriter()
+    writer.clone_document_from_reader(reader)
+    for page in writer.pages:
+        compress_fn = getattr(page, "compress_content_streams", None)
+        if callable(compress_fn):
+            compress_fn()
+
+    with optimised_path.open("wb") as handle:
+        writer.write(handle)
+    optimised_path.replace(pdf_path)
+    return True
+
+
 def optimise_pdf_with_ghostscript(pdf_path: Path) -> bool:
     gs_path = shutil.which("gs")
     if not gs_path:
-        print("Ghostscript not found; skipping PDF optimisation step.")
-        return False
+        print("Ghostscript not found; using pypdf fallback optimisation.")
+        return _optimise_pdf_with_pypdf(pdf_path)
 
     optimised_path = pdf_path.with_name(f"{pdf_path.stem}.optimised{pdf_path.suffix}")
     cmd = [
@@ -106,9 +128,128 @@ def optimise_pdf_with_ghostscript(pdf_path: Path) -> bool:
         f"-sOutputFile={optimised_path}",
         str(pdf_path),
     ]
-    subprocess.run(cmd, check=True)
-    optimised_path.replace(pdf_path)
+    try:
+        subprocess.run(cmd, check=True)
+        optimised_path.replace(pdf_path)
+    except subprocess.CalledProcessError:
+        print("Ghostscript optimisation failed; using pypdf fallback optimisation.")
+        return _optimise_pdf_with_pypdf(pdf_path)
+
+    if pdf_path.stat().st_size > TARGET_PDF_SIZE_BYTES:
+        print("Ghostscript output still above size target; applying pypdf fallback optimisation.")
+        return _optimise_pdf_with_pypdf(pdf_path)
+
     return True
+
+
+def ensure_support_figure_images() -> None:
+    ASSETS.mkdir(parents=True, exist_ok=True)
+
+    def _font(size: int) -> ImageFont.ImageFont:
+        candidates = [
+            "/System/Library/Fonts/Supplemental/Helvetica.ttc",
+            "/System/Library/Fonts/Supplemental/Arial.ttf",
+            "/System/Library/Fonts/Supplemental/Times New Roman.ttf",
+        ]
+        for candidate in candidates:
+            try:
+                return ImageFont.truetype(candidate, size=size)
+            except OSError:
+                continue
+        return ImageFont.load_default()
+
+    def _save_figure(path: Path, painter) -> None:
+        w, h = 1280, 720
+        img = PILImage.new("RGB", (w, h), "#f8fafc")
+        draw = ImageDraw.Draw(img)
+        # subtle header band
+        draw.rectangle((0, 0, w, 92), fill="#e2e8f0")
+        painter(draw, w, h)
+        img.save(path, format="JPEG", quality=78, optimize=True, progressive=True, subsampling=1)
+
+    def _paint_learning_loop(draw: ImageDraw.ImageDraw, w: int, h: int) -> None:
+        title = _font(44)
+        body = _font(22)
+        draw.text((52, 20), "Learning Evidence Loop", fill="#0f172a", font=title)
+        labels = ["Run", "Observe", "Compare", "Explain", "Improve"]
+        points = [(175, 306), (440, 176), (780, 200), (960, 420), (510, 520)]
+        for i, (x, y) in enumerate(points):
+            nx, ny = points[(i + 1) % len(points)]
+            draw.line((x + 52, y, nx - 52, ny), fill="#334155", width=5)
+        for i, (x, y) in enumerate(points):
+            draw.ellipse((x - 58, y - 58, x + 58, y + 58), fill="#dbeafe", outline="#2563eb", width=4)
+            label = labels[i]
+            left, top, right, bottom = draw.textbbox((0, 0), label, font=body)
+            text_w = right - left
+            text_h = bottom - top
+            draw.text((x - text_w / 2, y - text_h / 2 - 1), label, fill="#1e3a8a", font=body)
+        draw.text((52, 654), "Use this cycle for every chapter activity and reflection.", fill="#334155", font=body)
+
+    def _paint_training_curve(draw: ImageDraw.ImageDraw, w: int, h: int) -> None:
+        title = _font(44)
+        body = _font(22)
+        draw.text((52, 20), "Training vs Validation Curve Read", fill="#0f172a", font=title)
+        # axes
+        draw.line((110, 600, 1150, 600), fill="#1f2937", width=4)
+        draw.line((110, 600, 110, 140), fill="#1f2937", width=4)
+        # train curve
+        train_pts = [(144, 546), (338, 453), (552, 373), (766, 313), (974, 286)]
+        val_pts = [(144, 520), (338, 413), (552, 360), (766, 373), (974, 406)]
+        draw.line(train_pts, fill="#0ea5e9", width=5)
+        draw.line(val_pts, fill="#f97316", width=5)
+        for x, y in train_pts:
+            draw.ellipse((x - 6, y - 6, x + 6, y + 6), fill="#0ea5e9")
+        for x, y in val_pts:
+            draw.rectangle((x - 6, y - 6, x + 6, y + 6), fill="#f97316")
+        draw.text((1020, 246), "Train", fill="#0c4a6e", font=body)
+        draw.text((1020, 426), "Validation", fill="#9a3412", font=body)
+        draw.text((148, 628), "Epoch", fill="#334155", font=body)
+        draw.text((22, 136), "Loss", fill="#334155", font=body)
+        draw.text((52, 670), "Watch for the gap: train down, validation up.", fill="#334155", font=body)
+
+    def _paint_learn_mode(draw: ImageDraw.ImageDraw, w: int, h: int) -> None:
+        title = _font(44)
+        body = _font(22)
+        draw.text((52, 20), "Learn Mode Evidence Surfaces", fill="#0f172a", font=title)
+        panels = [
+            (78, 152, 406, 506, "#e0f2fe", "Token Preview", "How text is split"),
+            (476, 152, 804, 506, "#ede9fe", "Probabilities", "What the model prefers"),
+            (874, 152, 1202, 506, "#dcfce7", "Attention Map", "What tokens influence focus"),
+        ]
+        for x1, y1, x2, y2, fill, title_txt, sub_txt in panels:
+            draw.rounded_rectangle((x1, y1, x2, y2), radius=20, fill=fill, outline="#334155", width=3)
+            draw.text((x1 + 18, y1 + 16), title_txt, fill="#0f172a", font=body)
+            draw.text((x1 + 18, y1 + 62), sub_txt, fill="#334155", font=_font(18))
+            for i in range(6):
+                y = y1 + 112 + i * 38
+                draw.rectangle((x1 + 18, y, x2 - 18, y + 18), fill="#ffffff", outline="#cbd5e1", width=1)
+        draw.text((52, 654), "Use each panel to support a specific claim in your reflection notes.", fill="#334155", font=body)
+
+    def _paint_qa_grounding(draw: ImageDraw.ImageDraw, w: int, h: int) -> None:
+        title = _font(44)
+        body = _font(22)
+        draw.text((52, 20), "Grounded QA Flow", fill="#0f172a", font=title)
+        # boxes
+        boxes = [
+            (78, 172, 412, 346, "#dbeafe", "Question"),
+            (472, 172, 840, 346, "#dcfce7", "Context"),
+            (908, 172, 1202, 346, "#fef3c7", "Answer"),
+        ]
+        for x1, y1, x2, y2, color, label in boxes:
+            draw.rounded_rectangle((x1, y1, x2, y2), radius=18, fill=color, outline="#334155", width=3)
+            draw.text((x1 + 16, y1 + 16), label, fill="#0f172a", font=body)
+        draw.text((98, 236), "Who pilots\nthe Aurora?", fill="#1e3a8a", font=body)
+        draw.text((494, 236), "Captain Rowan is\nthe pilot.", fill="#14532d", font=body)
+        draw.text((928, 236), "Captain Rowan\npilots the Aurora.", fill="#92400e", font=body)
+        draw.line((412, 258, 472, 258), fill="#334155", width=5)
+        draw.line((840, 258, 908, 258), fill="#334155", width=5)
+        draw.text((52, 654), "Better context gives clearer, safer answers.", fill="#334155", font=body)
+
+    _save_figure(FIGURE_LEARNING_LOOP, _paint_learning_loop)
+    _save_figure(FIGURE_LEARN_MODE, _paint_learn_mode)
+    _save_figure(FIGURE_TRAINING_CURVE, _paint_training_curve)
+    _save_figure(FIGURE_QA_GROUNDING, _paint_qa_grounding)
+
 
 rl_config.invariant = 1
 PAGE_TOTAL_HINT = 0
@@ -159,6 +300,9 @@ class BookDocTemplate(BaseDocTemplate):
         section_marker = getattr(flowable, "_running_section", None)
         if chapter_marker:
             self.current_running_chapter = chapter_marker
+        chapter_number = getattr(flowable, "_chapter_number", None)
+        if chapter_number:
+            self.current_chapter_number = chapter_number
         chapter_accent = getattr(flowable, "_chapter_accent", None)
         if chapter_accent:
             self.current_chapter_accent = chapter_accent
@@ -168,7 +312,7 @@ class BookDocTemplate(BaseDocTemplate):
 
 def ensure_cover_image(path: Path) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    width, height = 2480, 3508
+    width, height = 1600, 2262
     image = PILImage.new("RGB", (width, height), "#050b18")
     draw = ImageDraw.Draw(image)
 
@@ -183,7 +327,7 @@ def ensure_cover_image(path: Path) -> None:
     # Diagonal sheen overlay.
     sheen = PILImage.new("RGBA", (width, height), (0, 0, 0, 0))
     sheen_draw = ImageDraw.Draw(sheen, "RGBA")
-    for i in range(-height, width, 120):
+    for i in range(-height, width, 86):
         sheen_draw.line(
             [(i, 0), (i + height, height)],
             fill=(255, 255, 255, 22),
@@ -194,10 +338,10 @@ def ensure_cover_image(path: Path) -> None:
     # Soft glow shapes for depth.
     glow = PILImage.new("RGBA", (width, height), (0, 0, 0, 0))
     glow_draw = ImageDraw.Draw(glow, "RGBA")
-    glow_draw.ellipse((-380, -120, 1120, 1280), fill=(56, 189, 248, 120))
-    glow_draw.ellipse((1320, 120, 2860, 1580), fill=(16, 185, 129, 115))
-    glow_draw.ellipse((640, 2550, 2420, 4300), fill=(59, 130, 246, 140))
-    glow = glow.filter(ImageFilter.GaussianBlur(28))
+    glow_draw.ellipse((-250, -86, 720, 832), fill=(56, 189, 248, 110))
+    glow_draw.ellipse((850, 82, 1845, 1020), fill=(16, 185, 129, 105))
+    glow_draw.ellipse((410, 1640, 1570, 2780), fill=(59, 130, 246, 130))
+    glow = glow.filter(ImageFilter.GaussianBlur(21))
 
     composed = PILImage.alpha_composite(image.convert("RGBA"), glow)
     composed = PILImage.alpha_composite(composed, sheen)
@@ -205,15 +349,11 @@ def ensure_cover_image(path: Path) -> None:
     # Text area panel for cleaner readability.
     panel = PILImage.new("RGBA", (width, height), (0, 0, 0, 0))
     panel_draw = ImageDraw.Draw(panel, "RGBA")
-    panel_draw.rounded_rectangle(
-        (210, 1500, 2260, 2920),
-        radius=34,
-        fill=(8, 17, 40, 125),
-        outline=(255, 255, 255, 48),
-        width=2,
-    )
-    panel_draw.rectangle((280, 1530, 2140, 1600), fill=(245, 158, 11, 240))
-    panel_draw.rectangle((280, 2790, 2140, 2830), fill=(148, 163, 184, 230))
+    panel_draw.rounded_rectangle((124, 930, 1478, 1930), radius=30, fill=(6, 16, 38, 138), outline=(255, 255, 255, 58), width=2)
+    panel_draw.rectangle((176, 964, 1420, 1010), fill=(245, 158, 11, 245))
+    panel_draw.rectangle((176, 1840, 1420, 1872), fill=(148, 163, 184, 236))
+    panel_draw.ellipse((1110, 770, 1608, 1270), fill=(56, 189, 248, 48))
+    panel_draw.ellipse((-110, 1560, 430, 2150), fill=(20, 184, 166, 44))
     composed = PILImage.alpha_composite(composed, panel)
     image = composed.convert("RGB")
 
@@ -231,13 +371,13 @@ def ensure_cover_image(path: Path) -> None:
         return ImageFont.load_default()
 
     draw = ImageDraw.Draw(image)
-    title_font = load_font(206)
-    chapter_font = load_font(132)
-    tag_font = load_font(66)
-    subtitle_font = load_font(52)
-    meta_font = load_font(44)
-    strip_font = load_font(44)
-    author_font = load_font(64)
+    title_font = load_font(140)
+    chapter_font = load_font(88)
+    tag_font = load_font(40)
+    subtitle_font = load_font(32)
+    meta_font = load_font(28)
+    strip_font = load_font(28)
+    author_font = load_font(42)
 
     def draw_centered_text(text: str, font: ImageFont.ImageFont, y: int, fill: tuple[int, int, int]) -> None:
         left, right = 280, 2140
@@ -246,16 +386,23 @@ def ensure_cover_image(path: Path) -> None:
         x = int(left + ((right - left - width) / 2))
         draw.text((x, y), text, fill=fill, font=font)
 
-    draw.text((280, 1688), "TECH I CAN", fill=(249, 250, 251), font=title_font)
-    draw.text((280, 1868), "Kairo", fill=(251, 191, 36), font=chapter_font)
-    draw.text((280, 2070), BOOK_TAGLINE, fill=(224, 231, 255), font=tag_font)
-    draw.text((280, 2230), "A practical beginner guide to tiny language models", fill=(226, 232, 240), font=subtitle_font)
-    draw.text((280, 2472), BOOK_EDITION, fill=(177, 194, 214), font=meta_font)
-    draw.text((280, 2550), BOOK_SERIES, fill=(170, 186, 205), font=meta_font)
-    draw.text((280, 2630), f"By {BOOK_AUTHOR}", fill=(241, 245, 249), font=author_font)
-    draw_centered_text("Build. Train. Compare. Explain.", strip_font, 2732, (227, 235, 246))
+    draw.text((176, 1086), "TECH I CAN", fill=(249, 250, 251), font=title_font)
+    draw.text((176, 1214), "Kairo", fill=(251, 191, 36), font=chapter_font)
+    draw.text((176, 1340), BOOK_TAGLINE, fill=(224, 231, 255), font=tag_font)
+    draw.text((176, 1440), "A practical beginner guide to tiny language models", fill=(226, 232, 240), font=subtitle_font)
+    draw.text((176, 1592), BOOK_EDITION, fill=(177, 194, 214), font=meta_font)
+    draw.text((176, 1642), BOOK_SERIES, fill=(170, 186, 205), font=meta_font)
+    draw.text((176, 1702), f"By {BOOK_AUTHOR}", fill=(241, 245, 249), font=author_font)
+    draw_centered_text("Build. Train. Compare. Explain.", strip_font, 1770, (227, 235, 246))
 
-    image.save(path, format="PNG")
+    image.save(
+        path,
+        format="JPEG",
+        quality=64,
+        optimize=True,
+        progressive=True,
+        subsampling=2,
+    )
 
 
 def clean_lines(text: str) -> list[str]:
@@ -274,6 +421,8 @@ def validate_book_structure(lines: list[str]) -> None:
         raise SystemExit("Book markdown is missing the glossary chapter heading.")
     if "# Chapter 44: Key Words Index" not in text:
         raise SystemExit("Book markdown is missing the key words index chapter heading.")
+    if "## References (APA 7th Edition)" not in text:
+        raise SystemExit("Book markdown is missing the APA references section.")
 
     code_blocks: list[tuple[int, int, str]] = []
     in_code = False
@@ -314,6 +463,83 @@ def validate_book_structure(lines: list[str]) -> None:
         raise SystemExit(
             f"Parameter(s) used in manuscript but missing from glossary: {missing_glossary_params}"
         )
+
+    # Image accessibility and caption discipline.
+    image_line_re = re.compile(r"^!\[(.*?)\]\((.*?)\)$")
+    for idx, line in enumerate(lines):
+        stripped = line.strip()
+        image_match = image_line_re.match(stripped)
+        if not image_match:
+            continue
+        alt_text = image_match.group(1).strip()
+        if len(alt_text) < 8:
+            raise SystemExit(f"Image at line {idx + 1} must include meaningful alt text.")
+
+        caption_found = False
+        for probe in range(idx + 1, min(len(lines), idx + 5)):
+            candidate = lines[probe].strip()
+            if not candidate:
+                continue
+            caption_found = candidate.lower().startswith("caption:")
+            break
+        if not caption_found:
+            raise SystemExit(f"Image at line {idx + 1} must be followed by a 'Caption:' line.")
+
+    # Guard against repeated boilerplate in learning/assessment bullets.
+    section = ""
+    chapter = ""
+    learned_seen: dict[str, str] = {}
+    reflection_seen: dict[str, str] = {}
+    for raw_line in lines:
+        stripped = raw_line.strip()
+        if stripped.startswith("# Chapter "):
+            chapter = stripped[2:].strip()
+            section = ""
+            continue
+        if stripped.startswith("## "):
+            section = stripped[3:].strip().lower()
+            continue
+        if not stripped.startswith("- "):
+            continue
+        bullet = stripped[2:].strip().lower()
+        if section.startswith("after you interact: what you learned"):
+            prior = learned_seen.get(bullet)
+            if prior and prior != chapter:
+                raise SystemExit(f"Repeated 'What you learned' bullet in {prior} and {chapter}: {bullet}")
+            learned_seen[bullet] = chapter
+        if section.startswith("reflection questions"):
+            prior = reflection_seen.get(bullet)
+            if prior and prior != chapter:
+                raise SystemExit(f"Repeated reflection question in {prior} and {chapter}: {bullet}")
+            reflection_seen[bullet] = chapter
+
+    # Treat markdown as publishable master: chapter intros must stand on their own.
+    chapter = ""
+    in_intro = False
+    intro_words = 0
+    chapter_intro_counts: dict[str, int] = {}
+    for raw_line in lines:
+        stripped = raw_line.strip()
+        if stripped.startswith("# "):
+            if chapter.startswith("Chapter "):
+                chapter_intro_counts[chapter] = intro_words
+            chapter = stripped[2:].strip()
+            in_intro = False
+            intro_words = 0
+            continue
+        if stripped.startswith("## "):
+            in_intro = stripped[3:].strip().lower() == "intro into this chapter"
+            continue
+        if not in_intro or not stripped or stripped.startswith("![") or stripped.startswith("Caption:"):
+            continue
+        intro_words += len(stripped.split())
+    if chapter.startswith("Chapter "):
+        chapter_intro_counts[chapter] = intro_words
+
+    short_intros = [(name, count) for name, count in chapter_intro_counts.items() if count < MIN_INTRO_WORDS]
+    if short_intros:
+        sample = ", ".join(f"{name} ({count} words)" for name, count in short_intros[:8])
+        raise SystemExit(f"Chapter intro sections are too short (<{MIN_INTRO_WORDS} words): {sample}")
 
 
 def extract_keyword_terms(lines: list[str]) -> list[str]:
@@ -455,6 +681,35 @@ def merge_callout_continuations(lines: list[str]) -> list[str]:
         message = " ".join(message_parts).strip()
         merged.append(f"{label}: {message}" if message else f"{label}:")
     return merged
+
+
+def chapter_focus_bridge(chapter_title: str, objectives: list[str]) -> str:
+    cleaned = [item.strip().rstrip(".") for item in objectives if item.strip()]
+    if not cleaned:
+        return ""
+
+    primary = cleaned[0]
+    secondary = cleaned[1] if len(cleaned) > 1 else cleaned[0]
+    tertiary = cleaned[2] if len(cleaned) > 2 else cleaned[-1]
+    variants = [
+        f"In practical terms, this chapter helps you {primary}, then {secondary}, and finally {tertiary}. Keep your notes focused on what changed and why.",
+        f"Think of this chapter as a guided rehearsal for {primary}. You then deepen that work through {secondary} and {tertiary}, so you can explain your results with confidence.",
+        f"Your main target here is to {primary}. The chapter then extends into {secondary} and {tertiary}, giving you a complete evidence trail to discuss.",
+        f"This chapter moves step by step: first {primary}, then {secondary}, then {tertiary}. By the end, you should be able to teach the same sequence clearly to someone else.",
+    ]
+    index = sum(ord(ch) for ch in chapter_title) % len(variants)
+    return variants[index]
+
+
+def parse_markdown_image(line: str) -> tuple[str, str] | None:
+    match = re.match(r"^!\[(.*?)\]\((.*?)\)$", line.strip())
+    if not match:
+        return None
+    alt_text = match.group(1).strip()
+    rel_path = match.group(2).strip()
+    if not rel_path:
+        return None
+    return (alt_text, rel_path)
 
 
 def pick_primary_pages(pages: list[int], max_items: int = 5) -> list[int]:
@@ -654,6 +909,23 @@ def build_styles() -> dict[str, ParagraphStyle]:
             spaceAfter=5,
             **flow_control,
         ),
+        "intro_bridge": ParagraphStyle(
+            "IntroBridge",
+            parent=base["BodyText"],
+            fontName="Times-Italic",
+            fontSize=11.6,
+            leading=17.2,
+            alignment=4,
+            textColor=colors.HexColor("#1f2937"),
+            backColor=colors.HexColor("#f8fafc"),
+            borderColor=colors.HexColor("#cbd5e1"),
+            borderWidth=0.6,
+            borderPadding=6,
+            borderRadius=2,
+            spaceBefore=5,
+            spaceAfter=8,
+            **flow_control,
+        ),
         "takeaway_box": ParagraphStyle(
             "TakeawayBox",
             parent=base["BodyText"],
@@ -800,6 +1072,30 @@ def build_styles() -> dict[str, ParagraphStyle]:
             spaceAfter=9,
             **flow_control,
         ),
+        "figure_caption": ParagraphStyle(
+            "FigureCaption",
+            parent=base["BodyText"],
+            fontName="Helvetica-Bold",
+            fontSize=9.6,
+            leading=12.5,
+            textColor=colors.HexColor("#334155"),
+            alignment=1,
+            spaceBefore=2,
+            spaceAfter=2,
+            **flow_control,
+        ),
+        "figure_alt": ParagraphStyle(
+            "FigureAlt",
+            parent=base["BodyText"],
+            fontName="Helvetica-Oblique",
+            fontSize=8.8,
+            leading=11.8,
+            textColor=colors.HexColor("#475569"),
+            alignment=1,
+            spaceBefore=0,
+            spaceAfter=8,
+            **flow_control,
+        ),
         "index_entry": ParagraphStyle(
             "IndexEntry",
             parent=base["BodyText"],
@@ -930,10 +1226,18 @@ def build_body_story(
     learned_points = 0
     has_custom_reflection = False
     has_custom_try_next = False
+    in_intro_section = False
+    intro_char_count = 0
+    chapter_objectives: list[str] = []
+    in_learning_objectives = False
 
     def flush_paragraph() -> None:
+        nonlocal intro_char_count
         if paragraph:
-            story.append(Paragraph(inline_markup(" ".join(paragraph).strip()), styles["body"]))
+            joined = " ".join(paragraph).strip()
+            story.append(Paragraph(inline_markup(joined), styles["body"]))
+            if in_intro_section:
+                intro_char_count += len(joined)
             paragraph.clear()
 
     def flush_code() -> None:
@@ -1000,6 +1304,11 @@ def build_body_story(
         learned_points = 0
         has_custom_reflection = False
         has_custom_try_next = False
+
+    def append_intro_bridge_if_needed() -> None:
+        # Markdown is now treated as publishable source-of-truth.
+        # Keep renderer output faithful and avoid hidden prose injection.
+        return
 
     def append_keyword_index() -> None:
         entries = keyword_page_map or {}
@@ -1076,6 +1385,36 @@ def build_body_story(
             story.append(KeepTogether([Paragraph(text, styles[style_key])]))
             continue
 
+        image_info = parse_markdown_image(stripped)
+        if image_info:
+            flush_paragraph()
+            flush_table()
+            alt_text, rel_path = image_info
+            image_path = (ROOT / rel_path).resolve() if not Path(rel_path).is_absolute() else Path(rel_path)
+            if image_path.exists():
+                with PILImage.open(image_path) as img_meta:
+                    src_w, src_h = img_meta.size
+                target_w = width * 0.86
+                ratio = src_h / max(1, src_w)
+                target_h = target_w * ratio
+                max_h = 92 * mm
+                if target_h > max_h:
+                    scale = max_h / target_h
+                    target_h = max_h
+                    target_w *= scale
+                fig = Image(str(image_path), width=target_w, height=target_h, hAlign="CENTER")
+                story.append(fig)
+                story.append(Paragraph(inline_markup(f"Alt text: {alt_text}"), styles["figure_alt"]))
+            else:
+                story.append(Paragraph(inline_markup(f"Note: missing figure file: {rel_path}"), styles["note_box"]))
+            continue
+
+        if stripped.lower().startswith("caption:"):
+            flush_paragraph()
+            caption_text = stripped.split(":", 1)[1].strip()
+            story.append(Paragraph(inline_markup(caption_text), styles["figure_caption"]))
+            continue
+
         if stripped.startswith("```"):
             flush_paragraph()
             flush_table()
@@ -1104,6 +1443,7 @@ def build_body_story(
 
         if stripped.startswith("# "):
             flush_paragraph()
+            append_intro_bridge_if_needed()
             append_recap_extensions()
             heading_text = stripped[2:]
             if not first_heading:
@@ -1113,18 +1453,30 @@ def build_body_story(
             chapter_accent = chapter_accent_for_heading(heading_text)
             has_custom_reflection = False
             has_custom_try_next = False
+            in_intro_section = False
+            intro_char_count = 0
+            chapter_objectives = []
+            in_learning_objectives = False
             para = Paragraph(inline_markup(heading_text), styles["chapter"])
             para._toc_level = 0  # type: ignore[attr-defined]
             para._toc_text = chapter_toc_title(heading_text)  # type: ignore[attr-defined]
             para._running_chapter = chapter_toc_title(heading_text)  # type: ignore[attr-defined]
+            chapter_no_match = re.match(r"^Chapter\s+(\d+):", heading_text, flags=re.IGNORECASE)
+            if chapter_no_match:
+                para._chapter_number = chapter_no_match.group(1)  # type: ignore[attr-defined]
             para._chapter_accent = chapter_accent  # type: ignore[attr-defined]
             story.append(para)
             append_chapter_band(story, width, chapter_accent)
             continue
         if stripped.startswith("## "):
             flush_paragraph()
+            append_intro_bridge_if_needed()
             section_text = stripped[3:]
             section_lower = section_text.lower()
+            in_intro_section = section_lower.startswith("intro into this chapter")
+            if not in_intro_section:
+                intro_char_count = 0
+            in_learning_objectives = section_lower.startswith("what you will learn in this chapter")
             if in_after_learning and section_lower.startswith("reflection questions"):
                 has_custom_reflection = True
                 in_after_learning = False
@@ -1149,10 +1501,13 @@ def build_body_story(
             continue
         if stripped.startswith("### "):
             flush_paragraph()
+            append_intro_bridge_if_needed()
             story.append(Paragraph(inline_markup(stripped[4:]), styles["section"]))
             continue
         if stripped.startswith("- "):
             flush_paragraph()
+            if in_learning_objectives:
+                chapter_objectives.append(stripped[2:].strip())
             if in_after_learning:
                 learned_points += 1
                 story.append(Paragraph(inline_markup(stripped[2:]), styles["learned_detail"], bulletText="•"))
@@ -1174,6 +1529,7 @@ def build_body_story(
         paragraph.append(stripped)
 
     flush_paragraph()
+    append_intro_bridge_if_needed()
     append_recap_extensions()
     flush_code()
     flush_table()
@@ -1183,13 +1539,15 @@ def build_body_story(
 def draw_body_page_background(canvas, doc) -> None:  # type: ignore[no-untyped-def]
     canvas.saveState()
     page_w, page_h = doc.pagesize
-    canvas.setFillColor(colors.HexColor("#ececec"))
+    canvas.setFillColor(colors.HexColor("#e7ebf1"))
     canvas.rect(0, 0, page_w, page_h, stroke=0, fill=1)
     canvas.setFillColor(colors.HexColor("#ffffff"))
     canvas.rect(doc.leftMargin - 6 * mm, doc.bottomMargin - 4 * mm, doc.width + 12 * mm, doc.height + 8 * mm, stroke=0, fill=1)
     accent_hex = getattr(doc, "current_chapter_accent", BRAND_ACCENTS[0])
     canvas.setFillColor(tint(accent_hex, 0.84))
     canvas.rect(doc.leftMargin - 6 * mm, doc.bottomMargin - 4 * mm, 1.6 * mm, doc.height + 8 * mm, stroke=0, fill=1)
+    canvas.setFillColor(tint(accent_hex, 0.92))
+    canvas.circle(page_w - doc.rightMargin + 1.5 * mm, page_h - doc.topMargin + 2 * mm, 4.2 * mm, stroke=0, fill=1)
     canvas.restoreState()
 
 
@@ -1202,10 +1560,15 @@ def draw_body_page_overlay(canvas, doc) -> None:  # type: ignore[no-untyped-def]
     canvas.setLineWidth(0.5)
     canvas.line(doc.leftMargin, page_h - 15 * mm, page_w - doc.rightMargin, page_h - 15 * mm)
     chapter = getattr(doc, "current_running_chapter", "Main")
+    chapter_number = str(getattr(doc, "current_chapter_number", ""))
 
     canvas.setFillColor(colors.HexColor("#0f172a"))
     canvas.setFont("Helvetica-Bold", 9)
     canvas.drawString(doc.leftMargin, page_h - 11.3 * mm, f"{BOOK_TITLE} | {chapter}")
+    if chapter_number:
+        canvas.setFillColor(tint(accent_hex, 0.78))
+        canvas.setFont("Helvetica-Bold", 34)
+        canvas.drawRightString(page_w - doc.rightMargin + 4.2 * mm, page_h - 10.2 * mm, chapter_number)
 
     # Footer with progress line and page index.
     progress_left = doc.leftMargin
@@ -1235,6 +1598,7 @@ def draw_front_matter_page(canvas, doc) -> None:  # type: ignore[no-untyped-def]
 def render_book(out_pdf: Path) -> None:
     global PAGE_TOTAL_HINT
     ensure_cover_image(COVER_IMAGE)
+    ensure_support_figure_images()
     lines = clean_lines(BOOK_MD.read_text(encoding="utf-8"))
     validate_book_structure(lines)
     keyword_terms = extract_keyword_terms(lines)
@@ -1283,6 +1647,7 @@ def render_book(out_pdf: Path) -> None:
         doc.current_running_chapter = "Preface"
         doc.current_running_section = ""
         doc.current_chapter_accent = BRAND_ACCENTS[0]
+        doc.current_chapter_number = ""
         return doc
 
     body_width = make_doc().width
@@ -1364,6 +1729,11 @@ def render_book(out_pdf: Path) -> None:
     PAGE_TOTAL_HINT = len(PdfReader(str(out_pdf)).pages)
     apply_accessibility_catalog_tags(out_pdf)
     optimise_pdf_with_ghostscript(out_pdf)
+    if out_pdf.stat().st_size > TARGET_PDF_SIZE_BYTES:
+        raise SystemExit(
+            f"Book PDF is {out_pdf.stat().st_size} bytes, above target {TARGET_PDF_SIZE_BYTES} bytes. "
+            "Install Ghostscript (`gs`) for stronger optimisation."
+        )
 
 
 def main() -> int:

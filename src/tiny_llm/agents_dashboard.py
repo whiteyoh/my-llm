@@ -30,52 +30,66 @@ STATUS_LABELS = {
     "completed": "Completed",
 }
 STATUS_COLORS = {
-    "idle": "#6b7280",
-    "queued": "#2563eb",
-    "running": "#0ea5e9",
+    "idle": "#94a3b8",
+    "queued": "#3b82f6",
+    "running": "#06b6d4",
     "blocked": "#ef4444",
     "completed": "#22c55e",
 }
+STATUS_ICONS = {
+    "idle": "◯",
+    "queued": "⏳",
+    "running": "▶",
+    "blocked": "⛔",
+    "completed": "✓",
+}
 
 
-def _inject_argocd_style() -> None:
+def _inject_style() -> None:
     st.markdown(
         """
 <style>
 .stApp { background: #0b1220; color: #dbe4f0; }
-.argocd-title { font-weight: 700; font-size: 1.45rem; color: #e5edff; margin-bottom: 0.15rem; }
-.argocd-sub { color: #93a4bf; font-size: 0.92rem; margin-bottom: 1rem; }
-.argo-kpi {
-  background: linear-gradient(180deg,#111b2e 0%,#0f1728 100%);
-  border: 1px solid #25324b; border-radius: 10px; padding: 10px 12px; min-height: 92px;
+.wrap { margin-bottom: 0.35rem; }
+.title { font-weight: 700; color: #e5edff; font-size: 1.1rem; margin-bottom: 0.1rem; }
+.sub { color: #7f93b5; font-size: 0.8rem; }
+.kpi {
+  background: linear-gradient(180deg,#121d31 0%,#0d1628 100%);
+  border: 1px solid #263652; border-radius: 10px; min-height: 76px;
+  display:flex; align-items:center; justify-content:center; flex-direction:column; gap:2px;
 }
-.argo-kpi .k { color:#8fa2c1; font-size:0.78rem; text-transform: uppercase; letter-spacing: 0.04em; }
-.argo-kpi .v { color:#ecf4ff; font-size:1.28rem; font-weight:700; margin-top:0.35rem; }
-.argo-kpi .h { color:#8fa2c1; font-size:0.8rem; margin-top:0.2rem; }
-.argo-chip { display:inline-block; padding:3px 10px; border-radius:999px; font-size:0.78rem; font-weight:600; color:white; }
-.argo-lane {
-  background:#0f1728; border:1px solid #26354f; border-radius:10px; padding:10px; min-height:260px;
+.kpi-ico { font-size: 1.2rem; line-height:1; }
+.kpi-val { color:#ecf4ff; font-weight:700; font-size: 1rem; line-height:1.1; }
+.lane {
+  background:#0f1728; border:1px solid #26354f; border-radius:10px; padding:8px; min-height:200px;
 }
-.argo-lane-title { color:#dce7fb; font-weight:700; margin-bottom:10px; }
-.argo-agent {
-  background:#131f33; border:1px solid #2a3b59; border-radius:8px; padding:9px 10px; margin-bottom:8px;
+.lane-head { color:#dce7fb; font-size:0.82rem; margin-bottom:6px; display:flex; align-items:center; gap:6px; }
+.agent {
+  background:#14223a; border:1px solid #2f456b; border-radius:8px; padding:6px 8px; margin-bottom:6px;
+  color:#dce7fb; font-size:0.78rem; display:flex; align-items:center; gap:7px;
 }
-.argo-agent-name { color:#ecf3ff; font-weight:600; font-size:0.92rem; }
-.argo-agent-note { color:#95a8c8; font-size:0.8rem; margin-top:4px; }
-.argo-alert {
-  border:1px solid #7f1d1d; background:#2a1214; color:#fecaca; border-radius:10px; padding:10px 12px;
+.tiny { color:#91a7c9; font-size:0.72rem; }
+.pulse {
+  width: 8px; height: 8px; border-radius: 999px; background: #06b6d4; display: inline-block;
+  box-shadow: 0 0 0 rgba(6,182,212,0.5); animation: pulse 1.3s infinite;
 }
-.argo-ok {
-  border:1px solid #14532d; background:#0f2417; color:#bbf7d0; border-radius:10px; padding:10px 12px;
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(6,182,212,0.55); transform: scale(1); }
+  70% { box-shadow: 0 0 0 10px rgba(6,182,212,0.0); transform: scale(1.1); }
+  100% { box-shadow: 0 0 0 0 rgba(6,182,212,0.0); transform: scale(1); }
+}
+.alert {
+  border:1px solid #7f1d1d; background:#2a1214; color:#fecaca; border-radius:10px; padding:8px 10px;
+  font-size:0.8rem;
+}
+.ok {
+  border:1px solid #14532d; background:#0f2417; color:#bbf7d0; border-radius:10px; padding:8px 10px;
+  font-size:0.8rem;
 }
 </style>
         """,
         unsafe_allow_html=True,
     )
-
-
-def _chip(label: str, color: str) -> str:
-    return f"<span class='argo-chip' style='background:{color};'>{label}</span>"
 
 
 def _sort_for_board(agent: dict[str, object], state: dict[str, object]) -> tuple[int, str]:
@@ -87,19 +101,29 @@ def _sort_for_board(agent: dict[str, object], state: dict[str, object]) -> tuple
     return (0 if updated else 1, updated)
 
 
-def _render_kpi(label: str, value: str, hint: str = "") -> None:
+def _icon_kpi(icon: str, value: str, color: str) -> None:
     st.markdown(
-        f"<div class='argo-kpi'><div class='k'>{label}</div><div class='v'>{value}</div><div class='h'>{hint}</div></div>",
+        f"<div class='kpi'><div class='kpi-ico' style='color:{color}'>{icon}</div><div class='kpi-val'>{value}</div></div>",
         unsafe_allow_html=True,
     )
 
 
+def _lane_header(status: str, count: int) -> str:
+    icon = STATUS_ICONS[status]
+    color = STATUS_COLORS[status]
+    return f"<div class='lane-head'><span style='color:{color}'>{icon}</span><span>{count}</span></div>"
+
+
 def main() -> None:
-    st.set_page_config(page_title="Kairo Agent Operations", layout="wide")
-    _inject_argocd_style()
-    st.markdown("<div class='argocd-title'>Kairo Agent Operations</div>", unsafe_allow_html=True)
+    st.set_page_config(page_title="Kairo Agent Ops", layout="wide")
+    _inject_style()
+
+    auto_refresh_fn = getattr(st, "autorefresh", None)
+    if callable(auto_refresh_fn):
+        auto_refresh_fn(interval=2000, key="agents-dashboard-autorefresh-2s")
+
     st.markdown(
-        "<div class='argocd-sub'>Argo-style orchestrator board for worker status, runtime activity, and missing agent detection.</div>",
+        "<div class='wrap'><div class='title'>Agent Ops</div><div class='sub'>live / 2s</div></div>",
         unsafe_allow_html=True,
     )
 
@@ -109,34 +133,21 @@ def main() -> None:
         return
 
     state = ensure_agents_in_state(load_state(STATE_PATH), agents)
-    expected_files = expected_agent_files()
-    missing_agents = missing_expected_agents(agents, expected_files)
+    missing_agents = missing_expected_agents(agents, expected_agent_files())
     state = sync_missing_agents(state, missing_agents)
 
     sidebar = st.sidebar
-    sidebar.header("Session Controls")
-    phase = sidebar.selectbox("Current phase", PHASES, index=PHASES.index(str(state.get("phase", "Discovery"))))
+    sidebar.header("Ops")
+    phase = sidebar.selectbox("Phase", PHASES, index=PHASES.index(str(state.get("phase", "Discovery"))))
     state = set_phase(state, phase)
 
-    auto_refresh = sidebar.toggle("Auto refresh board", value=True)
-    if auto_refresh:
-        auto_refresh_fn = getattr(st, "autorefresh", None)
-        if callable(auto_refresh_fn):
-            auto_refresh_fn(interval=5000, key="agents-dashboard-autorefresh")
-        else:
-            sidebar.caption("Auto refresh unavailable in this Streamlit version.")
-
-    if sidebar.button("Refresh Now"):
-        st.rerun()
-
-    if sidebar.button("Reset Board"):
+    if sidebar.button("Reset"):
         for agent in agents:
             state = set_agent_status(state, str(agent["name"]), "idle", note="Board reset")
         state["events"] = []
         state["missing_agents"] = []
         state = set_phase(state, "Discovery")
         append_event(state, "orchestrator", "board-reset")
-        st.success("Board reset.")
 
     counts = status_counts(state)
     running_agents = [
@@ -145,123 +156,71 @@ def main() -> None:
         if isinstance(state.get("agents", {}).get(str(agent["name"]), {}), dict)
         and state["agents"][str(agent["name"])].get("status") == "running"
     ]
-    sync_status = "OutOfSync" if missing_agents else "Synced"
-    sync_color = "#f59e0b" if missing_agents else "#22c55e"
-    health_status = "Degraded" if counts["blocked"] > 0 or missing_agents else "Healthy"
-    health_color = "#ef4444" if counts["blocked"] > 0 or missing_agents else "#22c55e"
 
     k1, k2, k3, k4, k5, k6 = st.columns(6)
     with k1:
-        _render_kpi("Workers", str(len(agents)), "discovered")
+        _icon_kpi("🧩", str(len(agents)), "#9ca3af")
     with k2:
-        _render_kpi("Running", str(counts["running"]), ", ".join(running_agents[:2]) if running_agents else "no active workers")
+        _icon_kpi("▶", str(counts["running"]), STATUS_COLORS["running"])
     with k3:
-        _render_kpi("Queued", str(counts["queued"]), "awaiting execution")
+        _icon_kpi("⏳", str(counts["queued"]), STATUS_COLORS["queued"])
     with k4:
-        _render_kpi("Blocked", str(counts["blocked"]), "needs intervention")
+        _icon_kpi("⛔", str(counts["blocked"]), STATUS_COLORS["blocked"])
     with k5:
-        _render_kpi("Sync", sync_status, "expected worker files")
+        _icon_kpi("✓", str(counts["completed"]), STATUS_COLORS["completed"])
     with k6:
-        _render_kpi("Health", health_status, f"phase: {state.get('phase', 'Discovery')}")
-
-    status_row = f"{_chip(sync_status, sync_color)}&nbsp;&nbsp;{_chip(health_status, health_color)}"
-    st.markdown(status_row, unsafe_allow_html=True)
+        _icon_kpi("⚠" if missing_agents else "✔", str(len(missing_agents)), "#f59e0b" if missing_agents else "#22c55e")
 
     if running_agents:
         st.markdown(
-            f"<div class='argo-ok'><strong>Running now:</strong> {', '.join(running_agents)}</div>",
+            f"<div class='ok'><span class='pulse'></span>&nbsp; {', '.join(running_agents)}</div>",
             unsafe_allow_html=True,
         )
     else:
-        st.markdown("<div class='argo-ok'><strong>Running now:</strong> none</div>", unsafe_allow_html=True)
+        st.markdown("<div class='ok'>✓ idle</div>", unsafe_allow_html=True)
 
     if missing_agents:
         st.markdown(
-            f"<div class='argo-alert'><strong>Missing agents detected:</strong> {', '.join(missing_agents)}</div>",
-            unsafe_allow_html=True,
-        )
-    else:
-        st.markdown(
-            "<div class='argo-ok'><strong>Expected agents:</strong> all discovered</div>",
+            f"<div class='alert'>⚠ missing: {', '.join(missing_agents)}</div>",
             unsafe_allow_html=True,
         )
 
     board_cols = st.columns(5)
     for i, status in enumerate(STATUS_VALUES):
         with board_cols[i]:
-            st.markdown(
-                f"<div class='argo-lane-title'>{STATUS_LABELS[status]}</div>",
-                unsafe_allow_html=True,
-            )
-            st.markdown("<div class='argo-lane'>", unsafe_allow_html=True)
+            st.markdown(_lane_header(status, counts[status]), unsafe_allow_html=True)
+            st.markdown("<div class='lane'>", unsafe_allow_html=True)
             members = []
             for agent in sorted(agents, key=lambda a: _sort_for_board(a, state)):
-                agent_info = state["agents"].get(str(agent["name"]), {})
-                if isinstance(agent_info, dict) and agent_info.get("status") == status:
-                    members.append((agent, agent_info))
+                info = state["agents"].get(str(agent["name"]), {})
+                if isinstance(info, dict) and info.get("status") == status:
+                    members.append((agent, info))
 
             if not members:
-                st.caption("No agents")
+                st.markdown("<div class='tiny'>·</div>", unsafe_allow_html=True)
             else:
-                for agent, agent_info in members:
-                    color = STATUS_COLORS.get(status, "#6b7280")
+                for agent, info in members:
+                    name = str(agent["name"])
+                    short = "".join(part[:1] for part in name.split("-"))[:4].upper() or name[:4].upper()
+                    badge = "<span class='pulse'></span>" if status == "running" else f"<span style='color:{STATUS_COLORS[status]}'>{STATUS_ICONS[status]}</span>"
                     st.markdown(
-                        (
-                            f"<div class='argo-agent'><div class='argo-agent-name'>{agent['name']}</div>"
-                            f"{_chip(STATUS_LABELS[status], color)}"
-                            "</div>"
-                        ),
+                        f"<div class='agent' title='{name}'>{badge}<span>{short}</span></div>",
                         unsafe_allow_html=True,
                     )
-                    note = str(agent_info.get("notes", "")).strip()
+                    note = str(info.get("notes", "")).strip()
                     if note:
-                        st.caption(f"Note: {note}")
+                        st.markdown(f"<div class='tiny'>{note[:42]}</div>", unsafe_allow_html=True)
             st.markdown("</div>", unsafe_allow_html=True)
 
-    st.subheader("Agent Controls")
-    for agent in agents:
-        name = str(agent["name"])
-        info = state["agents"].get(name, {})
-        if not isinstance(info, dict):
-            info = {"status": "idle", "notes": "", "updated_at": ""}
-
-        with st.expander(name):
-            st.caption(str(agent.get("description", "")))
-            use_when = agent.get("use_when", [])
-            if isinstance(use_when, list) and use_when:
-                st.write("Use when:")
-                for item in use_when[:3]:
-                    st.write(f"- {item}")
-
-            current_status = str(info.get("status", "idle"))
-            status = st.selectbox(
-                "Status",
-                STATUS_VALUES,
-                index=STATUS_VALUES.index(current_status) if current_status in STATUS_VALUES else 0,
-                key=f"status-{name}",
-            )
-            note = st.text_input("Note", value=str(info.get("notes", "")), key=f"note-{name}")
-            if st.button("Apply", key=f"apply-{name}"):
-                state = set_agent_status(state, name, status, note=note)
-                save_state(STATE_PATH, state)
-                st.success(f"Updated {name} -> {status}.")
-
-    st.subheader("Activity Feed")
     events = state.get("events", [])
-    if not isinstance(events, list) or not events:
-        st.caption("No activity yet.")
-    else:
-        for event in reversed(events[-30:]):
-            if not isinstance(event, dict):
-                continue
-            timestamp = str(event.get("timestamp", ""))
-            agent = str(event.get("agent", ""))
-            action = str(event.get("event", ""))
-            note = str(event.get("note", "")).strip()
-            line = f"`{timestamp}` • **{agent}** • `{action}`"
-            if note:
-                line += f" • {note}"
-            st.markdown(line)
+    if isinstance(events, list) and events:
+        with st.expander("◷", expanded=False):
+            for event in reversed(events[-12:]):
+                if not isinstance(event, dict):
+                    continue
+                agent = str(event.get("agent", ""))
+                action = str(event.get("event", ""))
+                st.markdown(f"<div class='tiny'>• {agent} · {action}</div>", unsafe_allow_html=True)
 
     save_state(STATE_PATH, state)
 

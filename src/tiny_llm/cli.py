@@ -54,3 +54,7 @@ def learn() -> None:
     script_path = Path(__file__).resolve().with_name("kairo_learn.py")
     sys.argv = ["streamlit", "run", str(script_path), *sys.argv[1:]]
     streamlit_cli.main()
+
+
+def orchestrator_log() -> None:
+    _run_main("tiny_llm.orchestrator_log")

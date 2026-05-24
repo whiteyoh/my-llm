@@ -17,11 +17,19 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - run: python -m pip install --upgrade pip
-      - run: pip install -e ".[dev,pdf]"
+      - run: pip install -e ".[dev,learn,pdf]" build
       - run: ruff check .
       - run: python -m compileall src tests tools
       - run: python tools/pdf/generate_printables.py
       - run: pytest -q
+      - run: pyproject-build
+      - run: python -m pip install --force-reinstall --no-deps dist/*.whl
+      - run: python -c "import tiny_llm; print('wheel import ok')"
+      - run: kairo-train --help
+      - run: python -m venv /tmp/kairo-sdist-check
+      - run: /tmp/kairo-sdist-check/bin/pip install --upgrade pip
+      - run: /tmp/kairo-sdist-check/bin/pip install --no-deps dist/*.tar.gz
+      - run: /tmp/kairo-sdist-check/bin/python -c "import tiny_llm; print('sdist import ok')"
       - run: kairo-train --input_file data/samples/space_adventure.txt --out_dir runs/ci --epochs 1 --batch_size 4 --seq_len 32 --d_model 64 --n_heads 4 --n_layers 2
       - run: kairo-generate --checkpoint runs/ci/best.pt --prompt "The robot opened the door" --max_new_tokens 20
       - run: kairo-evaluate --checkpoint runs/ci/best.pt --input_file data/samples/space_adventure.txt --batch_size 4

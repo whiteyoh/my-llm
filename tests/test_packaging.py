@@ -14,6 +14,7 @@ def test_console_scripts_are_declared() -> None:
     assert scripts["kairo-build-qa-corpus"] == "tiny_llm.cli:build_qa_corpus"
     assert scripts["kairo-agents-dashboard"] == "tiny_llm.cli:agents_dashboard"
     assert scripts["kairo-learn"] == "tiny_llm.cli:learn"
+    assert scripts["kairo-orchestrator-log"] == "tiny_llm.cli:orchestrator_log"
 
 
 def test_package_data_includes_sample_texts() -> None:

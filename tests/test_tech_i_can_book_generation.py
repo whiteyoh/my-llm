@@ -28,7 +28,9 @@ def test_book_render_is_deterministic_for_same_input(tmp_path: Path) -> None:
     try:
         module = _load_book_module()
     except SystemExit:
-        pytest.skip("book PDF dependencies not installed")
+        pytest.skip('book PDF dependencies not installed; run: pip install -e ".[dev,pdf]"')
+
+    module._build_mod_date = lambda: "D:20260501000000Z"  # type: ignore[method-assign]
 
     first_pdf = tmp_path / "book_first.pdf"
     second_pdf = tmp_path / "book_second.pdf"
@@ -42,7 +44,7 @@ def test_book_render_contains_required_front_and_back_matter(tmp_path: Path) -> 
     try:
         module = _load_book_module()
     except SystemExit:
-        pytest.skip("book PDF dependencies not installed")
+        pytest.skip('book PDF dependencies not installed; run: pip install -e ".[dev,pdf]"')
 
     out_pdf = tmp_path / "book.pdf"
     module.render_book(out_pdf)
@@ -61,3 +63,19 @@ def test_book_render_contains_required_front_and_back_matter(tmp_path: Path) -> 
         assert required in text, f"Missing expected book content: {required}"
 
     assert "Series tagline:" not in text
+
+
+def test_book_render_stays_under_size_budget(tmp_path: Path) -> None:
+    try:
+        module = _load_book_module()
+    except SystemExit:
+        pytest.skip('book PDF dependencies not installed; run: pip install -e ".[dev,pdf]"')
+
+    out_pdf = tmp_path / "book.pdf"
+    module.render_book(out_pdf)
+    assert out_pdf.stat().st_size <= module.TARGET_PDF_SIZE_BYTES
+
+
+def test_book_pipeline_avoids_utcnow_deprecation_path() -> None:
+    source = Path("tools/pdf/generate_tech_i_can_book.py").read_text(encoding="utf-8")
+    assert "datetime.utcnow(" not in source
