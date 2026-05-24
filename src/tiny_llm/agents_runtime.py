@@ -72,7 +72,7 @@ def discover_agents(root: Path | None = None) -> list[dict[str, object]]:
 
 
 def default_state() -> dict[str, object]:
-    return {"agents": {}, "events": [], "phase": "Discovery"}
+    return {"agents": {}, "events": [], "phase": "Discovery", "missing_agents": []}
 
 
 def load_state(path: Path) -> dict[str, object]:
@@ -87,6 +87,7 @@ def load_state(path: Path) -> dict[str, object]:
     raw.setdefault("agents", {})
     raw.setdefault("events", [])
     raw.setdefault("phase", "Discovery")
+    raw.setdefault("missing_agents", [])
     return raw
 
 
@@ -107,6 +108,7 @@ def ensure_agents_in_state(state: dict[str, object], agents: list[dict[str, obje
         existing.setdefault("status", "idle")
         existing.setdefault("notes", "")
         existing.setdefault("updated_at", "")
+    state.setdefault("missing_agents", [])
     return state
 
 
@@ -125,18 +127,7 @@ def set_agent_status(state: dict[str, object], agent_name: str, status: str, not
     info["notes"] = note
     info["updated_at"] = _now_iso()
 
-    events = state.setdefault("events", [])
-    assert isinstance(events, list)
-    events.append(
-        {
-            "timestamp": _now_iso(),
-            "agent": agent_name,
-            "event": f"status->{status}",
-            "note": note,
-        }
-    )
-    if len(events) > 200:
-        del events[:-200]
+    append_event(state, agent_name, f"status->{status}", note=note)
     return state
 
 
@@ -156,3 +147,63 @@ def status_counts(state: dict[str, object]) -> dict[str, int]:
             if status in counts:
                 counts[status] += 1
     return counts
+
+
+def append_event(state: dict[str, object], agent: str, event: str, note: str = "") -> dict[str, object]:
+    events = state.setdefault("events", [])
+    assert isinstance(events, list)
+    events.append(
+        {
+            "timestamp": _now_iso(),
+            "agent": agent,
+            "event": event,
+            "note": note,
+        }
+    )
+    if len(events) > 200:
+        del events[:-200]
+    return state
+
+
+def expected_agent_files(root: Path | None = None) -> list[str]:
+    base = root or project_root()
+    agents_md = base / "AGENTS.md"
+    if not agents_md.exists():
+        return []
+    text = agents_md.read_text(encoding="utf-8")
+    block = _parse_tag_block(text, "examples")
+    files: list[str] = []
+    for item in block:
+        stripped = item.strip()
+        if stripped.endswith(".md"):
+            files.append(Path(stripped).name)
+    return sorted(set(files))
+
+
+def missing_expected_agents(agents: list[dict[str, object]], expected_files: list[str]) -> list[str]:
+    if not expected_files:
+        return []
+    discovered = {Path(str(agent.get("path", ""))).name for agent in agents}
+    missing_files = sorted(file_name for file_name in expected_files if file_name not in discovered)
+    return [Path(file_name).stem for file_name in missing_files]
+
+
+def sync_missing_agents(state: dict[str, object], missing_agent_names: list[str]) -> dict[str, object]:
+    previous = state.get("missing_agents", [])
+    previous_list = previous if isinstance(previous, list) else []
+    previous_set = {str(item) for item in previous_list}
+    current = sorted(set(missing_agent_names))
+    current_set = set(current)
+
+    if current_set != previous_set:
+        state["missing_agents"] = current
+        if current:
+            append_event(
+                state,
+                "orchestrator",
+                "missing-agents-detected",
+                note=", ".join(current),
+            )
+        else:
+            append_event(state, "orchestrator", "missing-agents-resolved")
+    return state

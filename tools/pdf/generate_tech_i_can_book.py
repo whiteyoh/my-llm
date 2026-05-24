@@ -1,9 +1,12 @@
 from __future__ import annotations
 
 from collections import defaultdict
+from datetime import datetime
 from html import escape
 from pathlib import Path
 import re
+import shutil
+import subprocess
 import textwrap
 
 try:
@@ -15,6 +18,7 @@ try:
     from reportlab.lib.pagesizes import A4
     from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
     from reportlab.lib.units import mm
+    from reportlab.pdfbase import pdfdoc
     from reportlab.pdfgen.canvas import Canvas
     from reportlab.platypus import (
         BaseDocTemplate,
@@ -32,6 +36,8 @@ try:
     )
     from reportlab.platypus.tableofcontents import TableOfContents
     from pypdf import PdfReader
+    from pypdf import PdfWriter
+    from pypdf.generic import BooleanObject, DictionaryObject, NameObject, TextStringObject
 except Exception as exc:  # pragma: no cover
     raise SystemExit("Missing PDF tooling. Install with: pip install -e \".[pdf]\"") from exc
 
@@ -55,9 +61,73 @@ BOOK_PUBLICATION_DATE = "May 2026"
 BOOK_ISBN = "ISBN: Not assigned (Edition 1 school release, not for retail sale)"
 BOOK_KEYWORDS = "education, ai literacy, tiny llm, classroom, kairo, beginner ai"
 BRAND_ACCENTS = ["#2563eb", "#0d9488", "#ea580c", "#7c3aed", "#0891b2", "#be123c"]
+BOOK_META_TITLE = "Tech I Can | Kairo"
+BOOK_META_AUTHOR = "Paul McMurray"
+BOOK_META_SUBJECT = "Beginner guide to Kairo"
+BOOK_META_CREATOR = "Tech I Can Production Pipeline"
+BOOK_META_CREATION_DATE = "2026-05-01T00:00:00+00:00"
+
+
+def _build_mod_date() -> str:
+    return datetime.utcnow().strftime("D:%Y%m%d%H%M%SZ")
+
+
+def apply_accessibility_catalog_tags(pdf_path: Path) -> None:
+    reader = PdfReader(str(pdf_path))
+    writer = PdfWriter()
+    writer.clone_document_from_reader(reader)
+    writer._root_object.update(  # type: ignore[attr-defined]
+        {
+            NameObject("/MarkInfo"): DictionaryObject({NameObject("/Marked"): BooleanObject(True)}),
+            NameObject("/Lang"): TextStringObject("en-GB"),
+        }
+    )
+    tagged_path = pdf_path.with_name(f"{pdf_path.stem}.tagged{pdf_path.suffix}")
+    with tagged_path.open("wb") as handle:
+        writer.write(handle)
+    tagged_path.replace(pdf_path)
+
+
+def optimise_pdf_with_ghostscript(pdf_path: Path) -> bool:
+    gs_path = shutil.which("gs")
+    if not gs_path:
+        print("Ghostscript not found; skipping PDF optimisation step.")
+        return False
+
+    optimised_path = pdf_path.with_name(f"{pdf_path.stem}.optimised{pdf_path.suffix}")
+    cmd = [
+        gs_path,
+        "-sDEVICE=pdfwrite",
+        "-dCompatibilityLevel=1.4",
+        "-dPDFSETTINGS=/ebook",
+        "-dNOPAUSE",
+        "-dQUIET",
+        "-dBATCH",
+        f"-sOutputFile={optimised_path}",
+        str(pdf_path),
+    ]
+    subprocess.run(cmd, check=True)
+    optimised_path.replace(pdf_path)
+    return True
 
 rl_config.invariant = 1
 PAGE_TOTAL_HINT = 0
+
+
+class BookPDFInfo(pdfdoc.PDFInfo):
+    def format(self, document):  # type: ignore[override]
+        data = {
+            "Title": pdfdoc.PDFString(self.title),
+            "Author": pdfdoc.PDFString(self.author),
+            "Subject": pdfdoc.PDFString(self.subject),
+            "Creator": pdfdoc.PDFString(self.creator),
+            "Producer": pdfdoc.PDFString(self.producer),
+            "Keywords": pdfdoc.PDFString(self.keywords),
+            "CreationDate": pdfdoc.PDFString(BOOK_META_CREATION_DATE),
+            "ModDate": pdfdoc.PDFString(_build_mod_date()),
+            "Trapped": pdfdoc.PDFName(self.trapped),
+        }
+        return pdfdoc.PDFDictionary(data).format(document)
 
 
 class DeterministicCanvas(Canvas):
@@ -66,6 +136,12 @@ class DeterministicCanvas(Canvas):
     def __init__(self, *args, **kwargs):
         kwargs.setdefault("invariant", 1)
         super().__init__(*args, **kwargs)
+        self._doc.info = BookPDFInfo()
+        self.setTitle(BOOK_META_TITLE)
+        self.setAuthor(BOOK_META_AUTHOR)
+        self.setSubject(BOOK_META_SUBJECT)
+        self.setCreator(BOOK_META_CREATOR)
+        self.setKeywords(BOOK_KEYWORDS)
 
     def save(self):  # type: ignore[override]
         # ReportLab's final page index can be one step ahead at save-time.
@@ -159,13 +235,25 @@ def ensure_cover_image(path: Path) -> None:
     chapter_font = load_font(132)
     tag_font = load_font(66)
     subtitle_font = load_font(52)
+    meta_font = load_font(44)
+    strip_font = load_font(44)
     author_font = load_font(64)
+
+    def draw_centered_text(text: str, font: ImageFont.ImageFont, y: int, fill: tuple[int, int, int]) -> None:
+        left, right = 280, 2140
+        bbox = draw.textbbox((0, 0), text, font=font)
+        width = bbox[2] - bbox[0]
+        x = int(left + ((right - left - width) / 2))
+        draw.text((x, y), text, fill=fill, font=font)
 
     draw.text((280, 1688), "TECH I CAN", fill=(249, 250, 251), font=title_font)
     draw.text((280, 1868), "Kairo", fill=(251, 191, 36), font=chapter_font)
     draw.text((280, 2070), BOOK_TAGLINE, fill=(224, 231, 255), font=tag_font)
     draw.text((280, 2230), "A practical beginner guide to tiny language models", fill=(226, 232, 240), font=subtitle_font)
+    draw.text((280, 2472), BOOK_EDITION, fill=(177, 194, 214), font=meta_font)
+    draw.text((280, 2550), BOOK_SERIES, fill=(170, 186, 205), font=meta_font)
     draw.text((280, 2630), f"By {BOOK_AUTHOR}", fill=(241, 245, 249), font=author_font)
+    draw_centered_text("Build. Train. Compare. Explain.", strip_font, 2732, (227, 235, 246))
 
     image.save(path, format="PNG")
 
@@ -1274,6 +1362,8 @@ def render_book(out_pdf: Path) -> None:
     # Pass 2: render final book with populated keyword index.
     make_doc().multiBuild(build_story(keyword_map=keyword_page_map), canvasmaker=DeterministicCanvas)
     PAGE_TOTAL_HINT = len(PdfReader(str(out_pdf)).pages)
+    apply_accessibility_catalog_tags(out_pdf)
+    optimise_pdf_with_ghostscript(out_pdf)
 
 
 def main() -> int:
